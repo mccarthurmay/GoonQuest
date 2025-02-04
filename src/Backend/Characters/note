@@ -1,0 +1,3 @@
+Use interfaces
+
+- Hero shares things with mobs, but do stuff slightly differently. Should use interfaces and inheritance
