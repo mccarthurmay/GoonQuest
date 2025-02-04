@@ -14,3 +14,7 @@
 //    }
 //
 //}
+
+
+// STATS SHOULD BE HERE - i think. It may be easier to just keep track of all stats in parent. Every
+// single character has the same stats - HP defence crit chance hit chance etc
