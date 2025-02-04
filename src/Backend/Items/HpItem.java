@@ -1,13 +1,12 @@
 package Backend.Items;
 
 
-public class HpItem {
+public class HpItem extends Item {
 
-    String name;
     double hpGain;
 
     public HpItem(String name, double hpGain) {
-        this.name = name;
+        super(name);
         this.hpGain = hpGain;
     }
 
