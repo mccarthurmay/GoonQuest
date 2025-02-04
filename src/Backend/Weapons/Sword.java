@@ -1,10 +1,8 @@
 package Backend.Weapons;
 
-
-
 public class Sword extends Weapon{
-    public Sword(String name, double dmg, String effect){
-        super(name, dmg, effect);
+    public Sword(String name, double dmg, String effect, double crit, double hit){
+        super(name, dmg, effect, crit, hit);
     }
 
     @Override

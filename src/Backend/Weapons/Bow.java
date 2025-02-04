@@ -2,8 +2,8 @@ package Backend.Weapons;
 
 public class Bow extends Weapon{
 
-    public Bow(String name, double dmg, String effect){
-        super(name, dmg, effect);
+    public Bow(String name, double dmg, String effect, double crit, double hit){
+        super(name, dmg, effect, crit, hit);
     }
 
     @Override
