@@ -23,8 +23,13 @@ public class Stats {
         this.hitChance = hitChance;
     }
 
-    public void takeDamage(double taken){
-        HP -= taken - (taken*defMod); // reduces damage taken the higher your defense modifier is
+    public String toString(){
+        System.out.println("Attack: " + attackMod);
+        System.out.println("Defense: " + defMod);
+        System.out.println("HP: " + attackMod);
+        System.out.println("Attack: " + attackMod);
+        System.out.println("Attack: " + attackMod);
+
     }
     
 }
