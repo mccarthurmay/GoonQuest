@@ -23,6 +23,27 @@ public class Stats {
         this.hitChance = hitChance;
     }
 
+    public void setAttackMod(double attackMod){
+        this.attackMod = attackMod;
+    }
+
+    public void setDefMod(double defMod){
+        this.defMod = defMod;
+    }
+
+    public void setHP(double HP){
+        this.HP = HP;
+    }
+
+    public void setCrit(double crit){
+        this.crit = crit;
+    }
+
+    public void setHitChance(double hitChance){
+        this.hitChance = hitChance;
+    }
+
+
     public String toString(){
         return "Attack: " + attackMod + "\n" + "Defense: " + defMod+ "\n"+"HP: " + HP + "\n"+ "Crit Chance: " + crit + "\n" + "Hit Chance: " + hitChance;
     }
