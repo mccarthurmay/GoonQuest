@@ -12,10 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
-
-
-
 public class Hero extends Entity {
     ArrayList<Weapon> ownedWeapons = new ArrayList<>();
     ArrayList<Item> ownedItems = new ArrayList<>();
