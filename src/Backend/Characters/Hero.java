@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 
 
-public class Hero {
+public class Hero extends Entity {
     ArrayList<Weapon> ownedWeapons = new ArrayList<>();
     ArrayList<Item> ownedItems = new ArrayList<>();
     Double position;
@@ -142,6 +142,15 @@ public class Hero {
             direction = "right";
             playerX += playerSpeed;
         }
+        spriteCounter++;
+
+        if(spriteCounter > 10) {
+            if(spriteNum + 1>4){
+                spriteNum = 0;
+            }else{
+            spriteNum++;
+            }
+        }
     }
 
     public void draw(Graphics g2) {
@@ -149,17 +158,75 @@ public class Hero {
 
         switch (direction) {
             case "up":
-                img = up1;
-                break;
+                if(spriteNum == 1){
+                    img = up1;
+                    break;
+                }
+                if(spriteNum == 2){
+                    img = up2;
+                    break;
+                }
+                if(spriteNum == 3){
+                    img = up3;
+                    break;
+                }
+                if(spriteNum == 4){
+                    img = up4;
+                    break;
+                }
             case "down":
-                img = down1;
-                break;
+                if(spriteNum == 1){
+                    img = down1;
+                    break;
+                }
+                if(spriteNum == 2){
+                    img = down2;
+                    break;
+                }
+                if(spriteNum == 3){
+                    img = down3;
+                    break;
+                }
+                if(spriteNum == 4) {
+                    img = down4;
+                }
+
             case "left":
-                img = left1;
-                break;
+                if(spriteNum == 1){
+                    img = left1;
+                    break;
+                }
+                if(spriteNum == 2){
+                    img = left2;
+                    break;
+                }
+                if(spriteNum == 3){
+                    img = left3;
+                    break;
+                }
+                if(spriteNum == 4){
+                    img = left4;
+                    break;
+                }
+
             case "right":
-                img = right1;
-                break;
+                if(spriteNum == 1){
+                    img = right1;
+                    break;
+                }
+                if(spriteNum == 2){
+                    img = right2;
+                    break;
+                }
+                if(spriteNum == 3){
+                    img = right3;
+                    break;
+                }
+                if(spriteNum == 4){
+                    img = right4;
+                    break;
+                }
+
         }
 
         g2.drawImage(img, playerX, playerY, gp.tileSize, gp.tileSize, null);
