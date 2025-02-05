@@ -186,7 +186,7 @@ public class Hero extends CharacterManager{
 
         switch (direction) {
             case "up":
-                if(spriteNum == 1){
+                if(spriteNum == 1 && keyH.keyPressed()){
                     img = up1;
                     break;
                 }
@@ -217,6 +217,7 @@ public class Hero extends CharacterManager{
                 }
                 if(spriteNum == 4) {
                     img = down4;
+                    break;
                 }
 
             case "left":
