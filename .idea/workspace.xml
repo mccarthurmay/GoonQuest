@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="efb3b7ec-0b40-4b73-a18c-a31a7088ea8b" name="Changes" comment="Testing2">
-      <change beforePath="$PROJECT_DIR$/src/Backend/Items/DmgItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Backend/Items/DmgItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Backend/Items/StatusEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Backend/Items/StatusEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Backend/Characters/CharTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Backend/Characters/CharTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +158,7 @@
       <workItem from="1738775224552" duration="8000" />
       <workItem from="1738778134101" duration="2428000" />
       <workItem from="1738787947782" duration="1016000" />
-      <workItem from="1738789830992" duration="3253000" />
+      <workItem from="1738789830992" duration="3297000" />
     </task>
     <task id="LOCAL-00001" summary="New project">
       <option name="closed" value="true" />

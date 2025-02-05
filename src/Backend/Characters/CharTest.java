@@ -22,7 +22,6 @@ public class CharTest {
         items.add(milk2);
 
         Stats stat = new Stats(1,1,1,1,1);
-        .
         Hero Christian = new Hero("Christian", 100.0, weapons, items,stat);
         System.out.println(Christian);
 
