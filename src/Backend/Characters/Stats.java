@@ -24,12 +24,7 @@ public class Stats {
     }
 
     public String toString(){
-        System.out.println("Attack: " + attackMod);
-        System.out.println("Defense: " + defMod);
-        System.out.println("HP: " + attackMod);
-        System.out.println("Attack: " + attackMod);
-        System.out.println("Attack: " + attackMod);
-
+        return "Attack: " + attackMod + "\n" + "Defense: " + defMod+ "\n"+"HP: " + HP + "\n"+ "Crit Chance: " + crit + "\n" + "Hit Chance: " + hitChance;
     }
     
 }
