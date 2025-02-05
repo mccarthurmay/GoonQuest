@@ -8,9 +8,9 @@ public class ItemsTest {
         DmgItems Grenade = new DmgItems("Grenade", 100);
         DmgItems MagicSpear = new DmgItems("Magic Spear", 200);
 
-        StatusEffect SmokeBomb = new StatusEffect("Smoke Bomb", "hit_chance", false);
-        StatusEffect BadScroll = new StatusEffect("Bad Scroll", "defense", false);
-        StatusEffect GoodScroll = new StatusEffect("Good Scroll", "dmg", true);
+//        StatusEffect SmokeBomb = new StatusEffect("Smoke Bomb", "hit_chance", false);
+//        StatusEffect BadScroll = new StatusEffect("Bad Scroll", "defense", false);
+//        StatusEffect GoodScroll = new StatusEffect("Good Scroll", "dmg", true);
 
     }
 }

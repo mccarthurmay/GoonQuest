@@ -55,6 +55,30 @@ public class Hero extends CharacterManager{
     public void setHP(Double newHP){
         stats.setHP(newHP);
     }
+    public double getDamage(){
+        return stats.attackMod;
+    }
+    public void setDamage(Double newDamage){
+        stats.setAttackMod(newDamage);
+    }
+    public double getCrit(){
+        return stats.crit;
+    }
+    public void setCrit(Double newCrit){
+        stats.setCrit(newCrit);
+    }
+    public double getDefense(){
+        return stats.defMod;
+    }
+    public void setDefense(Double newDefense){
+        stats.setDefMod(newDefense);
+    }
+    public double getHitChance(){
+        return stats.hitChance;
+    }
+    public void setHitChance(Double newHitChance){
+        stats.setHitChance(newHitChance);
+    }
 
     // use item
 
@@ -186,7 +210,7 @@ public class Hero extends CharacterManager{
 
         switch (direction) {
             case "up":
-                if(spriteNum == 1 && keyH.keyPressed()){
+                if(spriteNum == 1){
                     img = up1;
                     break;
                 }
