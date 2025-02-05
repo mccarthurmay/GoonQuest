@@ -1,6 +1,9 @@
 git checkout --theirs .idea/workspace.xml
 
 
+git checkout -- filename
+
+
 src/
 ├── main/
 │   ├── java/
