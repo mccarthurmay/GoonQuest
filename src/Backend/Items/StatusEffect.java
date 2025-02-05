@@ -1,5 +1,7 @@
 package Backend.Items;
 
+import Backend.Characters.Hero;
+
 public class StatusEffect extends Item{
     String classification; // defense, health, dmg, etc...
     //int rounds; // number of rounds the buff lasts for?
@@ -14,8 +16,9 @@ public class StatusEffect extends Item{
     public void giveBuff(){
         // if classification.equals(defense) then add 10 defense for the round etc
     }
-
-    public void giveDebuff(){
+    public void useItem(Hero hero) {
+    }
+        public void giveDebuff(){
 
     }
 }

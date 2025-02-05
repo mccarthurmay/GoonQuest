@@ -1,5 +1,7 @@
 package Backend.Items;
 
+import Backend.Characters.Hero;
+
 public class DmgItems extends Item {
     double dmg;
 
@@ -8,4 +10,6 @@ public class DmgItems extends Item {
         this.dmg = dmg;
     }
 
+    public void useItem(Hero hero) {
+    }
 }
