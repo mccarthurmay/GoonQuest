@@ -1,5 +1,5 @@
 package Backend.Items;
-
+import Backend.Characters.*;
 
 public abstract class Item {
     String name;
@@ -8,6 +8,8 @@ public abstract class Item {
     public Item(String name) {
         this.name = name;
     }
+
+    public abstract void useItem(Hero hero);
 
 
 }

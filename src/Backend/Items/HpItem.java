@@ -1,5 +1,5 @@
 package Backend.Items;
-
+import Backend.Characters.*;
 
 public class HpItem extends Item {
 
@@ -16,6 +16,12 @@ public class HpItem extends Item {
 
     public double getHpGain() {
         return hpGain;
+    }
+
+    @Override
+    public void useItem(Hero hero) {
+        double HP = hero.getHP();
+        hero.setHP(HP);
     }
 
 }
