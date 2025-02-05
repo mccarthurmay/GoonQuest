@@ -12,7 +12,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class Hero extends Entity {
+public class Hero {
+
+    public int x, y;
+    public int speed;
+
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
+
+
     ArrayList<Weapon> ownedWeapons = new ArrayList<>(); // MAke all acharacters own an arraylist, of only one weapon
     ArrayList<Item> ownedItems = new ArrayList<>();
     Double position;
@@ -157,7 +165,7 @@ public class Hero extends Entity {
 
         if(spriteCounter > 10) {
             if(spriteNum + 1>4){
-                spriteNum = 0;
+                spriteNum = 1;
             }else{
             spriteNum++;
             }
