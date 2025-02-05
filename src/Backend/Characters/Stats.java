@@ -10,7 +10,7 @@ public class Stats {
     /**
      * Stats object for all enemies and the hero
      * @param attackMod Weapons are the primary way to increase the damage given, but the attackMod will also increase this
-     * @param defMod Affects how much damage you take, and how likely you are to dodge
+     * @param defMod Affects how much damage you take
      * @param HP How much health you have left. 0 = game over, reload save
      * @param crit Chance to deal double damage! added to the weapon crit chance
      * @param hitChance Chance to hit the enemy. added to the weapon hit chance
