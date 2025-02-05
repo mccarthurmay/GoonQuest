@@ -12,7 +12,6 @@ public class CharTest2 {
         ArrayList<Weapon> weapons = new ArrayList<>();
         weapons.add(sword);
         weapons.add(axe);
-
         StatusEffect milk2 = new StatusEffect("milk2", "health", true);
         HpItem milk = new HpItem("milk", 10);
         ArrayList<Item> items = new ArrayList<>();
@@ -28,5 +27,14 @@ public class CharTest2 {
         Christian.useItem(milk, Christian);
         System.out.println(Christian);
 
+        Axe greatAxe = new Axe("Awesome Axe", 100,"fire", 0.1, 1);
+        Sword greatSword = new Sword("Tubular Sword", 100,"fire",0.1,0.95);
+        ArrayList<Weapon> greatWeapons = new ArrayList<>(Arrays.asList(greatSword, greatAxe));
+        Stats scaryStats = new Stats(3,8,100,0.1,0.1);
+        Stats holyStats = new Stats(7, 10, 200, 1, 1);
+        Enemy goblar = new Enemy(scaryStats, greatAxe, "Goblar the Horrible");
+        Hero thor = new Hero("Thor the Wonderful", 100.9, greatWeapons, items, holyStats);
+        System.out.println(goblar.getStats());
+        thor.attack(goblar);
     }
 }

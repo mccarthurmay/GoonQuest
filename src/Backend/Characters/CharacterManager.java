@@ -1,6 +1,9 @@
 package Backend.Characters;
 import Backend.Weapons.Weapon;
+import Display.GamePanel;
+import Display.KeyHandler;
 
+import java.security.Key;
 import java.util.Random;
 
 abstract public class CharacterManager {
@@ -8,12 +11,18 @@ abstract public class CharacterManager {
     Stats stats;
     Weapon weapon; // Going to give bosses/mobs/minibosses only one weapon vs an arraylist
     String name;
+    GamePanel gp;
+    KeyHandler keyH;
     boolean guarding = false;
 
     public CharacterManager(Stats stats, Weapon weapon, String name){
         this.stats = stats;
         this.weapon = weapon;
         this.name = name;
+    }
+    public CharacterManager(GamePanel gp, KeyHandler keyH) {
+        this.gp = gp;
+        this.keyH = keyH;
     }
     public String getName(){
         return name;
@@ -45,11 +54,12 @@ abstract public class CharacterManager {
 
     public void takeDamage(double hitVal){
         if (guarding){
-            stats.HP = stats.HP - (hitVal - hitVal * stats.defMod * 4);
+            stats.HP -= (hitVal);
             System.out.println("Got hit for " + hitVal + ", but was guarding!");
             System.out.println(name + " HP is now " + stats.HP);
         }
-        stats.HP = stats.HP - (hitVal - hitVal * stats.defMod);
+        System.out.println("hitval: " + hitVal);
+        stats.HP -= (hitVal);
         System.out.println("Got hit for " + hitVal);
         System.out.println(name + " HP is now " + stats.HP);
     }

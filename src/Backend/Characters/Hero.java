@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class Hero {
+public class Hero extends CharacterManager{
 
     public int x, y;
     public int speed;
@@ -28,11 +28,13 @@ public class Hero {
     Stats stats;
 
     public Hero(String name, Double position, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats) {
+        super(stats, ownedWeapons.get(0), name);
         this.name = name;
         this.position = position;
         this.ownedWeapons = ownedWeapons;
         this.ownedItems = ownedItems;
         this.stats = stats;
+
     }
 
     @Override
@@ -95,7 +97,8 @@ public class Hero {
     /**
      * Christian- I added a new constructor to check display on the screen
      */
-    public Hero( GamePanel gp, KeyHandler keyH) {
+    public Hero(GamePanel gp, KeyHandler keyH) {
+        super(gp, keyH);
         this.gp = gp;
         this.keyH = keyH;
 
@@ -164,11 +167,17 @@ public class Hero {
         spriteCounter++;
 
         if(spriteCounter > 10) {
-            if(spriteNum + 1>4){
+            if(spriteNum == 1){
+                spriteNum = 2;
+            }else if(spriteNum == 2){
+                spriteNum = 3;
+            }else if(spriteNum == 3){
+                spriteNum = 4;
+            }else if(spriteNum == 4){
                 spriteNum = 1;
-            }else{
-            spriteNum++;
             }
+            spriteCounter = 0;
+
         }
     }
 
