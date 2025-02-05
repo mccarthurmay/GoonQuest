@@ -1,0 +1,43 @@
+src/
+├── main/
+│   ├── java/
+│   │   ├── core/               # Core game engine code
+│   │   │   ├── Game.java
+│   │   │   ├── GameLoop.java
+│   │   │   └── GameState.java
+│   │   │
+│   │   ├── entities/          # Game objects/entities
+│   │   │   ├── characters/    # Character-related classes
+│   │   │   │   ├── Player.java
+│   │   │   │   ├── NPC.java
+│   │   │   │   └── Enemy.java
+│   │   │   │
+│   │   │   ├── items/        # All items
+│   │   │   │   ├── weapons/
+│   │   │   │   ├── armor/
+│   │   │   │   └── consumables/
+│   │   │   │
+│   │   │   └── world/        # World objects, terrain
+│   │   │
+│   │   ├── systems/          # Game systems
+│   │   │   ├── combat/
+│   │   │   ├── inventory/
+│   │   │   └── save/
+│   │   │
+│   │   └── utils/            # Utility classes
+│   │
+│   ├── resources/
+│   │   ├── sprites/          # All game graphics
+│   │   │   ├── characters/
+│   │   │   ├── items/
+│   │   │   └── ui/
+│   │   │
+│   │   ├── audio/           # Sound effects and music
+│   │   │   ├── music/
+│   │   │   └── sfx/
+│   │   │
+│   │   └── data/           # Game data files (JSON, XML)
+│   │       ├── items/
+│   │       └── characters/
+│   │
+└── test/                   # Unit tests mirror main structure
