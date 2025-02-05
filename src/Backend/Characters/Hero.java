@@ -92,6 +92,8 @@ public class Hero extends Entity {
 
     BufferedImage img = null;
 
+    // Can be moved to CharacterManager later on - have each .png match name of NPC so it's universal
+    // ex. getPlayerImage(String CharName) would input CharName string value into "CharName".png
     public void getPlayerImage (){
         try{
             down1 = ImageIO.read(new File("src/Backend/Images/sprites/00_NPC_test.png"));
@@ -222,7 +224,7 @@ public class Hero extends Entity {
                 }
 
         }
-
+        // Probably move this eventually too
         g2.drawImage(img, playerX, playerY, gp.tileSize, gp.tileSize, null);
     }
 
