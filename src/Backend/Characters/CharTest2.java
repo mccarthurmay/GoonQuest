@@ -13,8 +13,8 @@ public class CharTest2 {
         weapons.add(sword);
         weapons.add(axe);
 
-        StatusEffect milk = new StatusEffect("milk", "health", true);
         StatusEffect milk2 = new StatusEffect("milk2", "health", true);
+        HpItem milk = new HpItem("milk", 10);
         ArrayList<Item> items = new ArrayList<>();
         items.add(milk);
         items.add(milk2);
@@ -25,6 +25,8 @@ public class CharTest2 {
         System.out.println(Christian);
 
 
+        Christian.useItem(milk, Christian);
+        System.out.println(Christian);
 
     }
 }

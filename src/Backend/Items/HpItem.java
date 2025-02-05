@@ -18,10 +18,10 @@ public class HpItem extends Item {
         return hpGain;
     }
 
-    @Override
     public void useItem(Hero hero) {
         double HP = hero.getHP();
-        hero.setHP(HP);
+        double newHP = HP + hpGain;
+        hero.setHP(newHP);
     }
 
 }

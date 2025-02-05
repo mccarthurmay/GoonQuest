@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class Hero extends Entity {
-    ArrayList<Weapon> ownedWeapons = new ArrayList<>();
+    ArrayList<Weapon> ownedWeapons = new ArrayList<>(); // MAke all acharacters own an arraylist, of only one weapon
     ArrayList<Item> ownedItems = new ArrayList<>();
     Double position;
     String name;
@@ -44,6 +44,13 @@ public class Hero extends Entity {
     }
     public void setHP(Double newHP){
         stats.setHP(newHP);
+    }
+
+    // use item
+
+    public void useItem(Item item, Hero hero){
+        ownedItems.remove(item);
+        item.useItem(this);
     }
 
     // obtain weapon

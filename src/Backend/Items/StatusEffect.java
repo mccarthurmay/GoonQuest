@@ -18,7 +18,8 @@ public class StatusEffect extends Item{
     }
     public void useItem(Hero hero) {
     }
-        public void giveDebuff(){
+
+    public void giveDebuff(){
 
     }
 }
