@@ -17,6 +17,9 @@ public abstract class Weapon {
         this.hit = hit;
     }
 
+    public double getDmg(){
+        return dmg;
+    }
     public abstract void attack();
 
 }
