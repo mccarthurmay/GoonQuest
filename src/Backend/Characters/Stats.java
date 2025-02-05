@@ -27,20 +27,40 @@ public class Stats {
         this.attackMod = attackMod;
     }
 
+    public double getAttackMod(){
+        return attackMod;
+    }
+
     public void setDefMod(double defMod){
         this.defMod = defMod;
+    }
+
+    public double getDefMod(){
+        return defMod;
     }
 
     public void setHP(double HP){
         this.HP = HP;
     }
 
+    public double getHP(){
+        return HP;
+    }
+
     public void setCrit(double crit){
         this.crit = crit;
     }
 
+    public double getCrit(){
+        return crit;
+    }
+
     public void setHitChance(double hitChance){
         this.hitChance = hitChance;
+    }
+
+    public double getHitChance(){
+        return hitChance;
     }
 
 

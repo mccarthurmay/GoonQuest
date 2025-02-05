@@ -38,6 +38,14 @@ public class Hero extends Entity {
                 '}';
     }
 
+
+    public double getHP(){
+        return stats.getHP();
+    }
+    public void setHP(Double newHP){
+        stats.setHP(newHP);
+    }
+
     // obtain weapon
 
     // obtain items
