@@ -22,6 +22,10 @@ bin/
 /nbdist/
 /.nb-gradle/
 
+### ISSUES INTELLIJ ###
+CP122.iml
+.idea/
+
 ### VS Code ###
 .vscode/
 
@@ -29,7 +33,3 @@ bin/
 .DS_Store
 
 
-### ISSUES INTELLIJ ###
-CP122.iml
-out/
-.idea/
