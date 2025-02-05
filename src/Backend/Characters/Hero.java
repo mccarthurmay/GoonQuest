@@ -15,26 +15,13 @@ import java.util.ArrayList;
 
 
 
+
 public class Hero extends Entity {
     ArrayList<Weapon> ownedWeapons = new ArrayList<>();
     ArrayList<Item> ownedItems = new ArrayList<>();
     Double position;
     String name;
     Stats stats;
-
-    // Display and drawings
-    GamePanel gp;
-    // Moving and changing player's coordinates on the screen
-    KeyHandler keyH;
-    int playerY;
-    int playerX;
-    int playerSpeed;
-    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
-    public String direction;
-
-
-
-
 
     public Hero(String name, Double position, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats) {
         this.name = name;
@@ -43,21 +30,6 @@ public class Hero extends Entity {
         this.ownedItems = ownedItems;
         this.stats = stats;
     }
-
-
-    /**
-     * Christian- I added a new constructor to check display on the screen
-     */
-    public Hero( GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
-        this.keyH = keyH;
-
-        setDeaultValues();
-        getPlayerImage ();
-
-    }
-
-
 
     @Override
     public String toString() {
@@ -80,6 +52,40 @@ public class Hero extends Entity {
 
     // A function to update a player's coordinates
 
+    /**
+     * Start of map update area for Christian
+     */
+
+    // Display and drawings
+    GamePanel gp;
+    // Moving and changing player's coordinates on the screen
+    KeyHandler keyH;
+    int playerY;
+    int playerX;
+    int playerSpeed;
+    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
+    public String direction;
+
+
+
+
+
+
+
+
+    /**
+     * Christian- I added a new constructor to check display on the screen
+     */
+    public Hero( GamePanel gp, KeyHandler keyH) {
+        this.gp = gp;
+        this.keyH = keyH;
+
+        setDeaultValues();
+        getPlayerImage ();
+
+    }
+
+
     public void setDeaultValues(){
         playerY= 100;
         playerX= 100;
@@ -87,7 +93,6 @@ public class Hero extends Entity {
 
         direction = "down";
     }
-
 
     BufferedImage img = null;
 
@@ -114,18 +119,11 @@ public class Hero extends Entity {
             left3 = ImageIO.read(new File("src/Backend/Images/sprites/14_NPC_test.png"));
             left4 = ImageIO.read(new File("src/Backend/Images/sprites/15_NPC_test.png"));
 
-
-
-
-
-
         }catch(IOException e){
             e.printStackTrace();
         }
 
     }
-
-
 
 
     public void update() {

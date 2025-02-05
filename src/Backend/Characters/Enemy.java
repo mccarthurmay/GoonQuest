@@ -1,7 +1,18 @@
-//package Backend.Characters;
-//
-//public class NormalMob extends CharacterManager{
-//    public NormalMob(Stats stats, Weapons weapons);
-//
-//
-//}
+package Backend.Characters;
+
+import Backend.Items.*;
+import Backend.Weapons.*;
+
+import java.util.ArrayList;
+
+public class Enemy {
+    Stats stats;
+    Weapons weapon;
+    Items item;
+
+
+    public Enemy(Stats stats, Weapons weapons){
+
+    }
+
+}
