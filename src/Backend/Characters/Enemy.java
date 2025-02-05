@@ -1,9 +1,6 @@
 package Backend.Characters;
-
 import Backend.Items.*;
 import Backend.Weapons.*;
-
-import java.util.ArrayList;
 
 public class Enemy {
     Stats stats;
