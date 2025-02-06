@@ -3,10 +3,29 @@ import Backend.Weapons.Weapon;
 import Display.GamePanel;
 import Display.KeyHandler;
 
+import java.awt.image.BufferedImage;
 import java.security.Key;
 import java.util.Random;
 
 abstract public class CharacterManager {
+
+    // Trying some stuff
+    public int x,y;
+    public int speed;
+
+    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
+    public String direction;
+
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
+
+
+
+
+
+
+
+
     // Parent
     Stats stats;
     Weapon weapon; // Going to give bosses/mobs/minibosses only one weapon vs an arraylist

@@ -14,12 +14,6 @@ import java.util.ArrayList;
 
 public class Hero extends CharacterManager{
 
-    public int x, y;
-    public int speed;
-
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
-
 
     ArrayList<Weapon> ownedWeapons = new ArrayList<>(); // MAke all acharacters own an arraylist, of only one weapon
     ArrayList<Item> ownedItems = new ArrayList<>();
@@ -121,11 +115,7 @@ public class Hero extends CharacterManager{
     GamePanel gp;
     // Moving and changing player's coordinates on the screen
     KeyHandler keyH;
-    int playerY;
-    int playerX;
-    int playerSpeed;
-    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
-    public String direction;
+
 
 
 
@@ -142,6 +132,8 @@ public class Hero extends CharacterManager{
         this.gp = gp;
         this.keyH = keyH;
 
+
+
         setDeaultValues();
         getPlayerImage ();
 
@@ -149,9 +141,9 @@ public class Hero extends CharacterManager{
 
 
     public void setDeaultValues(){
-        playerY= 100;
-        playerX= 100;
-        playerSpeed = 4;
+        y = 100;
+        x = 100;
+        speed = 4;
 
         direction = "down";
     }
@@ -194,16 +186,16 @@ public class Hero extends CharacterManager{
        if(keyH.rightPressed == true || keyH.leftPressed == true|| keyH.upPressed == true || keyH.downPressed == true){
            if(keyH.upPressed == true) {
                direction = "up";
-               playerY -= playerSpeed;
+               y -= speed;
            }else if (keyH.downPressed == true) {
                direction = "down";
-               playerY += playerSpeed;
+               y += speed;
            }else if(keyH.leftPressed == true) {
                direction = "left";
-               playerX -= playerSpeed;
+               x -= speed;
            }else if(keyH.rightPressed == true) {
                direction = "right";
-               playerX += playerSpeed;
+               x += speed;
            }
            spriteCounter++;
 
@@ -300,7 +292,7 @@ public class Hero extends CharacterManager{
 
         }
         // Probably move this eventually too
-        g2.drawImage(img, playerX, playerY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(img, x, y, gp.tileSize, gp.tileSize, null);
     }
 
 }
