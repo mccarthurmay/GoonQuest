@@ -1,10 +1,13 @@
 package Backend.Characters;
+import Backend.Items.Item;
+import Backend.Items.StatusEffect;
 import Backend.Weapons.Weapon;
 import Display.GamePanel;
 import Display.KeyHandler;
 
 import java.awt.image.BufferedImage;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Random;
 
 abstract public class CharacterManager {
@@ -82,6 +85,63 @@ abstract public class CharacterManager {
         System.out.println("Got hit for " + hitVal);
         System.out.println(name + " HP is now " + stats.HP);
     }
+    ArrayList<Item> ownedItems = new ArrayList<>();
+
+
+
+    public double getHP(){
+        return stats.getHP();
+    }
+    public void setHP(Double newHP){
+        stats.setHP(newHP);
+    }
+    public double getDamage(){
+        return stats.attackMod;
+    }
+    public void setDamage(Double newDamage){
+        stats.setAttackMod(newDamage);
+    }
+    public double getCrit(){
+        return stats.crit;
+    }
+    public void setCrit(Double newCrit){
+        stats.setCrit(newCrit);
+    }
+    public double getDefense(){
+        return stats.defMod;
+    }
+    public void setDefense(Double newDefense){
+        stats.setDefMod(newDefense);
+    }
+    public double getHitChance(){
+        return stats.hitChance;
+    }
+    public void setHitChance(Double newHitChance){
+        stats.setHitChance(newHitChance);
+    }
+
+    public Stats getStats() {
+        return stats;
+    }
+
+    public void reduceBuff(StatusEffect buff){
+        buff.reduceDuration(this);
+    }
+    public void reduceDebuff(StatusEffect debuff){
+        debuff.reduceDuration(this);
+    }
+
+    public String toString() {
+        return "EnemyType {" +
+                "Name=" + name +
+                ", ownedItems=" + ownedItems +
+                ", Weapon='" + weapon + '\'' +
+                ", stats=" + stats +
+                '}';
+    }
+
+
+
 
 }
 
