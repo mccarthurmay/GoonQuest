@@ -2,20 +2,16 @@ package Backend.Characters;
 import Backend.Items.*;
 import Backend.Weapons.*;
 
+import java.util.ArrayList;
+
 public class Enemy extends CharacterManager{
-    Stats stats;
-    Weapon weapon;
-    Item item;
 
-
-    public Enemy(Stats stats, Weapon weapon, String name){
+    public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems){
         super(stats, weapon, name);
-        this.stats = stats;
-        this.weapon = weapon;
-        this.name = name;
+        this.ownedItems = ownedItems;
     }
 
-    public Stats getStats() {
-        return stats;
-    }
 }
+
+
+

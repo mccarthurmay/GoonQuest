@@ -9,7 +9,7 @@ public abstract class Item {
         this.name = name;
     }
 
-    public abstract void useItem(Hero hero);
+    public abstract void useItem(CharacterManager character);
 
 
 }

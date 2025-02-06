@@ -2,11 +2,13 @@ package Backend.Items;
 
 import Backend.Characters.Hero;
 
-public class DmgItems extends Item {
+// Basically just gonna make this affect the character that it is applied to. Follows logic of StatusEffect.
+// If we want enemy to get damaged, consume the damage item and do enemy.useItem()
+
+public class DmgItems {
     double dmg;
 
     DmgItems(String name, double dmg) {
-        super(name);
         this.dmg = dmg;
     }
 

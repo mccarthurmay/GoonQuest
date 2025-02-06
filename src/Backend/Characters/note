@@ -19,8 +19,83 @@ Use interfaces
     }
 
 
+Enemies should have a list of items too... on attack they have a 25% chance to use 1 of the items on their list.
+
+Add code below to characterManager.
 
 
+
+    ArrayList<Item> ownedItems = new ArrayList<>();
+
+
+
+    public double getHP(){
+        return stats.getHP();
+    }
+    public void setHP(Double newHP){
+        stats.setHP(newHP);
+    }
+    public double getDamage(){
+        return stats.attackMod;
+    }
+    public void setDamage(Double newDamage){
+        stats.setAttackMod(newDamage);
+    }
+    public double getCrit(){
+        return stats.crit;
+    }
+    public void setCrit(Double newCrit){
+        stats.setCrit(newCrit);
+    }
+    public double getDefense(){
+        return stats.defMod;
+    }
+    public void setDefense(Double newDefense){
+        stats.setDefMod(newDefense);
+    }
+    public double getHitChance(){
+        return stats.hitChance;
+    }
+    public void setHitChance(Double newHitChance){
+        stats.setHitChance(newHitChance);
+    }
+
+    public Stats getStats() {
+        return stats;
+    }
+
+    public void reduceBuff(StatusEffect buff){
+        buff.reduceDuration(this);
+    }
+    public void reduceDebuff(StatusEffect debuff){
+        debuff.reduceDuration(this);
+    }
+
+    public String toString() {
+        return "EnemyType {" +
+                "Name=" + name +
+                ", ownedItems=" + ownedItems +
+                ", Weapon='" + weapon + '\'' +
+                ", stats=" + stats +
+                '}';
+    }
+
+    public void useItem(Item item){
+        ownedItems.remove(item);
+        item.useItem(this);
+    }
+
+
+
+Make it so hero doesn't save position. That's just extra work for such tiny results. Instead, only save what map they're currently on.
+If we saved midgame, we'd have to figure out how to save everything on the map, including enemies etc.
+
+Make toString for weapons. Also make twoString a variable in characterManager... all but hero will have nonoverrwritten tostring
+
+Change CharacterManager to accept OwnedItems
+
+
+remove all duplicate things in Hero
 
 
             if (item instanceof StatusEffect){

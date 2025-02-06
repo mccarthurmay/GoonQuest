@@ -1,4 +1,5 @@
 package Backend.Items;
+import Backend.Characters.CharacterManager;
 import Backend.Characters.Hero;
 
 public class StatusEffect extends Item{
@@ -24,78 +25,78 @@ public class StatusEffect extends Item{
         this.duration = duration;
     }
 
-    public void useItem(Hero hero) {
+    public void useItem(CharacterManager character) {
         if (buff) { // if buff is true, then give buff
-            sortBuff(hero);
+            sortBuff(character);
         } else { // else buff is false, give debuff
-            sortDebuff(hero);
+            sortDebuff(character);
         }
     }
 
-    public void sortBuff(Hero hero){
+    public void sortBuff(CharacterManager character){
         if (classification.equals("defense")){
-            double defense = hero.getDefense();
+            double defense = character.getDefense();
             double newDefense = defense + numChange;
-            hero.setDefense(newDefense);
+            character.setDefense(newDefense);
         } else if (classification.equals("hp")){
-            double HP = hero.getHP();
+            double HP = character.getHP();
             double newHP = HP + numChange;
-            hero.setHP(newHP);
+            character.setHP(newHP);
         } else if (classification.equals("dmg")) {
-            double dmg = hero.getDamage();
+            double dmg = character.getDamage();
             double newDmg = dmg + numChange;
-            hero.setDamage(newDmg);
+            character.setDamage(newDmg);
         } else if (classification.equals("crit")){
-            double crit = hero.getCrit();
+            double crit = character.getCrit();
             double newCrit = crit + numChange;
-            hero.setCrit(newCrit);
+            character.setCrit(newCrit);
         } else if (classification.equals("hitchance")){
-            double hc = hero.getHitChance();
+            double hc = character.getHitChance();
             double newHc = hc + numChange;
-            hero.setHitChance(newHc);
+            character.setHitChance(newHc);
         }
     }
 
-    public void sortDebuff(Hero hero){
+    public void sortDebuff(CharacterManager character){
         if (classification.equals("defense")){
-            double defense = hero.getDefense();
+            double defense = character.getDefense();
             double newDefense = defense - numChange;
-            hero.setDefense(newDefense);
+            character.setDefense(newDefense);
         } else if (classification.equals("hp")){
-            double HP = hero.getHP();
+            double HP = character.getHP();
             double newHP = HP - numChange;
-            hero.setHP(newHP);
+            character.setHP(newHP);
         } else if (classification.equals("dmg")) {
-            double dmg = hero.getDamage();
+            double dmg = character.getDamage();
             double newDmg = dmg - numChange;
-            hero.setDamage(newDmg);
+            character.setDamage(newDmg);
         } else if (classification.equals("crit")){
-            double crit = hero.getCrit();
+            double crit = character.getCrit();
             double newCrit = crit - numChange;
-            hero.setCrit(newCrit);
+            character.setCrit(newCrit);
         } else if (classification.equals("hitchance")){
-            double hc = hero.getHitChance();
+            double hc = character.getHitChance();
             double newHc = hc - numChange;
-            hero.setHitChance(newHc);
+            character.setHitChance(newHc);
         }
     }
 
-    public void removeBuff(Hero hero){
+    public void removeBuff(CharacterManager character){
         if (buff){
-            sortDebuff(hero);
+            sortDebuff(character);
         }
         else{
-            sortBuff(hero);
+            sortBuff(character);
         }
     }
 
     // Debuffs should never lower duration... can fix later when battle is created
-    public void reduceDuration(Hero hero){
+    public void reduceDuration(CharacterManager character){
         if (duration > 0) {
             duration--;
         }
         if (duration == 0) {
-            removeBuff(hero);
+            removeBuff(character);
             duration--; // Makes it so removeBuff is only ran once
         }
 
