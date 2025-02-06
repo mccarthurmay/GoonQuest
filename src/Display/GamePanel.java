@@ -1,5 +1,6 @@
 package Display;
 import Backend.Characters.Hero;
+import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -9,11 +10,12 @@ public class GamePanel extends JPanel implements Runnable {
     public  int originalTileSize = 16;
     public  int scale = 3;
     public int tileSize = originalTileSize * scale;
-    final int maxScreenCol= 16;
-    final int maxScreenRow= 12;
-    final int screenWidth = maxScreenCol * tileSize;
-    final int screenHeight = maxScreenRow * tileSize;
+    public final int maxScreenCol= 16;
+    public final int maxScreenRow= 12;
+    public final int screenWidth = maxScreenCol * tileSize;
+    public final int screenHeight = maxScreenRow * tileSize;
 
+    TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Hero hero = new Hero(this, keyH);
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        tileM.draw(g2);
         hero.draw(g2);
         g2.dispose();
     }
