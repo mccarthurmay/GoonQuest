@@ -7,6 +7,15 @@ public class StatusEffect extends Item{
     double numChange;
     int duration; //later used for duration of rounds
 
+
+    /**
+     * Give buff/debuff to any character
+     * @param name Input name of effect
+     * @param classification Input class: "defense", "hp", "dmg", "crit", or "hitchance"
+     * @param buff Input bool of buff; true = Buff, false = DeBuff
+     * @param numChange Input the value of the change. ex, 20 with false is -20 whatevers (dmg maybe)
+     * @param duration Input number of rounds this effect will last.
+     */
     public StatusEffect(String name, String classification, boolean buff, double numChange, int duration) {
         super(name);
         this.classification = classification;
@@ -23,12 +32,12 @@ public class StatusEffect extends Item{
         }
     }
 
-        public void sortBuff(Hero hero){
+    public void sortBuff(Hero hero){
         if (classification.equals("defense")){
             double defense = hero.getDefense();
             double newDefense = defense + numChange;
             hero.setDefense(newDefense);
-        } else if (classification.equals("health")){
+        } else if (classification.equals("hp")){
             double HP = hero.getHP();
             double newHP = HP + numChange;
             hero.setHP(newHP);
@@ -52,7 +61,7 @@ public class StatusEffect extends Item{
             double defense = hero.getDefense();
             double newDefense = defense - numChange;
             hero.setDefense(newDefense);
-        } else if (classification.equals("health")){
+        } else if (classification.equals("hp")){
             double HP = hero.getHP();
             double newHP = HP - numChange;
             hero.setHP(newHP);
@@ -81,12 +90,17 @@ public class StatusEffect extends Item{
     }
 
     // Debuffs should never lower duration... can fix later when battle is created
-    public void reduceDuration(){
-        if (duration > 1) {
+    public void reduceDuration(Hero hero){
+        if (duration > 0) {
             duration--;
+        }
+        if (duration == 0) {
+            removeBuff(hero);
+            duration--; // Makes it so removeBuff is only ran once
         }
 
     }
+
     public int getDuration(){
         return duration;
     }

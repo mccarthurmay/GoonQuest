@@ -27,6 +27,14 @@ public class Hero extends CharacterManager{
     String name;
     Stats stats;
 
+    /**
+     * Create playable hero for game
+     * @param name Input name
+     * @param position Input position (need to be changed)
+     * @param ownedWeapons Input ArrayList of owned weapons (default: Stick)
+     * @param ownedItems Input ArrayList of owned items
+     * @param stats Input stats of hero
+     */
     public Hero(String name, Double position, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats) {
         super(stats, ownedWeapons.get(0), name);
         this.name = name;
@@ -89,10 +97,10 @@ public class Hero extends CharacterManager{
 
     // Will have different situations where a buff should be reduced
     public void reduceBuff(StatusEffect buff){
-        buff.reduceDuration();
+        buff.reduceDuration(this);
     }
     public void reduceDebuff(StatusEffect debuff){
-        debuff.reduceDuration();
+        debuff.reduceDuration(this);
     }
 
     // obtain weapon
