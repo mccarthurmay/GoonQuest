@@ -16,14 +16,7 @@ public class StatusEffect extends Item{
         this.duration = duration;
     }
 
-    public void giveBuff(Hero hero) { // remove 1 duration after each battle
-        if (duration > 0) {
-            applyBuff(hero);
-            duration--;
-        } else {
-            removeBuff(hero);
-        }
-    }
+
 
     public void applyBuff(Hero hero){
         if (buff){ // if buff is true, then give buff
@@ -56,6 +49,14 @@ public class StatusEffect extends Item{
             double dmg = hero.getDamage();
             double newDmg = dmg + numChange;
             hero.setDamage(newDmg);
+        } else if (classification.equals("crit")){
+            double crit = hero.getCrit();
+            double newCrit = crit + numChange;
+            hero.setCrit(newCrit);
+        } else if (classification.equals("hitchance")){
+            double hc = hero.getHitChance();
+            double newHc = hc + numChange;
+            hero.setHitChance(newHc);
         }
     }
 
@@ -72,11 +73,25 @@ public class StatusEffect extends Item{
             double dmg = hero.getDamage();
             double newDmg = dmg - numChange;
             hero.setDamage(newDmg);
+        } else if (classification.equals("crit")){
+            double crit = hero.getCrit();
+            double newCrit = crit + numChange;
+            hero.setCrit(newCrit);
+        } else if (classification.equals("hitchance")){
+            double hc = hero.getHitChance();
+            double newHc = hc + numChange;
+            hero.setHitChance(newHc);
         }
     }
 
-
+    // Since hero only runs this once, need a fix. Currently, max duration can be 1 or else it's forever
     public void useItem(Hero hero) {
+        if (duration > 0) {
+            applyBuff(hero);
+            duration--;
+        } else {
+            removeBuff(hero);
+        }
     }
 
 }

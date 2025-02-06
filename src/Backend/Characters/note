@@ -17,3 +17,14 @@ Use interfaces
 
         }
     }
+
+
+
+
+
+
+            if (item instanceof StatusEffect){
+                item.useItem(this);
+            }
+
+            -- maybe
