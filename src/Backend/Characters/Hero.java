@@ -191,34 +191,36 @@ public class Hero extends CharacterManager{
 
 
     public void update() {
-        if(keyH.upPressed == true) {
-            direction = "up";
-            playerY -= playerSpeed;
-        }else if (keyH.downPressed == true) {
-            direction = "down";
-            playerY += playerSpeed;
-        }else if(keyH.leftPressed == true) {
-            direction = "left";
-            playerX -= playerSpeed;
-        }else if(keyH.rightPressed == true) {
-            direction = "right";
-            playerX += playerSpeed;
-        }
-        spriteCounter++;
+       if(keyH.rightPressed == true || keyH.leftPressed == true|| keyH.upPressed == true || keyH.downPressed == true){
+           if(keyH.upPressed == true) {
+               direction = "up";
+               playerY -= playerSpeed;
+           }else if (keyH.downPressed == true) {
+               direction = "down";
+               playerY += playerSpeed;
+           }else if(keyH.leftPressed == true) {
+               direction = "left";
+               playerX -= playerSpeed;
+           }else if(keyH.rightPressed == true) {
+               direction = "right";
+               playerX += playerSpeed;
+           }
+           spriteCounter++;
 
-        if(spriteCounter > 10) {
-            if(spriteNum == 1){
-                spriteNum = 2;
-            }else if(spriteNum == 2){
-                spriteNum = 3;
-            }else if(spriteNum == 3){
-                spriteNum = 4;
-            }else if(spriteNum == 4){
-                spriteNum = 1;
-            }
-            spriteCounter = 0;
+           if(spriteCounter > 10) {
+               if(spriteNum == 1){
+                   spriteNum = 2;
+               }else if(spriteNum == 2){
+                   spriteNum = 3;
+               }else if(spriteNum == 3){
+                   spriteNum = 4;
+               }else if(spriteNum == 4){
+                   spriteNum = 1;
+               }
+               spriteCounter = 0;
 
-        }
+           }
+       }
     }
 
     public void draw(Graphics g2) {
