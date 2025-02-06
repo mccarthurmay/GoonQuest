@@ -23,7 +23,7 @@ public class CharTest2 {
         System.out.println(Christian);
 
 
-        Christian.useItem(milk, Christian);
+        Christian.useItem(milk);
         System.out.println(Christian);
 
         Axe greatAxe = new Axe("Awesome Axe", 100,"fire", 0.1, 1);

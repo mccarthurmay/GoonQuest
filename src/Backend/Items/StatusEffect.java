@@ -3,7 +3,6 @@ import Backend.Characters.Hero;
 
 public class StatusEffect extends Item{
     String classification; // defense, health, dmg, etc...
-    //int rounds; // number of rounds the buff lasts for?
     boolean buff; // can rename, basically is it a buff or debuff?
     double numChange;
     int duration; //later used for duration of rounds
@@ -16,27 +15,15 @@ public class StatusEffect extends Item{
         this.duration = duration;
     }
 
-
-
-    public void applyBuff(Hero hero){
-        if (buff){ // if buff is true, then give buff
+    public void useItem(Hero hero) {
+        if (buff) { // if buff is true, then give buff
             sortBuff(hero);
-        }
-        else{ // else buff is false, give debuff
+        } else { // else buff is false, give debuff
             sortDebuff(hero);
         }
     }
 
-    public void removeBuff(Hero hero){
-        if (buff){
-            sortDebuff(hero);
-        }
-        else{
-            sortDebuff(hero);
-        }
-    }
-
-    public void sortBuff(Hero hero){
+        public void sortBuff(Hero hero){
         if (classification.equals("defense")){
             double defense = hero.getDefense();
             double newDefense = defense + numChange;
@@ -75,24 +62,38 @@ public class StatusEffect extends Item{
             hero.setDamage(newDmg);
         } else if (classification.equals("crit")){
             double crit = hero.getCrit();
-            double newCrit = crit + numChange;
+            double newCrit = crit - numChange;
             hero.setCrit(newCrit);
         } else if (classification.equals("hitchance")){
             double hc = hero.getHitChance();
-            double newHc = hc + numChange;
+            double newHc = hc - numChange;
             hero.setHitChance(newHc);
         }
     }
 
-    // Since hero only runs this once, need a fix. Currently, max duration can be 1 or else it's forever
-    public void useItem(Hero hero) {
-        if (duration > 0) {
-            applyBuff(hero);
-            duration--;
-        } else {
-            removeBuff(hero);
+    public void removeBuff(Hero hero){
+        if (buff){
+            sortDebuff(hero);
+        }
+        else{
+            sortBuff(hero);
         }
     }
+
+    // Debuffs should never lower duration... can fix later when battle is created
+    public void reduceDuration(){
+        if (duration > 1) {
+            duration--;
+        }
+
+    }
+    public int getDuration(){
+        return duration;
+    }
+
+    // Battle logic:
+    // continually call "if buffWasUsed" then "reduce duration" "if duration == 0, removeBuff"
+    // just have to track "if buffWasUsed" variable
 
 }
 

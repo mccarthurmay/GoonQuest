@@ -82,9 +82,17 @@ public class Hero extends CharacterManager{
 
     // use item
 
-    public void useItem(Item item, Hero hero){
+    public void useItem(Item item){
         ownedItems.remove(item);
         item.useItem(this);
+    }
+
+    // Will have different situations where a buff should be reduced
+    public void reduceBuff(StatusEffect buff){
+        buff.reduceDuration();
+    }
+    public void reduceDebuff(StatusEffect debuff){
+        debuff.reduceDuration();
     }
 
     // obtain weapon

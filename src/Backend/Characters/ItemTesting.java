@@ -18,12 +18,12 @@ public class ItemTesting {
         HpItem milk = new HpItem("milk", 10);
 
         // Create deBuff item - NOTE, due to item deleting from list, the logic only allows a duration of 1 or else it's forever
-        StatusEffect poisonmilk = new StatusEffect("Poison Milk", "health", false, 1, 1);
+        StatusEffect poisonarrow = new StatusEffect("Poison Arrow", "health", false, 20, 1);
 
         // Add items
         ArrayList<Item> items = new ArrayList<>();
         items.add(milk);
-        items.add(poisonmilk);
+        items.add(poisonarrow);
 
         // Create stats
         Stats stat = new Stats(2,15,100,5,100);
@@ -33,15 +33,15 @@ public class ItemTesting {
 
         // Show how to use item
         System.out.println(Christian);
-        Christian.useItem(milk, Christian);
+        Christian.useItem(milk);
         System.out.println(Christian);
 
         // Show how to use buff
-        Christian.useItem(poisonmilk, Christian);
-        System.out.println(Christian);
+        Christian.useItem(poisonarrow);
         System.out.println(Christian);
 
-        // BROKEN, WILL FIX DW BOUT IT
+        // Oh Christian attacked!!! Monster defended.
+
 
 
 
