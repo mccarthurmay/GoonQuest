@@ -5,6 +5,7 @@ import Backend.WorldBuilding.TileManager;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
@@ -29,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public Hero hero = HeroFactory.createDefaultHero(this, keyH);
 
+
     // set player's default position * DELETE LATER*
     int playerX = 100;
     int playerY = 100;
@@ -45,9 +47,14 @@ public class GamePanel extends JPanel implements Runnable {
     // Add a buffer for entire game -- no buffer causes flickering
     private BufferedImage gameBuffer;
 
+    // Add fields for fog regions
+    private ArrayList<Rectangle> foggyRegions;
+    private boolean isInFoggyRegion = false;
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.WHITE);
+
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
@@ -55,6 +62,21 @@ public class GamePanel extends JPanel implements Runnable {
         // Initialize game buffer
         gameBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
 
+
+        // define foggy regions with coordinates
+        foggyRegions = new ArrayList<>();
+        // EXAMPLEEEEEE
+        addFoggyRegion(18,18,5,5);
+    }
+    private boolean checkFoggyRegion() {
+        Point playerWorldPos = new Point(hero.worldX, hero.worldY);
+
+        for (Rectangle region : foggyRegions) {
+            if (region.contains(playerWorldPos)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void startGameThread() {
@@ -91,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         hero.update();
+        isInFoggyRegion = checkFoggyRegion();
     }
 
 
@@ -108,43 +131,45 @@ public class GamePanel extends JPanel implements Runnable {
         hero.draw(bufferG);
 
         // Create fog layer
-        BufferedImage fogLayer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D fogG = fogLayer.createGraphics();
+        if (isInFoggyRegion) {  // Fix this typo in your field declaration too
+            BufferedImage fogLayer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D fogG = fogLayer.createGraphics();
 
-        // Fill fog layer with black
-        fogG.setColor(new Color(0,0,0));
-        fogG.fillRect(0, 0, screenWidth, screenHeight);
+            // Fill fog layer with black
+            fogG.setColor(new Color(0, 0, 0));
+            fogG.fillRect(0, 0, screenWidth, screenHeight);
 
-        // Create gradient for smooth visibility circle
-        RadialGradientPaint gradient = new RadialGradientPaint(
-                hero.screenX + tileSize/2,
-                hero.screenY + tileSize/2,
-                visibilityRadius,
-                new float[]{0.0f, 0.5f, 1.0f}, // Percent of circle
-                new Color[]{
-                        new Color(0,0,0, 255), // Center is fully visible
-                        new Color(0,0,0, 150), // Middle mostly visible
-                        new Color(0,0,0, 50) // Edge is darkest
-                }
-        );
+            // Create gradient for smooth visibility circle
+            RadialGradientPaint gradient = new RadialGradientPaint(
+                    hero.screenX + tileSize / 2,
+                    hero.screenY + tileSize / 2,
+                    visibilityRadius,
+                    new float[]{0.0f, 0.5f, 1.0f}, // Percent of circle
+                    new Color[]{
+                            new Color(0, 0, 0, 255), // Center is fully visible
+                            new Color(0, 0, 0, 150), // Middle mostly visible
+                            new Color(0, 0, 0, 50) // Edge is darkest
+                    }
+            );
 
-        // Apply gradient to create visibility circle
-        fogG.setComposite(AlphaComposite.DstOut);
-        fogG.setPaint(gradient);
-        fogG.fillOval(
-                hero.screenX + tileSize/2 - visibilityRadius,
-                hero.screenY + tileSize/2 - visibilityRadius,
-                visibilityRadius *2,
-                visibilityRadius *2
-        );
+            // Apply gradient to create visibility circle
+            fogG.setComposite(AlphaComposite.DstOut);
+            fogG.setPaint(gradient);
+            fogG.fillOval(
+                    hero.screenX + tileSize / 2 - visibilityRadius,
+                    hero.screenY + tileSize / 2 - visibilityRadius,
+                    visibilityRadius * 2,
+                    visibilityRadius * 2
+            );
 
 
-        // Apply fog to the game buffer
-        bufferG.setComposite(fogComposite);
-        bufferG.drawImage(fogLayer, 0, 0, null);
+            // Apply fog to the game buffer
+            bufferG.setComposite(fogComposite);
+            bufferG.drawImage(fogLayer, 0, 0, null);
 
-        // Dispose fog first
-        fogG.dispose();
+            // Dispose fog first
+            fogG.dispose();
+        }
 
         // Draw the final composed buffer to the screen
         g2.drawImage(gameBuffer, 0, 0, null);
@@ -160,6 +185,20 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setFogDensity(float density){
         this.fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, density);
+    }
+
+    public void addFoggyRegion(int tileX, int tileY, int width, int height) {
+        foggyRegions.add(new Rectangle(
+                tileX * tileSize,
+                tileY * tileSize,
+                width * tileSize,
+                height * tileSize
+        ));
+    }
+    public void removeFoggyRegion(int index) {
+        if (index >= 0 && index < foggyRegions.size()) {
+            foggyRegions.remove(index);
+        }
     }
 
 }
