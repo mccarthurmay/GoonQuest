@@ -35,7 +35,7 @@ public class Weapon {
         this.message = message; // We can make messages unique for every weapon
 
         if (spritePath == null || spritePath.isEmpty()) {
-            spritePath = "./src/Backend/Images/weaponSprites/axe.png";  // If "" or null, this is the default sprite. For testing purposes, saves a lot of time.
+            spritePath = "./src/Backend/Images/weaponSprites/default.png";  // If "" or null, this is the default sprite. For testing purposes, saves a lot of time.
         }
         this.sprite = ImageIO.read(new File(spritePath));
     }
