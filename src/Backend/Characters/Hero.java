@@ -57,6 +57,17 @@ public class Hero extends CharacterManager {
     }
 
     /**
+     * Old constructor for character testing
+     */
+    public Hero(String name, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats) {
+        super(stats, ownedWeapons.get(0), name);
+        this.name = name;
+        this.ownedWeapons = ownedWeapons;
+        this.ownedItems = ownedItems;
+        this.stats = stats;
+
+    }
+    /**
      * Old constructor for display testing, so you don't gotta type all that shit.
      */
     public Hero(GamePanel gp, KeyHandler keyH) {
