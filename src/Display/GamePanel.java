@@ -42,6 +42,8 @@ public class GamePanel extends JPanel implements Runnable {
     private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.99f);
     private int visibilityRadius = 100;
 
+    // Add a buffer for entire game -- no buffer causes flickering
+    private BufferedImage gameBuffer;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -50,6 +52,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
+        // Initialize game buffer
+        gameBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
 
     }
 
@@ -94,9 +98,10 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // Create buffer to draw shit in memory before in world, prevents flickering
-        BufferedImage buffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bufferG = buffer.createGraphics();
+        Graphics2D bufferG = gameBuffer.createGraphics();
+
+        bufferG.setColor(getBackground());
+        bufferG.fillRect(0, 0, screenWidth, screenHeight);
 
         // Draw out normal world
         tileM.draw(bufferG);
@@ -134,14 +139,18 @@ public class GamePanel extends JPanel implements Runnable {
         );
 
 
-        // Actually draw the shit out
-        g2.drawImage(buffer, 0, 0, null);
-        g2.setComposite(fogComposite);
-        g2.drawImage(fogLayer, 0, 0, null);
+        // Apply fog to the game buffer
+        bufferG.setComposite(fogComposite);
+        bufferG.drawImage(fogLayer, 0, 0, null);
+
+        // Dispose fog first
+        fogG.dispose();
+
+        // Draw the final composed buffer to the screen
+        g2.drawImage(gameBuffer, 0, 0, null);
 
         // Clear memory
         bufferG.dispose();
-        fogG.dispose();
         g2.dispose();
     }
 
