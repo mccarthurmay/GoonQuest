@@ -4,6 +4,8 @@ import Backend.Weapons.*;
 import Display.GamePanel;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class Enemy extends CharacterManager{
 
     public Enemy(GamePanel gp){
         super(gp);
+        this.gp = gp;
         direction = "down";
         speed = 3;
         getImage();
@@ -25,29 +28,22 @@ public class Enemy extends CharacterManager{
 
     public void getImage() {
         try {
-            down1 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            down2 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            down3 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            down4 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-
-            right1 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            right2 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            right3 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            right4 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-
-            up1 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            up2 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            up3 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            up4 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-
-            left1 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            left2 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            left3 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
-            left4 = ImageIO.read(new File("src/Backend/Images/sprites/SH_Lham_Dearg.png"));
+            down1 = ImageIO.read(new File("src/Backend/Images/sprites/glargo_red.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
     }
+    public void draw(Graphics2D g2){
+        BufferedImage image = down1;
+
+        int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
+        int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
+
+        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
+    }
+
 
 
 

@@ -9,6 +9,8 @@ public class Main{
 
 
         GamePanel gamePanel = new GamePanel();
+        gamePanel.setupGame();
+
         window.add(gamePanel);
         window.pack();
 
@@ -16,6 +18,7 @@ public class Main{
         window.setVisible(true);
 
         gamePanel.startGameThread();
+
     }
 
 }

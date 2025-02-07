@@ -28,8 +28,10 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
     public Hero hero = HeroFactory.createDefaultHero(this, keyH);
-    public Enemy lham[] = new Enemy[10]; // can have up to 10 enemies
+    public Enemy enemy[] = new Enemy[10]; // can have up to 10 enemies
+
 
 
     // set player's default position * DELETE LATER*
@@ -79,6 +81,11 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         return false;
+    }
+
+    public void setupGame() { // add things to the game world, play music, etc
+        aSetter.setEnemy();
+        System.out.println("enemy set");
     }
 
     public void startGameThread() {
@@ -131,6 +138,14 @@ public class GamePanel extends JPanel implements Runnable {
         // Draw out normal world
         tileM.draw(bufferG);
         hero.draw(bufferG);
+
+        for (int i = 0; i < enemy.length; i++){ // draws all enemies
+            if (enemy[i] != null){
+                enemy[i].draw(bufferG);
+            }
+        }
+
+
 
         // Create fog layer
         if (isInFoggyRegion) {
