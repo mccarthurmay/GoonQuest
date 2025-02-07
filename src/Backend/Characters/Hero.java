@@ -37,6 +37,11 @@ public class Hero extends CharacterManager{
         this.ownedItems = ownedItems;
         this.stats = stats;
 
+        // Christian while drew at susssies
+
+        screenX = gp.screenWidth/2;
+        screenY = gp.screenHeight/2;
+
     }
 
     @Override
@@ -117,13 +122,8 @@ public class Hero extends CharacterManager{
     KeyHandler keyH;
 
 
-
-
-
-
-
-
-
+    public final int screenX;
+    public final int screenY;
     /**
      * Christian- I added a new constructor to check display on the screen
      */
@@ -132,17 +132,21 @@ public class Hero extends CharacterManager{
         this.gp = gp;
         this.keyH = keyH;
 
+        screenX = gp.screenWidth/2 - (gp.tileSize/2);
+        screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
 
-        setDeaultValues();
+
+
+        setDefaultValues();
         getPlayerImage ();
 
     }
 
 
-    public void setDeaultValues(){
-        y = 100;
-        x = 100;
+    public void setDefaultValues(){
+        worldY = gp.tileSize * 20;
+        worldX = gp.tileSize * 20;
         speed = 4;
 
         direction = "down";
@@ -186,16 +190,16 @@ public class Hero extends CharacterManager{
        if(keyH.rightPressed == true || keyH.leftPressed == true|| keyH.upPressed == true || keyH.downPressed == true){
            if(keyH.upPressed == true) {
                direction = "up";
-               y -= speed;
+               worldY -= speed;
            }else if (keyH.downPressed == true) {
                direction = "down";
-               y += speed;
+               worldY += speed;
            }else if(keyH.leftPressed == true) {
                direction = "left";
-               x -= speed;
+               worldX -= speed;
            }else if(keyH.rightPressed == true) {
                direction = "right";
-               x += speed;
+               worldX += speed;
            }
            spriteCounter++;
 
@@ -292,7 +296,7 @@ public class Hero extends CharacterManager{
 
         }
         // Probably move this eventually too
-        g2.drawImage(img, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
 }

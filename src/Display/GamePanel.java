@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
-    public  int originalTileSize = 16;
+    public  int originalTileSize = 20;
     public  int scale = 3;
     public int tileSize = originalTileSize * scale;
     public final int maxScreenCol= 16;
@@ -15,10 +15,17 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = maxScreenCol * tileSize;
     public final int screenHeight = maxScreenRow * tileSize;
 
+    // World Settings
+    public final int maxWorldCol = 36;
+    public final int maxWorldRow = 36;
+    public final int worldWidth  = tileSize*maxWorldCol;
+    public final int WorldHeight = tileSize * maxWorldRow;
+
+
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Hero hero = new Hero(this, keyH);
+    public Hero hero = new Hero(this, keyH);
 
     // set player's default position * DELETE LATER*
     int playerX = 100;
