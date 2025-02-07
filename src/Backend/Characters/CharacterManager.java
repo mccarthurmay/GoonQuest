@@ -5,6 +5,7 @@ import Backend.Weapons.Weapon;
 import Display.GamePanel;
 import Display.KeyHandler;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.security.Key;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ abstract public class CharacterManager {
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
+
+    public Rectangle solidArea;
+    public boolean collisionsOn = false;
 
 
 

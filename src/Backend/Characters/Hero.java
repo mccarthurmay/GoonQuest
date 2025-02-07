@@ -136,6 +136,13 @@ public class Hero extends CharacterManager{
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
 
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+
+
 
 
         setDefaultValues();
@@ -187,20 +194,43 @@ public class Hero extends CharacterManager{
 
 
     public void update() {
+
+
+
        if(keyH.rightPressed == true || keyH.leftPressed == true|| keyH.upPressed == true || keyH.downPressed == true){
            if(keyH.upPressed == true) {
                direction = "up";
-               worldY -= speed;
            }else if (keyH.downPressed == true) {
                direction = "down";
-               worldY += speed;
            }else if(keyH.leftPressed == true) {
                direction = "left";
-               worldX -= speed;
            }else if(keyH.rightPressed == true) {
                direction = "right";
-               worldX += speed;
            }
+
+           //Check Tile Collision
+           collisionsOn = false;
+           gp.collisionChecker.checkTile(this);
+
+           if (collisionsOn == false) {
+               switch (direction) {
+                   case "up":
+                       worldY -= speed;
+                       break;
+                   case "down":
+                       worldY += speed;
+                       break;
+                   case "left":
+                       worldX -= speed;
+                       break;
+                   case "right":
+                       worldX += speed;
+                       break;
+               }
+           }
+
+
+
            spriteCounter++;
 
            if(spriteCounter > 10) {
