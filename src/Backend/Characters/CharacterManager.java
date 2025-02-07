@@ -64,10 +64,10 @@ abstract public class CharacterManager {
             weapon.attack(); // print out a special message
             if (critDecider < stats.crit){
                 System.out.println("Critical hit! Double damage!");
-                hitVal = 2* (stats.attackMod + weapon.getDmg());
+                hitVal = 2* (stats.attackMod + weapon.getDamage());
             }
             else {
-               hitVal = stats.attackMod + weapon.getDmg();
+               hitVal = stats.attackMod + weapon.getDamage();
             }
         }
         foe.takeDamage(hitVal);
