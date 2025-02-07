@@ -65,6 +65,9 @@ public class Hero extends CharacterManager {
         this.ownedWeapons = ownedWeapons;
         this.ownedItems = ownedItems;
         this.stats = stats;
+        // Default values for screen position
+        this.screenX = 0;  // or some other default value
+        this.screenY = 0;  // or some other default value
 
     }
     /**
