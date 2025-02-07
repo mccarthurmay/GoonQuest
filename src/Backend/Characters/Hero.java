@@ -11,130 +11,60 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+public class Hero extends CharacterManager {
+    // Game mechanics fields
+    private ArrayList<Weapon> ownedWeapons = new ArrayList<>();
+    private ArrayList<Item> ownedItems = new ArrayList<>();
+    private String name;
+    private Stats stats;
 
-public class Hero extends CharacterManager{
-
-
-    ArrayList<Weapon> ownedWeapons = new ArrayList<>(); // MAke all acharacters own an arraylist, of only one weapon
-    ArrayList<Item> ownedItems = new ArrayList<>();
-    Double position;
-    String name;
-    Stats stats;
+    // Display and movement fields
+    private GamePanel gp;
+    private KeyHandler keyH;
+    public final int screenX;
+    public final int screenY;
+    private BufferedImage img = null;
 
     /**
-     * Create playable hero for game
-     * @param name Input name
-     * @param position Input position (need to be changed)
-     * @param ownedWeapons Input ArrayList of owned weapons (default: Stick)
-     * @param ownedItems Input ArrayList of owned items
-     * @param stats Input stats of hero
+     * Create a character - now with Christian's game panel and keyhandler
      */
-    public Hero(String name, Double position, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats) {
+    public Hero(String name, ArrayList<Weapon> ownedWeapons,
+                ArrayList<Item> ownedItems, Stats stats, GamePanel gp, KeyHandler keyH) {
+
         super(stats, ownedWeapons.get(0), name);
+
+        // Game mechanics initialization
         this.name = name;
-        this.position = position;
         this.ownedWeapons = ownedWeapons;
         this.ownedItems = ownedItems;
         this.stats = stats;
 
-        // Christian while drew at susssies
+        // Display and movement initialization
+        this.gp = gp;
+        this.keyH = keyH;
+        this.screenX = gp.screenWidth/2 - (gp.tileSize/2);
+        this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
-        screenX = gp.screenWidth/2;
-        screenY = gp.screenHeight/2;
+        // Initialize collision area
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
 
+        setDefaultValues();
+        getPlayerImage();
     }
-
-    @Override
-    public String toString() {
-        return "Hero{" +
-                "ownedWeapons=" + ownedWeapons +
-                ", ownedItems=" + ownedItems +
-                ", position=" + position +
-                ", name='" + name + '\'' +
-                ", stats=" + stats +
-                '}';
-    }
-
-
-    public double getHP(){
-        return stats.getHP();
-    }
-    public void setHP(Double newHP){
-        stats.setHP(newHP);
-    }
-    public double getDamage(){
-        return stats.attackMod;
-    }
-    public void setDamage(Double newDamage){
-        stats.setAttackMod(newDamage);
-    }
-    public double getCrit(){
-        return stats.crit;
-    }
-    public void setCrit(Double newCrit){
-        stats.setCrit(newCrit);
-    }
-    public double getDefense(){
-        return stats.defMod;
-    }
-    public void setDefense(Double newDefense){
-        stats.setDefMod(newDefense);
-    }
-    public double getHitChance(){
-        return stats.hitChance;
-    }
-    public void setHitChance(Double newHitChance){
-        stats.setHitChance(newHitChance);
-    }
-
-    // use item
-
-    public void useItem(Item item){
-        ownedItems.remove(item);
-        item.useItem(this);
-    }
-
-    // Will have different situations where a buff should be reduced
-    public void reduceBuff(StatusEffect buff){
-        buff.reduceDuration(this);
-    }
-    public void reduceDebuff(StatusEffect debuff){
-        debuff.reduceDuration(this);
-    }
-
-    // obtain weapon
-
-    // obtain items
-
-    // read stats
-
-    // select weapon  (should this just be done locally in battle?)i
-
-    // A function to update a player's coordinates
 
     /**
-     * Start of map update area for Christian
-     */
-
-    // Display and drawings
-    GamePanel gp;
-    // Moving and changing player's coordinates on the screen
-    KeyHandler keyH;
-
-
-    public final int screenX;
-    public final int screenY;
-    /**
-     * Christian- I added a new constructor to check display on the screen
+     * Old constructor for display testing, so you don't gotta type all that shit.
      */
     public Hero(GamePanel gp, KeyHandler keyH) {
         super(gp, keyH);
         this.gp = gp;
         this.keyH = keyH;
-
-        screenX = gp.screenWidth/2 - (gp.tileSize/2);
-        screenY = gp.screenHeight/2 - (gp.tileSize/2);
-
+        this.screenX = gp.screenWidth/2 - (gp.tileSize/2); // needed to add this. bc yellow underline told me to
+        this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
         solidArea = new Rectangle();
         solidArea.x = 8;
@@ -142,29 +72,27 @@ public class Hero extends CharacterManager{
         solidArea.width = 32;
         solidArea.height = 32;
 
-
-
-
         setDefaultValues();
-        getPlayerImage ();
-
+        getPlayerImage();
     }
 
 
-    public void setDefaultValues(){
+    // Use one of those special milks (items)
+    public void useItem(Item item) {
+        ownedItems.remove(item);
+        item.useItem(this);
+    }
+
+    // Display and movement methods
+    public void setDefaultValues() {
         worldY = gp.tileSize * 20;
         worldX = gp.tileSize * 20;
         speed = 4;
-
         direction = "down";
     }
 
-    BufferedImage img = null;
-
-    // Can be moved to CharacterManager later on - have each .png match name of NPC so it's universal
-    // ex. getPlayerImage(String CharName) would input CharName string value into "CharName".png
-    public void getPlayerImage (){
-        try{
+    public void getPlayerImage() {
+        try {
             down1 = ImageIO.read(new File("src/Backend/Images/sprites/00_NPC_test.png"));
             down2 = ImageIO.read(new File("src/Backend/Images/sprites/01_NPC_test.png"));
             down3 = ImageIO.read(new File("src/Backend/Images/sprites/02_NPC_test.png"));
@@ -175,7 +103,6 @@ public class Hero extends CharacterManager{
             right3 = ImageIO.read(new File("src/Backend/Images/sprites/06_NPC_test.png"));
             right4 = ImageIO.read(new File("src/Backend/Images/sprites/07_NPC_test.png"));
 
-
             up1 = ImageIO.read(new File("src/Backend/Images/sprites/08_NPC_test.png"));
             up2 = ImageIO.read(new File("src/Backend/Images/sprites/09_NPC_test.png"));
             up3 = ImageIO.read(new File("src/Backend/Images/sprites/10_NPC_test.png"));
@@ -185,32 +112,27 @@ public class Hero extends CharacterManager{
             left2 = ImageIO.read(new File("src/Backend/Images/sprites/13_NPC_test.png"));
             left3 = ImageIO.read(new File("src/Backend/Images/sprites/14_NPC_test.png"));
             left4 = ImageIO.read(new File("src/Backend/Images/sprites/15_NPC_test.png"));
-
-        }catch(IOException e){
+        } catch(IOException e) {
             e.printStackTrace();
         }
-
     }
 
-
+    // I just followed the underlined stuff... don't need boolean == here
     public void update() {
+        if(keyH.rightPressed || keyH.leftPressed || keyH.upPressed || keyH.downPressed) {
+            if(keyH.upPressed) {
+                direction = "up";
+            } else if(keyH.downPressed) {
+                direction = "down";
+            } else if(keyH.leftPressed) {
+                direction = "left";
+            } else if(keyH.rightPressed) {
+                direction = "right";
+            }
 
-
-
-       if(keyH.rightPressed == true || keyH.leftPressed == true|| keyH.upPressed == true || keyH.downPressed == true){
-           if(keyH.upPressed == true) {
-               direction = "up";
-           }else if (keyH.downPressed == true) {
-               direction = "down";
-           }else if(keyH.leftPressed == true) {
-               direction = "left";
-           }else if(keyH.rightPressed == true) {
-               direction = "right";
-           }
-
-           //Check Tile Collision
-           collisionsOn = false;
-           gp.collisionChecker.checkTile(this);
+            // Check Tile Collision
+            collisionsOn = false;
+            gp.collisionChecker.checkTile(this);
 
            if (collisionsOn == false) {
                switch (direction) {
@@ -231,28 +153,18 @@ public class Hero extends CharacterManager{
 
 
 
-           spriteCounter++;
-
-           if(spriteCounter > 10) {
-               if(spriteNum == 1){
-                   spriteNum = 2;
-               }else if(spriteNum == 2){
-                   spriteNum = 3;
-               }else if(spriteNum == 3){
-                   spriteNum = 4;
-               }else if(spriteNum == 4){
-                   spriteNum = 1;
-               }
-               spriteCounter = 0;
-
-           }
-       }
+            spriteCounter++;
+            if(spriteCounter > 10) {
+                spriteNum = (spriteNum % 4) + 1;
+                spriteCounter = 0;
+            }
+        }
     }
 
     public void draw(Graphics g2) {
         BufferedImage img = null;
 
-        switch (direction) {
+        switch(direction) {
             case "up":
                 if(spriteNum == 1){
                     img = up1;
@@ -329,4 +241,13 @@ public class Hero extends CharacterManager{
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
+    @Override
+    public String toString() {
+        return "Hero{" +
+                "ownedWeapons=" + ownedWeapons +
+                ", ownedItems=" + ownedItems +
+                ", name='" + name + '\'' +
+                ", stats=" + stats +
+                '}';
+    }
 }

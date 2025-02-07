@@ -128,10 +128,12 @@ abstract public class CharacterManager {
         return stats;
     }
 
-    public void reduceBuff(StatusEffect buff){
+    // Use this like "if Hero attacks, reduce buff. else if hero blocks, don't use this fucking command"
+    public void reduceBuff(StatusEffect buff) {
         buff.reduceDuration(this);
     }
-    public void reduceDebuff(StatusEffect debuff){
+    // I think this would be used every round. Poison goes away in a linear fashion, damage reduction goes away in linear fashion
+    public void reduceDebuff(StatusEffect debuff) {
         debuff.reduceDuration(this);
     }
 

@@ -1,5 +1,5 @@
 package Display;
-import Backend.Characters.Hero;
+import Backend.Characters.*;
 import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
-    public Hero hero = new Hero(this, keyH);
+    public Hero hero = HeroFactory.createDefaultHero(this, keyH);
 
     // set player's default position * DELETE LATER*
     int playerX = 100;
