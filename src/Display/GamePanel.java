@@ -4,6 +4,7 @@ import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
@@ -32,6 +33,15 @@ public class GamePanel extends JPanel implements Runnable {
     int playerX = 100;
     int playerY = 100;
     int playerSpeed = 4;
+
+
+
+    // Composite controls how pixels overlap existing pixels
+    // Src_over draws pixels on top of existing, taking in account of transparency
+    // DstOut makes existing pixels more transparent where drawn (cut holes)
+    private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.99f);
+    private int visibilityRadius = 100;
+
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -80,14 +90,67 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
 
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        tileM.draw(g2);
-        hero.draw(g2);
+
+        // Create buffer to draw shit in memory before in world, prevents flickering
+        BufferedImage buffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bufferG = buffer.createGraphics();
+
+        // Draw out normal world
+        tileM.draw(bufferG);
+        hero.draw(bufferG);
+
+        // Create fog layer
+        BufferedImage fogLayer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D fogG = fogLayer.createGraphics();
+
+        // Fill fog layer with black
+        fogG.setColor(new Color(0,0,0));
+        fogG.fillRect(0, 0, screenWidth, screenHeight);
+
+        // Create gradient for smooth visibility circle
+        RadialGradientPaint gradient = new RadialGradientPaint(
+                hero.screenX + tileSize/2,
+                hero.screenY + tileSize/2,
+                visibilityRadius,
+                new float[]{0.0f, 0.5f, 1.0f}, // Percent of circle
+                new Color[]{
+                        new Color(0,0,0, 255), // Center is fully visible
+                        new Color(0,0,0, 150), // Middle mostly visible
+                        new Color(0,0,0, 50) // Edge is darkest
+                }
+        );
+
+        // Apply gradient to create visibility circle
+        fogG.setComposite(AlphaComposite.DstOut);
+        fogG.setPaint(gradient);
+        fogG.fillOval(
+                hero.screenX + tileSize/2 - visibilityRadius,
+                hero.screenY + tileSize/2 - visibilityRadius,
+                visibilityRadius *2,
+                visibilityRadius *2
+        );
+
+
+        // Actually draw the shit out
+        g2.drawImage(buffer, 0, 0, null);
+        g2.setComposite(fogComposite);
+        g2.drawImage(fogLayer, 0, 0, null);
+
+        // Clear memory
+        bufferG.dispose();
+        fogG.dispose();
         g2.dispose();
     }
 
+    public void setVisibilityRadius(int radius){
+        this.visibilityRadius = radius;
+    }
 
+    public void setFogDensity(float density){
+        this.fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, density);
+    }
 
 }
