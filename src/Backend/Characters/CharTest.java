@@ -7,11 +7,11 @@ import Backend.Weapons.*;
 
 public class CharTest {
     public static void main(String[] args) {
-        Axe axe = new Axe("Big Axe", 10,"fire", 1, 1);
-        Sword sword = new Sword("Sword", 10,"fire",1,1);
-        ArrayList<Weapon> weapons = new ArrayList<>();
-        weapons.add(sword);
-        weapons.add(axe);
+//        Axe axe = new Axe("Big Axe", 10,"fire", 1, 1);
+//        Sword sword = new Sword("Sword", 10,"fire",1,1);
+//        ArrayList<Weapon> weapons = new ArrayList<>();
+//        weapons.add(sword);
+//        weapons.add(axe);
 
 
 

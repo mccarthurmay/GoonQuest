@@ -1,14 +1,20 @@
 package Backend.Weapons;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 public class WeaponsTest {
     public static void main(String[] args) {
-        Sword FlameSword = new Sword("Dog poop", 200000, "fire", 0.035, 0.80);
-        FlameSword.attack();
 
-        Bow LightBow = new Bow("Bow", 200000, "light", 0.2, 0.65);
-        LightBow.attack();
 
-        Axe NormalAxe = new Axe("Bow", 1, "none", 0.15, 0.70);
-        NormalAxe.attack();
+        // Due to the way BufferedImage works, need to have a catch IOException e... really stupid
+        try {
+            System.out.println("Current working directory: " + System.getProperty("user.dir"));
+            Weapon WindsweptAxe = new Weapon("Windswept Axe", 10, "wind", 5,100,"Man, it's windy", "./src/Backend/Images/weaponSprites/axe.png");
+            BufferedImage AxeSprite = WindsweptAxe.getSprite();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

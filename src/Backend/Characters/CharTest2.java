@@ -7,24 +7,24 @@ import Backend.Weapons.*;
 
 public class CharTest2 {
     public static void main(String[] args) {
-        Axe axe = new Axe("Big Axe", 10,"fire", 1, 1);
-        Sword sword = new Sword("Sword", 10,"fire",1,1);
-        ArrayList<Weapon> weapons = new ArrayList<>();
-        weapons.add(sword);
-        weapons.add(axe);
-
-        HpItem milk = new HpItem("milk", 10);
-        ArrayList<Item> items = new ArrayList<>();
-        items.add(milk);
-
-        Stats stat = new Stats(1,1,1,1,1);
-
-        Hero Christian = new Hero("Christian", 100.0, weapons, items,stat);
-        System.out.println(Christian);
-
-
-        Christian.useItem(milk);
-        System.out.println(Christian);
+//        Axe axe = new Axe("Big Axe", 10,"fire", 1, 1);
+//        Sword sword = new Sword("Sword", 10,"fire",1,1);
+//        ArrayList<Weapon> weapons = new ArrayList<>();
+//        weapons.add(sword);
+//        weapons.add(axe);
+//
+//        HpItem milk = new HpItem("milk", 10);
+//        ArrayList<Item> items = new ArrayList<>();
+//        items.add(milk);
+//
+//        Stats stat = new Stats(1,1,1,1,1);
+//
+//        Hero Christian = new Hero("Christian", 100.0, weapons, items,stat);
+//        System.out.println(Christian);
+//
+//
+//        Christian.useItem(milk);
+//        System.out.println(Christian);
 
 //        Axe greatAxe = new Axe("Awesome Axe", 100,"fire", 0.1, 1);
 //        Sword greatSword = new Sword("Tubular Sword", 100,"fire",0.1,0.95);

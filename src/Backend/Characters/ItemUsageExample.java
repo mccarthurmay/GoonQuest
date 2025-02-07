@@ -1,14 +1,15 @@
 package Backend.Characters;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Backend.Items.*;
 import Backend.Weapons.*;
 
 public class ItemUsageExample {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         // NOTE -- must have a weapon or error
-        Axe test = new Axe("test", 2,"what",2,3);
+        Weapon test = new Weapon("test", 2,"what",2,3,"testing","");
         ArrayList<Weapon> weapons = new ArrayList<>();
         weapons.add(test);
 
