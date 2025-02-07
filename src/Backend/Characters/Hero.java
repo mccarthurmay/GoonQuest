@@ -47,10 +47,10 @@ public class Hero extends CharacterManager {
 
         // Initialize collision area
         solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
-        solidArea.width = 32;
-        solidArea.height = 32;
+        solidArea.x = 10;
+        solidArea.y = 10;
+        solidArea.width = 36;
+        solidArea.height = 36;
 
         setDefaultValues();
         getPlayerImage();
@@ -253,6 +253,7 @@ public class Hero extends CharacterManager {
         }
         // Probably move this eventually too
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 
     @Override

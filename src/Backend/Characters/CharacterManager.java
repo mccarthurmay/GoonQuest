@@ -23,7 +23,8 @@ abstract public class CharacterManager {
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
-    public Rectangle solidArea;
+    public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // default collision for characters
+
     public boolean collisionsOn = false;
 
 
@@ -49,6 +50,9 @@ abstract public class CharacterManager {
     public CharacterManager(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+    }
+    public CharacterManager(GamePanel gp) {
+        this.gp = gp;
     }
     public String getName(){
         return name;
