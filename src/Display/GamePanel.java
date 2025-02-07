@@ -40,8 +40,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Composite controls how pixels overlap existing pixels
     // Src_over draws pixels on top of existing, taking in account of transparency
-    // DstOut makes existing pixels more transparent where drawn (cut holes)
-    private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.99f);
+    // DstOut makes existing pixels more transparent where drawn (cut holes)\
+    // CHANGE ALPHA TO CHANGE HOW TRANSPARENT THE FOG IS
+    private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
     private int visibilityRadius = 100;
 
     // Add a buffer for entire game -- no buffer causes flickering
@@ -131,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
         hero.draw(bufferG);
 
         // Create fog layer
-        if (isInFoggyRegion) {  // Fix this typo in your field declaration too
+        if (isInFoggyRegion) {
             BufferedImage fogLayer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics2D fogG = fogLayer.createGraphics();
 
