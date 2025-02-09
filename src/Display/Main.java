@@ -11,6 +11,11 @@ public class Main{
         GamePanel gamePanel = new GamePanel();
         gamePanel.setupGame();
 
+        // Create battle system
+        Battle battle = new Battle(gamePanel, window);
+        gamePanel.battle = battle;
+
+
         window.add(gamePanel);
         window.pack();
 

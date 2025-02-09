@@ -6,6 +6,9 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean battleTestKey; // since enemies don't work, just made a set battle key
+
+
 
     public void keyTyped(KeyEvent e) {}
 
@@ -24,6 +27,13 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = true;
         }
+
+        // REMOVE THIS LATER
+        if (keyCode == KeyEvent.VK_B) {  // "B" to start battle
+            battleTestKey = true;
+        }
+
+
     }
 
 

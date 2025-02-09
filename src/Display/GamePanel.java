@@ -55,6 +55,9 @@ public class GamePanel extends JPanel implements Runnable {
     private ArrayList<Rectangle> foggyRegions;
     private boolean isInFoggyRegion = false;
 
+    // Battle
+    public Battle battle;
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.WHITE);
@@ -130,6 +133,13 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         isInFoggyRegion = checkFoggyRegion();
+
+        // REMOVE THIS LATER
+        if(keyH.battleTestKey) {
+            battle.testBattleTransition();
+        }
+
+        battle.checkBattle();
     }
 
 
