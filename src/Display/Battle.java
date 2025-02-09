@@ -1,11 +1,14 @@
 package Display;
 
+import Backend.Characters.Enemy;
+import Backend.Characters.EnemyFactory;
 import javax.swing.*;
 
 public class Battle {
     GamePanel gp;
     JFrame window;
     BattlePanel battlePanel;
+    Enemy currentEnemy; // tracks current enemy
 
     public Battle(GamePanel gp, JFrame window) {
         this.gp = gp;
@@ -18,7 +21,7 @@ public class Battle {
         if(enemyIndex != 999) {
             gp.stopGameThread(); // Battle thread frozen if gamethread on
             // Create new battle panel
-            BattlePanel battlePanel = new BattlePanel(gp);
+            BattlePanel battlePanel = new BattlePanel(gp, currentEnemy);
 
             // Remove game panel and add battle panel
             window.remove(gp);
@@ -37,7 +40,8 @@ public class Battle {
 
     // REMOVE THIS LATER
     public void testBattleTransition() {
-        BattlePanel battlePanel = new BattlePanel(gp);
+        this.currentEnemy = EnemyFactory.createDefaultEnemy(gp);
+        BattlePanel battlePanel = new BattlePanel(gp, this.currentEnemy);
 
         gp.stopGameThread(); // BattleThread was frozen if both threads on
 

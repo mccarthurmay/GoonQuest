@@ -30,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Hero hero = HeroFactory.createDefaultHero(this, keyH);
+    public Enemy foe = EnemyFactory.createDefaultEnemy(this);
     public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
 
 

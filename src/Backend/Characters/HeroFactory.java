@@ -25,7 +25,7 @@ public class HeroFactory {
         items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3));
 
         // Create default stats
-        Stats stats = new Stats(100.0, 10.0, 5.0, 0.15, 0.85);
+        Stats stats = new Stats(100.0, 10.0, 200.0, 0.15, 0.85);
 
         // Create and return the hero
         return new Hero("Player", weapons, items, stats, gp, keyH);

@@ -31,7 +31,7 @@ public class Enemy extends CharacterManager{
     public void getImage() {
         try {
             down1 = ImageIO.read(new File("src/Backend/Images/sprites/glargo_red.png"));
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -65,10 +65,9 @@ public class Enemy extends CharacterManager{
     }
 
 
-
-
-
-
+    public Weapon getWeapon() {
+        return weapon;
+    }
 }
 
 

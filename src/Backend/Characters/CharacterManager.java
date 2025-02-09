@@ -55,7 +55,7 @@ abstract public class CharacterManager {
         return name;
     }
 
-    public void attack(CharacterManager foe){
+    public void attack(CharacterManager foe, Weapon weapon){
         Random rand = new Random();
         double hitDecider = rand.nextDouble();
         double critDecider = rand.nextDouble();

@@ -3,14 +3,20 @@ package Display;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import Backend.Characters.Hero;
+import Backend.Characters.HeroFactory;
 import Backend.Weapons.Weapon;
 import java.util.ArrayList;
+import Backend.Characters.Enemy;
+import Backend.Characters.EnemyFactory;
 
 public class BattlePanel extends JPanel implements Runnable {
 
     GamePanel gamePanel; // copy original panel
     private KeyHandler keyH;
     private Thread battleThread;
+    private Enemy currentEnemy;
 
     // Battle positions
     int playerX = 100;
@@ -18,9 +24,8 @@ public class BattlePanel extends JPanel implements Runnable {
     int enemyX = 500;
     int enemyY = 300;
 
-    final int HERO_MAX_HEALTH = 200; // Temporary, will set player max health in hero later
-    final int ENEMY_MAX_HEALTH = 500; // Temporary, enemy max health will change
-    int currentEnemyHealth = ENEMY_MAX_HEALTH;
+    private double heroMaxHealth;
+    private double enemyMaxHealth; // WILL HAVE TO CHANGE TO MORPH BY ENEMY
 
     // Health bar settings
     int healthBarWidth = 100;
@@ -36,26 +41,43 @@ public class BattlePanel extends JPanel implements Runnable {
     private final float BOUNCE_SPEED = 0.1f;
     private final float BOUNCE_HEIGHT = 10;
 
+    // Battle UI
+    private Rectangle attackButton;
+    private boolean isPlayerTurn = true;
+    private String battleMessage = "ATTACK IT";
+
+    // Item UI
+    private Rectangle itemButton;
+
+    public BattlePanel(GamePanel gamePanel, Enemy enemy) {
+            this.gamePanel = gamePanel;
+            this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
+            this.currentEnemy = enemy;
+
+            // Set up the battle panel properties
+            this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
+            this.setBackground(Color.BLACK); // black because I didn't look at your map code
+            this.setDoubleBuffered(true);
+
+            // Initialize bounce effect
+            ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
+            weaponBounceOffsets = new float[weapons.size()];
+
+            // Initialize item button
+            itemButton = new Rectangle(50, 550, 100, 40);
 
 
+            // Initialize attack button
+            attackButton = new Rectangle(50, 450, 100, 40);
 
-    public BattlePanel(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-        this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
+            // Initialize max healths
+            this.heroMaxHealth = gamePanel.hero.getHP();
+            this.enemyMaxHealth = currentEnemy.getHP();
 
-        // Set up the battle panel properties
-        this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
-        this.setBackground(Color.BLACK); // black because I didn't look at your map code
-        this.setDoubleBuffered(true);
-
-        // Initialize bounce effect
-        ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        weaponBounceOffsets = new float[weapons.size()];
-
-        // Key listeners
-        this.addKeyListener(keyH);
-        this.setFocusable(true);
-        startBattleThread();
+            // Key listeners
+            this.addKeyListener(keyH);
+            this.setFocusable(true);
+            startBattleThread();
 
     }
 
@@ -64,6 +86,52 @@ public class BattlePanel extends JPanel implements Runnable {
         battleThread.start();
     }
 
+
+    public void drawAttackButton(Graphics2D g2){
+        // Button background
+        g2.setColor(isPlayerTurn ? Color.RED : Color.GRAY);  // This is a neat way to shorthand if statements
+        g2.fill(attackButton);
+
+        // Button border
+        g2.setColor(Color.WHITE);
+        g2.draw(attackButton);
+
+        // Button Text
+        g2.setFont(new Font("Arial", Font.BOLD, 20));
+        g2.setColor(Color.WHITE);
+        String buttonText = "ATTACK (button)- this is not in the right place";
+
+        g2.drawString(buttonText, 50, 400); // in wrong place
+
+    }
+
+    private void performPlayerAttack(){
+        if (isPlayerTurn){
+            Weapon selectedWeapon = getSelectedWeapon();
+            gamePanel.hero.attack(currentEnemy, selectedWeapon);
+            if (currentEnemy.getHP() <= 0) {
+                battleMessage = "Enemy was defeated!";
+                return;
+            }
+        }
+        isPlayerTurn = false;
+        battleMessage = "Enemy's turn!";
+
+        performEnemyAttack();
+    }
+
+    private void performEnemyAttack(){
+        Weapon weapon = currentEnemy.getWeapon();
+        currentEnemy.attack(gamePanel.hero, weapon);
+
+        if (gamePanel.hero.getHP() <= 0) {
+            battleMessage = "You were defeated!";
+            return;
+        }
+
+        isPlayerTurn = true;
+        battleMessage = "ATTACK AGAIN";
+    }
     public void drawWeaponSelect(Graphics2D g2) {
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
         int startX = getWidth()/2 - (weapons.size() * 60)/2; // Center the weapons
@@ -100,11 +168,12 @@ public class BattlePanel extends JPanel implements Runnable {
         int battleSize = gamePanel.tileSize * 3;
         g2.drawImage(image, playerX, playerY, battleSize, battleSize, null);
 
-        drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), HERO_MAX_HEALTH);
+        drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), heroMaxHealth);
 
     }
 
-    public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, int maxHealth) {
+
+    public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, double maxHealth) {
         g2.setColor(Color.GRAY);
         g2.fillRect(x, y, healthBarWidth, healthBarHeight);
 
@@ -134,17 +203,25 @@ public class BattlePanel extends JPanel implements Runnable {
 
         // IDK how to get the enemy
         g2.fillRect(enemyX, enemyY, 150, 100);
-        drawHealthBar(g2, enemyX, enemyY + 60, currentEnemyHealth, ENEMY_MAX_HEALTH);
+        drawHealthBar(g2, enemyX, enemyY + 60, currentEnemy.getHP(), enemyMaxHealth);
 
         // Draw weapon selection
         drawWeaponSelect(g2);
 
+        // Draw attack button
+        drawAttackButton(g2);
+        // Draw item button
+
+
         // Battle UI
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g2.drawString("In Battle with + Enemy name", getWidth()/2 - 100, 50);
+        g2.drawString("In Battle with + Enemy name", getWidth()/2 - 500, 50);
 
-
+        // Draw battle message
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 20));
+        g2.drawString(battleMessage, getWidth()/2 - 150, 50);
 
         g2.dispose();
     }
@@ -197,6 +274,11 @@ public class BattlePanel extends JPanel implements Runnable {
             //System.out.println("Selecting next weapon");
             selectNextWeapon();
             keyH.weaponRight = false;
+        }
+        if(keyH.spacePressed) {
+
+            performPlayerAttack();
+            keyH.spacePressed = false;
         }
 
     }
