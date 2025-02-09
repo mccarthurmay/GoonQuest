@@ -123,6 +123,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void stopGameThread(){
+        gameThread = null;
+    }
+
     public void update() {
         hero.update();
 
@@ -140,6 +144,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         battle.checkBattle();
+
+        if (battle != null){
+            battle.update();
+        }
     }
 
 

@@ -50,7 +50,9 @@ public class Weapon {
             return dmg;
         }
 
-
+        public String getName(){
+        return name;
+        }
 
         public double getCritChance () {
             return crit;

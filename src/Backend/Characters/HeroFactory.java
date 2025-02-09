@@ -14,8 +14,10 @@ public class HeroFactory {
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
         Weapon defaultWeapon = new Weapon("Stick", 2, "Basic weapon", 2, 3, "A simple stick", "");
+        Weapon defaultWeapon2 = new Weapon("Stick2", 2, "Basic", 2, 3, "A simple stick", "");
         ArrayList<Weapon> weapons = new ArrayList<>();
         weapons.add(defaultWeapon);
+        weapons.add(defaultWeapon2);
 
         // Create default items
         ArrayList<Item> items = new ArrayList<>();

@@ -7,7 +7,7 @@ public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean battleTestKey; // since enemies don't work, just made a set battle key
-
+    public boolean weaponLeft, weaponRight;
 
 
     public void keyTyped(KeyEvent e) {}
@@ -34,6 +34,15 @@ public class KeyHandler implements KeyListener {
         }
 
 
+        // Weapon selection controls
+
+        if (keyCode == KeyEvent.VK_LEFT) {
+            weaponLeft = true;
+        }
+        if (keyCode == KeyEvent.VK_RIGHT) {
+            weaponRight = true;
+        }
+
     }
 
 
@@ -55,6 +64,15 @@ public class KeyHandler implements KeyListener {
         // REMOVE THIS LATER
          if (keyCode == KeyEvent.VK_B) {  // release "B" to end battle
              battleTestKey = false;
+         }
+
+         // Weapon stuff
+
+         if (keyCode == KeyEvent.VK_LEFT) {
+             weaponLeft = false;
+         }
+         if (keyCode == KeyEvent.VK_RIGHT) {
+             weaponRight = false;
          }
 
      }

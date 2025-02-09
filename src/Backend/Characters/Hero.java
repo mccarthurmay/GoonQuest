@@ -103,6 +103,10 @@ public class Hero extends CharacterManager {
         direction = "down";
     }
 
+    public ArrayList<Weapon> getOwnedWeapons(){
+        return ownedWeapons;
+    }
+
 
 
     // I just followed the underlined stuff... don't need boolean == here
