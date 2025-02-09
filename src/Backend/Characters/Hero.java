@@ -4,11 +4,8 @@ import Backend.Items.*;
 import Display.GamePanel;
 import Display.KeyHandler;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Hero extends CharacterManager {
@@ -41,6 +38,7 @@ public class Hero extends CharacterManager {
 
         // Display and movement initialization
         this.gp = gp;
+        System.out.println(this.gp);
         this.keyH = keyH;
         this.screenX = gp.screenWidth/2 - (gp.tileSize/2);
         this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -74,7 +72,7 @@ public class Hero extends CharacterManager {
      * Old constructor for display testing, so you don't gotta type all that shit.
      */
     public Hero(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+        super(gp);
         this.gp = gp;
         this.keyH = keyH;
         this.screenX = gp.screenWidth/2 - (gp.tileSize/2); // needed to add this. bc yellow underline told me to
@@ -105,31 +103,7 @@ public class Hero extends CharacterManager {
         direction = "down";
     }
 
-    public void getPlayerImage() {
-        try {
-            down1 = ImageIO.read(new File("src/Backend/Images/sprites/00_NPC_test.png"));
-            down2 = ImageIO.read(new File("src/Backend/Images/sprites/01_NPC_test.png"));
-            down3 = ImageIO.read(new File("src/Backend/Images/sprites/02_NPC_test.png"));
-            down4 = ImageIO.read(new File("src/Backend/Images/sprites/03_NPC_test.png"));
 
-            right1 = ImageIO.read(new File("src/Backend/Images/sprites/04_NPC_test.png"));
-            right2 = ImageIO.read(new File("src/Backend/Images/sprites/05_NPC_test.png"));
-            right3 = ImageIO.read(new File("src/Backend/Images/sprites/06_NPC_test.png"));
-            right4 = ImageIO.read(new File("src/Backend/Images/sprites/07_NPC_test.png"));
-
-            up1 = ImageIO.read(new File("src/Backend/Images/sprites/08_NPC_test.png"));
-            up2 = ImageIO.read(new File("src/Backend/Images/sprites/09_NPC_test.png"));
-            up3 = ImageIO.read(new File("src/Backend/Images/sprites/10_NPC_test.png"));
-            up4 = ImageIO.read(new File("src/Backend/Images/sprites/11_NPC_test.png"));
-
-            left1 = ImageIO.read(new File("src/Backend/Images/sprites/12_NPC_test.png"));
-            left2 = ImageIO.read(new File("src/Backend/Images/sprites/13_NPC_test.png"));
-            left3 = ImageIO.read(new File("src/Backend/Images/sprites/14_NPC_test.png"));
-            left4 = ImageIO.read(new File("src/Backend/Images/sprites/15_NPC_test.png"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     // I just followed the underlined stuff... don't need boolean == here
     public void update() {
@@ -147,20 +121,22 @@ public class Hero extends CharacterManager {
             // Check Tile Collision
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);
+            int enemyIndex = gp.collisionChecker.checkEnemy(this, gp.enemy); // check if any enemies are colliding with the player
+            // fight enemy!
 
            if (collisionsOn == false) {
                switch (direction) {
                    case "up":
-                       worldY -= speed;
+                       this.worldY -= speed;
                        break;
                    case "down":
-                       worldY += speed;
+                       this.worldY += speed;
                        break;
                    case "left":
-                       worldX -= speed;
+                       this.worldX -= speed;
                        break;
                    case "right":
-                       worldX += speed;
+                       this.worldX += speed;
                        break;
                }
            }
@@ -175,7 +151,7 @@ public class Hero extends CharacterManager {
         }
     }
 
-    public void draw(Graphics g2) {
+    public void drawHero(Graphics g2) {
         BufferedImage img = null;
 
         switch(direction) {

@@ -5,8 +5,11 @@ import Backend.Weapons.Weapon;
 import Display.GamePanel;
 import Display.KeyHandler;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,12 +29,6 @@ abstract public class CharacterManager {
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // default collision for characters
 
     public boolean collisionsOn = false;
-
-
-
-
-
-
 
 
     // Parent
@@ -149,10 +146,72 @@ abstract public class CharacterManager {
                 ", stats=" + stats +
                 '}';
     }
+    public void draw(Graphics2D g2){
+        BufferedImage image = down1;
+        int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
+        int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
+        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
+    }
+    public void setAction() {
 
+    }
+    public void update() {
+        setAction();
+        collisionsOn = false;
+        gp.collisionChecker.checkTile(this);
+        if (collisionsOn == false) {
+            switch (direction) {
+                case "up":
+                    this.worldY -= speed;
+                    break;
+                case "down":
+                    this.worldY += speed;
+                    break;
+                case "left":
+                    this.worldX -= speed;
+                    break;
+                case "right":
+                    this.worldX += speed;
+                    break;
+                case "none":
+                    break;
+            }
+        }
+        spriteCounter++;
+        if(spriteCounter > 10) {
+            spriteNum = (spriteNum % 4) + 1;
+            spriteCounter = 0;
+        }
+    }
 
+    public void getPlayerImage() {
+        try {
+            down1 = ImageIO.read(new File("src/Backend/Images/sprites/00_NPC_test.png"));
+            down2 = ImageIO.read(new File("src/Backend/Images/sprites/01_NPC_test.png"));
+            down3 = ImageIO.read(new File("src/Backend/Images/sprites/02_NPC_test.png"));
+            down4 = ImageIO.read(new File("src/Backend/Images/sprites/03_NPC_test.png"));
 
+            right1 = ImageIO.read(new File("src/Backend/Images/sprites/04_NPC_test.png"));
+            right2 = ImageIO.read(new File("src/Backend/Images/sprites/05_NPC_test.png"));
+            right3 = ImageIO.read(new File("src/Backend/Images/sprites/06_NPC_test.png"));
+            right4 = ImageIO.read(new File("src/Backend/Images/sprites/07_NPC_test.png"));
+
+            up1 = ImageIO.read(new File("src/Backend/Images/sprites/08_NPC_test.png"));
+            up2 = ImageIO.read(new File("src/Backend/Images/sprites/09_NPC_test.png"));
+            up3 = ImageIO.read(new File("src/Backend/Images/sprites/10_NPC_test.png"));
+            up4 = ImageIO.read(new File("src/Backend/Images/sprites/11_NPC_test.png"));
+
+            left1 = ImageIO.read(new File("src/Backend/Images/sprites/12_NPC_test.png"));
+            left2 = ImageIO.read(new File("src/Backend/Images/sprites/13_NPC_test.png"));
+            left3 = ImageIO.read(new File("src/Backend/Images/sprites/14_NPC_test.png"));
+            left4 = ImageIO.read(new File("src/Backend/Images/sprites/15_NPC_test.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

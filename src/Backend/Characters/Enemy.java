@@ -9,10 +9,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Enemy extends CharacterManager{
 
     GamePanel gp;
+    int actionLockCounter = 0;
     public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems){
         super(stats, weapon, name);
         this.ownedItems = ownedItems;
@@ -33,16 +35,35 @@ public class Enemy extends CharacterManager{
             e.printStackTrace();
         }
     }
-    public void draw(Graphics2D g2){
-        BufferedImage image = down1;
 
-        int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
-        int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
-        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+    public void setAction() {
+
+        actionLockCounter++;
+        if(actionLockCounter == 10){
+            Random random = new Random();
+            int i = random.nextInt(100);
+            if (i == 1){
+                direction = "right";
+            }
+            else if (i == 2){
+                direction = "up";
+            }
+            else if (i == 3){
+                direction = "down";
+            }
+            else if (i  == 4){
+                direction = "left";
+            }
+            else{
+                direction = "none";
+            }
+            actionLockCounter = 0;
         }
+
+
     }
+
 
 
 

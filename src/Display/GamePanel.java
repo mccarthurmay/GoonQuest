@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
-    public  int originalTileSize = 20;
-    public  int scale = 3;
+    public int originalTileSize = 20;
+    public int scale = 3;
     public int tileSize = originalTileSize * scale;
     public final int maxScreenCol= 16;
     public final int maxScreenRow= 12;
@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Hero hero = HeroFactory.createDefaultHero(this, keyH);
-    public Enemy enemy[] = new Enemy[10]; // can have up to 10 enemies
+    public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
 
 
 
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() { // add things to the game world, play music, etc
-        aSetter.setEnemy();
+        //aSetter.setEnemy();
         System.out.println("enemy set");
     }
 
@@ -122,6 +122,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         hero.update();
+
+        for (int i = 0; i < enemy.length; i++){
+            if (enemy[i] != null){
+                enemy[i].update();
+            }
+        }
+
         isInFoggyRegion = checkFoggyRegion();
     }
 
@@ -136,15 +143,15 @@ public class GamePanel extends JPanel implements Runnable {
         bufferG.fillRect(0, 0, screenWidth, screenHeight);
 
         // Draw out normal world
-        tileM.draw(bufferG);
-        hero.draw(bufferG);
+
 
         for (int i = 0; i < enemy.length; i++){ // draws all enemies
             if (enemy[i] != null){
                 enemy[i].draw(bufferG);
             }
         }
-
+        tileM.draw(bufferG);
+        hero.drawHero(bufferG);
 
 
         // Create fog layer
