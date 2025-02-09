@@ -51,5 +51,11 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = false;
         }
+
+        // REMOVE THIS LATER
+         if (keyCode == KeyEvent.VK_B) {  // release "B" to end battle
+             battleTestKey = false;
+         }
+
      }
 }
