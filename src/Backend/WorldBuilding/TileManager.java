@@ -8,6 +8,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TileManager {
 
@@ -18,29 +21,39 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[10];
+        tile = new Tile[40000];
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
-        loadMap("/Backend/Maps/larger_map.txt");
+        loadMap("/Backend/Maps/data2.txt");
         getTileImage();
     }
 
 
 
     public void getTileImage() {
-        try{
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(new File("src/Backend/Images/Tiles/output_tileset/basic_tile_sprites14.png"));
+        File dir = new File("src/Backend/Images/unique_tiles");
+        File[] directoryListing = dir.listFiles();
+        int i = 0;
+        if (directoryListing != null) {
+            for (File child : directoryListing) {
+                String filename = child.getName();
+                String myNum = "";
+                if (filename.length() > 12){
+                    myNum = filename.substring(4, 9);
+                } else {
+                    myNum = filename.substring(4, 8);
+                }
+                int newNum = Integer.parseInt(myNum);
+                tile[newNum] = new Tile();
+                try {
+                    System.out.println(child.getAbsolutePath());
+                    tile[newNum].image = ImageIO.read(new File(child.getAbsolutePath()));
 
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(new File("src/Backend/Images/Tiles/output_tileset/basic_tile_sprites10.png"));
-            tile[1].collision = true;
-
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(new File("src/Backend/Images/Tiles/output_tileset/basic_tile_sprites25.png"));
-
-
-        }catch(Exception e){
-            e.printStackTrace();
+                } catch(Exception e){
+                    System.out.println(e);
+                }
+                i++;
+                // Do something with child
+            }
         }
     }
 
@@ -93,8 +106,8 @@ public class TileManager {
             int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
             if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
+                System.out.println(tileNum);
                 g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-                g2.drawRect(screenX, screenY, 100, 100);
             }
             worldCol++;
 

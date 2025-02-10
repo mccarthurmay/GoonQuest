@@ -99,7 +99,7 @@ public class Hero extends CharacterManager {
     public void setDefaultValues() {
         worldY = gp.tileSize * 20;
         worldX = gp.tileSize * 20;
-        speed = 4;
+        speed = 20;
         direction = "down";
     }
 
@@ -233,7 +233,6 @@ public class Hero extends CharacterManager {
         }
         // Probably move this eventually too
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 
     @Override
