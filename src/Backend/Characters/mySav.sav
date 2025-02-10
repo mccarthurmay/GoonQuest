@@ -1,0 +1,14 @@
+<name>
+Maxroy
+</name>
+<weapon>
+Stick, 2, Basic weapon, 2, 3, A simple stick,‎
+Stick2, 2, Basic weapon, 2, 3, Twice the stick, twice the fun,‎
+</weapon>
+<item>
+HpItem, Health Potion, 10
+StatusEffect, Strength Boost, dmg, true, 5, 3
+</item>
+<stats>
+100, 10, 42069, 0.15, 0.85
+</stats>

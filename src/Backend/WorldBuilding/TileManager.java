@@ -45,7 +45,6 @@ public class TileManager {
                 int newNum = Integer.parseInt(myNum);
                 tile[newNum] = new Tile();
                 try {
-                    System.out.println(child.getAbsolutePath());
                     tile[newNum].image = ImageIO.read(new File(child.getAbsolutePath()));
 
                 } catch(Exception e){
@@ -106,7 +105,6 @@ public class TileManager {
             int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
             if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-                System.out.println(tileNum);
                 g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
             }
             worldCol++;

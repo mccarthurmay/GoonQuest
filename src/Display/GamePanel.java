@@ -5,7 +5,9 @@ import Backend.WorldBuilding.TileManager;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
@@ -29,7 +31,9 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
-    public Hero hero = HeroFactory.createDefaultHero(this, keyH);
+
+    public Hero hero = loadHero(this, keyH);
+
     public Enemy foe = EnemyFactory.createDefaultEnemy(this);
     public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
 
@@ -151,6 +155,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public Hero loadHero(GamePanel gp, KeyHandler keyH) {
+        Hero hero;
+        Scanner input = new Scanner(System.in);
+        System.out.println("Would you like to load a save? (y/n): ");
+        String response = input.nextLine();
+        if (response.equals("y") || response.equals("Y")) {
+            System.out.println("Input your save file directory (ex: src/saves/mySav.sav)");
+            response = input.nextLine();
+
+            hero = HeroFactory.load(response, gp, keyH);
+
+        }else {
+            hero = HeroFactory.createDefaultHero(this, keyH);
+        }
+
+        return hero;
+    }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
