@@ -3,7 +3,7 @@ package Display;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+import java.util.concurrent.TimeUnit;
 import Backend.Characters.Hero;
 import Backend.Characters.HeroFactory;
 import Backend.Weapons.Weapon;
@@ -19,13 +19,26 @@ public class BattlePanel extends JPanel implements Runnable {
     private Enemy currentEnemy;
 
     // Battle positions
-    int playerX = 100;
-    int playerY = 300;
-    int enemyX = 500;
-    int enemyY = 300;
+    private int playerBaseX = 100;
+    private int playerBaseY = 300;
+    private int enemyBaseX = 500;
+    private int enemyBaseY = 300;
+    private int playerX = playerBaseX;
+    private int playerY = playerBaseY;
+    private int enemyX = enemyBaseX;
+    private int enemyY = enemyBaseY;
+
+    // Animation states
+    private boolean isPlayerAttacking = false;
+    private boolean isEnemyAttacking = false;
+    private int attackAnimationTicks = 0;
+    private final int ATTACK_ANIMATION_DURATION = 60; // 1 second at 60 FPS
+    private final int JUMP_HEIGHT = 100;
+    private final int HORIZONTAL_JUMP_DISTANCE = 200;
+
 
     private double heroMaxHealth;
-    private double enemyMaxHealth; // WILL HAVE TO CHANGE TO MORPH BY ENEMY
+    private double enemyMaxHealth;
 
     // Health bar settings
     int healthBarWidth = 100;
@@ -41,10 +54,11 @@ public class BattlePanel extends JPanel implements Runnable {
     private final float BOUNCE_SPEED = 0.1f;
     private final float BOUNCE_HEIGHT = 10;
 
-    // Battle UI
+    // Battle Metrics
     private Rectangle attackButton;
     private boolean isPlayerTurn = true;
     private String battleMessage = "ATTACK IT";
+    private boolean waitingForAnimation = false;
 
     // Item UI
     private Rectangle itemButton;
@@ -63,11 +77,8 @@ public class BattlePanel extends JPanel implements Runnable {
             ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
             weaponBounceOffsets = new float[weapons.size()];
 
-            // Initialize item button
+            // Initialize buttons
             itemButton = new Rectangle(50, 550, 100, 40);
-
-
-            // Initialize attack button
             attackButton = new Rectangle(50, 450, 100, 40);
 
             // Initialize max healths
@@ -80,6 +91,70 @@ public class BattlePanel extends JPanel implements Runnable {
             startBattleThread();
 
     }
+
+    private void updateAttackAnimation() {
+        if (isPlayerAttacking) {
+            // First half of animation going towards enemy (0-30 ticks)
+            if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
+                // Calculate progress (0.0-1.0)
+                float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
+                // Calculate jump height (follow the sin wave)
+                float jumpHeight = (float) Math.sin(progress * Math.PI) * JUMP_HEIGHT; // bounce animation lol
+
+                // Move character forward + up according to progress
+                playerX = (int) (playerBaseX + (HORIZONTAL_JUMP_DISTANCE * progress));
+                playerY = (int) (playerBaseY - jumpHeight);
+
+                // Second half (31-60 ticks)
+            } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
+                // Calculate progress
+                float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
+                float jumpHeight = (float) Math.sin((1 - progress) * Math.PI) * JUMP_HEIGHT;
+
+                // Move character back to start + down according to progress
+                playerX = (int) (playerBaseX + HORIZONTAL_JUMP_DISTANCE * (1 - progress));
+                playerY = (int) (playerBaseY - jumpHeight);
+            } else {
+                isPlayerAttacking = false;
+                playerX = playerBaseX;
+                playerY = playerBaseY;
+                waitingForAnimation = false;
+                performEnemyAttack();
+            }
+            attackAnimationTicks++;
+        } else if (isEnemyAttacking) {
+            if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
+                // Calculate progress (0.0-1.0)
+                float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
+                // Calculate jump height (follow the sin wave)
+                float jumpHeight = (float) Math.sin(progress * Math.PI) * JUMP_HEIGHT; // bounce animation lol
+
+                // Move character forward + up according to progress
+                enemyX = (int) (enemyBaseX - (HORIZONTAL_JUMP_DISTANCE * progress));
+                enemyY = (int) (enemyBaseY - jumpHeight);
+
+                // Second half (31-60 ticks)
+            } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
+                // Calculate progress
+                float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
+                float jumpHeight = (float) Math.sin((1 - progress) * Math.PI) * JUMP_HEIGHT;
+
+                // Move character back to start + down according to progress
+                enemyX = (int) (enemyBaseX - HORIZONTAL_JUMP_DISTANCE * (1 - progress));
+                enemyY = (int) (enemyBaseY - jumpHeight);
+            } else {
+                isEnemyAttacking = false;
+                enemyX = enemyBaseX;
+                enemyY = enemyBaseY;
+                waitingForAnimation = false;
+            }
+            attackAnimationTicks++;
+        }
+
+    }
+
+
+
 
     public void startBattleThread() {
         battleThread = new Thread(this);
@@ -106,9 +181,17 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void performPlayerAttack(){
-        if (isPlayerTurn){
+        if (isPlayerTurn && !waitingForAnimation){
             Weapon selectedWeapon = getSelectedWeapon();
             gamePanel.hero.attack(currentEnemy, selectedWeapon);
+
+            isPlayerAttacking = true;
+            attackAnimationTicks = 0;
+            waitingForAnimation = false;
+            isPlayerTurn = false;
+            battleMessage = "Attacking!";
+
+
             if (currentEnemy.getHP() <= 0) {
                 battleMessage = "Enemy was defeated!";
                 return;
@@ -117,12 +200,23 @@ public class BattlePanel extends JPanel implements Runnable {
         isPlayerTurn = false;
         battleMessage = "Enemy's turn!";
 
+//        try{
+//            TimeUnit.SECONDS.sleep(3);
+//        }catch(InterruptedException _){
+//        }
+
         performEnemyAttack();
     }
 
     private void performEnemyAttack(){
         Weapon weapon = currentEnemy.getWeapon();
         currentEnemy.attack(gamePanel.hero, weapon);
+
+        isEnemyAttacking = true;
+        attackAnimationTicks = 0;
+        waitingForAnimation = true;
+        battleMessage = "Enemy Attacking!";
+
 
         if (gamePanel.hero.getHP() <= 0) {
             battleMessage = "You were defeated!";
@@ -162,10 +256,10 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     public void drawHeroBattle(Graphics2D g2) {
-        BufferedImage image = gamePanel.hero.up1; //Sets him looking up
+        BufferedImage image = gamePanel.hero.right1; //Sets him looking up
 
         // Draw hero but big
-        int battleSize = gamePanel.tileSize * 3;
+        int battleSize = gamePanel.tileSize * 2;
         g2.drawImage(image, playerX, playerY, battleSize, battleSize, null);
 
         drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), heroMaxHealth);
@@ -264,6 +358,8 @@ public class BattlePanel extends JPanel implements Runnable {
 
     public void update() {
         bounceTime += BOUNCE_SPEED;
+
+        updateAttackAnimation();
 
         if(keyH.weaponLeft) {
             //System.out.println("Selecting previous weapon");
