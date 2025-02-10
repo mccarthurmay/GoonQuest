@@ -20,9 +20,9 @@ public class BattlePanel extends JPanel implements Runnable {
 
     // Battle positions
     private int playerBaseX = 150;
-    private int playerBaseY = 400;
-    private int enemyBaseX = 600;
-    private int enemyBaseY = 150;
+    private int playerBaseY = 300;
+    private int enemyBaseX = 625;
+    private int enemyBaseY = 125;
     private int playerX = playerBaseX;
     private int playerY = playerBaseY;
     private int enemyX = enemyBaseX;
@@ -35,6 +35,18 @@ public class BattlePanel extends JPanel implements Runnable {
     private final int ATTACK_ANIMATION_DURATION = 10; // 1 second at 60 FPS
     int juttDistance = 30; // Smaller distance
 
+    // UI states
+    private final int STATE_WEAPONS = 0;
+    private final int STATE_ITEMS = 1;
+    private final int STATE_ATTACK = 2;
+    private final int STATE_DEFEND = 3;
+
+    private boolean inSubmenu = false;
+
+    private int currentUIState = STATE_WEAPONS;
+    private int selectedButtonIndex = 0;
+    private Rectangle[] buttons = new Rectangle[4];
+    private final String[] buttonLabels = {"Attack", "Weapon", "Defend", "Items"};
 
     private double heroMaxHealth;
     private double enemyMaxHealth;
@@ -54,7 +66,7 @@ public class BattlePanel extends JPanel implements Runnable {
     private final float BOUNCE_HEIGHT = 10;
 
     // Battle Metrics
-    private Rectangle attackButton;
+    private Rectangle BattleUI;
     private boolean isPlayerTurn = true;
     private String battleMessage = "ATTACK IT";
     private boolean waitingForAnimation = false;
@@ -77,8 +89,8 @@ public class BattlePanel extends JPanel implements Runnable {
             weaponBounceOffsets = new float[weapons.size()];
 
             // Initialize buttons
-            itemButton = new Rectangle(50, 550, 100, 40);
-            attackButton = new Rectangle(50, 450, 100, 40);
+
+            BattleUI = new Rectangle(0, 575, 960, 145);
 
             // Initialize max healths
             this.heroMaxHealth = gamePanel.hero.getHP();
@@ -164,31 +176,145 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
 
-    public void drawAttackButton(Graphics2D g2){
-        // Button background
-        g2.setColor(isPlayerTurn ? Color.RED : Color.GRAY);  // This is a neat way to shorthand if statements
-        g2.fill(attackButton);
-
-        // Button border
+    public void drawBattleUI(Graphics2D g2){
+        // Main UI background
+        g2.setColor(Color.GRAY);  // This is a neat way to shorthand if statements
+        g2.fill(BattleUI);
         g2.setColor(Color.WHITE);
-        g2.draw(attackButton);
+        g2.draw(BattleUI);
 
-        // Button Text
-        g2.setFont(new Font("Arial", Font.BOLD, 20));
-        g2.setColor(Color.WHITE);
-        String buttonText = "ATTACK (button)- this is not in the right place";
+        // Calculate dimensions
+        int uiWidth = BattleUI.width;
+        int uiHeight = BattleUI.height;
+        // Use thirds
+        int buttonSectionWidth = uiWidth/3;
+        int listSectionWidth = (uiWidth * 2) / 3;
 
-        g2.drawString(buttonText, 50, 400); // in wrong place
+        // Draw button section background
+        g2.setColor(Color.DARK_GRAY);
+        g2.fillRect(BattleUI.x, BattleUI.y, buttonSectionWidth, uiHeight);
+
+        // Button drawing
+        int buttonWidth = buttonSectionWidth/2 - 15;
+        int buttonHeight = uiHeight / 2 - 15; // - 15 is for padding
+
+        for (int row = 0; row < 2; row++) {
+            for (int col = 0; col < 2; col++) {
+                int i = row * 2 + col;
+                int x = BattleUI.x + (col * (buttonWidth + 10)) + 10; // +10 for padding
+                int y = BattleUI.y + (row * (buttonHeight + 10)) + 10;
+
+                buttons[i] = new Rectangle(x, y, buttonWidth, buttonHeight);
+
+                g2.setColor(!inSubmenu && i == selectedButtonIndex ? Color.YELLOW : Color.GRAY);
+                g2.fill(buttons[i]);
+
+                g2.setColor(Color.WHITE);
+                g2.draw(buttons[i]);
+
+                g2.setFont(new Font("Arial", Font.BOLD, 20));
+                FontMetrics fm = g2.getFontMetrics();
+                int textX = buttons[i].x + (buttons[i].width - fm.stringWidth(buttonLabels[i])) / 2;
+                int textY = buttons[i].y + ((buttons[i].height + fm.getAscent()) / 2);
+                g2.drawString(buttonLabels[i], textX, textY);
+            }
+        }
+        int contentX = BattleUI.x + buttonSectionWidth + 10;
+        int contentY = BattleUI.y + 10;
+        int contentWidth = listSectionWidth - 20;
+        int contentHeight = uiHeight - 20;
+
+        if (inSubmenu) {
+            if (currentUIState == STATE_WEAPONS) {
+                drawWeaponsList(g2, contentX, contentY, contentWidth, contentHeight);
+            } else if (currentUIState == STATE_ITEMS) {
+                drawItemsList(g2, contentX, contentY, contentWidth, contentHeight);
+            } else if (currentUIState == STATE_ATTACK) {
+                drawAttackMessage(g2, contentX, contentY, contentWidth, contentHeight);
+                performPlayerAttack();
+            } else if (currentUIState == STATE_DEFEND) {
+                drawDefendMessage(g2, contentX, contentY, contentWidth, contentHeight);
+            }
+        }
+
+
 
     }
 
+    private void drawWeaponsList(Graphics g2, int x, int y, int width, int height){
+        g2.setColor(new Color(40,40,40));
+        g2.fillRect(x, y, width, height);
+
+        ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
+        int weaponBoxSize = 80;
+        int weaponsPerRow = width / (weaponBoxSize + 10);
+
+        for (int i = 0; i < weapons.size(); i++) {
+            int row = i / weaponsPerRow;
+            int col = i % weaponsPerRow;
+
+            int weaponX = x + col * (weaponBoxSize + 10);
+            int weaponY = y + row * (weaponBoxSize + 10);
+
+            g2.setColor(i == selectedWeaponIndex ? Color.YELLOW : Color.WHITE);
+
+            g2.fillRect(weaponX, weaponY, weaponBoxSize, weaponBoxSize);
+
+            g2.setColor(Color.BLACK);
+            g2.setFont(new Font("Arial", Font.BOLD, 12));
+            String weaponName = weapons.get(i).getName();
+            g2.drawString(weaponName, weaponX + 5, weaponY + weaponBoxSize / 2);
+        }
+    }
+
+    private void drawItemsList(Graphics g2, int x, int y, int width, int height){
+        g2.setColor(new Color(40,40,40));
+        g2.fillRect(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 24));
+
+    }
+
+    private void drawAttackMessage(Graphics g2, int x, int y, int width, int height){
+        g2.setColor(new Color(40,40,40));
+        g2.fillRect(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 24));
+        g2.drawString("Select option!", x + 20, y + 20);
+
+
+    }
+    private void drawDefendMessage(Graphics g2, int x, int y, int width, int height){
+        g2.setColor(new Color(40,40,40));
+        g2.fillRect(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 24));
+        g2.drawString("__ blocked the attack!", x + 20, y + 20);
+    }
+
+
+    private void updateUIState(){
+        if (selectedButtonIndex == 0) {
+            currentUIState = STATE_ATTACK;
+        } else if (selectedButtonIndex == 1) {
+            currentUIState = STATE_WEAPONS;
+        } else if (selectedButtonIndex == 2) {
+            currentUIState = STATE_DEFEND;
+        } else if (selectedButtonIndex == 3) {
+            currentUIState = STATE_ITEMS;
+        }
+    }
+
+
+
     private void performPlayerAttack(){
         if (isPlayerTurn && !waitingForAnimation){
-
-
             isPlayerAttacking = true;
             attackAnimationTicks = 0;
-            waitingForAnimation = false;
+            waitingForAnimation = true;
             isPlayerTurn = false;
             battleMessage = "Attacking!";
 
@@ -204,7 +330,6 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void performEnemyAttack(){
-
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
         waitingForAnimation = true;
@@ -296,7 +421,7 @@ public class BattlePanel extends JPanel implements Runnable {
         drawWeaponSelect(g2);
 
         // Draw attack button
-        drawAttackButton(g2);
+        drawBattleUI(g2);
         // Draw item button
 
 
@@ -350,27 +475,78 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        bounceTime += BOUNCE_SPEED;
-
         updateAttackAnimation();
 
-        if(keyH.weaponLeft) {
-            //System.out.println("Selecting previous weapon");
-            selectPreviousWeapon();
-            keyH.weaponLeft = false; // Ensures one keypress... don't know if needed
-        }
-        if(keyH.weaponRight) {
-            //System.out.println("Selecting next weapon");
-            selectNextWeapon();
-            keyH.weaponRight = false;
-        }
-        if(keyH.spacePressed) {
+        if (!inSubmenu) {
+            if (keyH.upPressed) {
+                selectedButtonIndex = (selectedButtonIndex + 2) % 4;
+                updateUIState();
+                keyH.upPressed = false;
+            }
+            if (keyH.downPressed) {
+                selectedButtonIndex = (selectedButtonIndex + 2) % 4;
+                updateUIState();
+                keyH.downPressed = false;
+            }
+            if (keyH.leftPressed) {
+                selectedButtonIndex = selectedButtonIndex % 2 == 0 ? selectedButtonIndex + 1 : selectedButtonIndex - 1;
+                updateUIState();
+                keyH.leftPressed = false;
+            }
+            if (keyH.rightPressed) {
+                selectedButtonIndex = selectedButtonIndex % 2 == 0 ? selectedButtonIndex + 1 : selectedButtonIndex - 1;
+                updateUIState();
+                keyH.rightPressed = false;
+            }
 
-            performPlayerAttack();
-            keyH.spacePressed = false;
-        }
+            if (keyH.spacePressed) {
+                if (selectedButtonIndex == 0) {
+                    if (isPlayerTurn && !waitingForAnimation){
+                        performPlayerAttack();
+                    }
+                } else if (selectedButtonIndex == 2) {
+                    if (isPlayerTurn && !waitingForAnimation){
+                        performEnemyAttack();
+                    }
+                }
+                else {
+                    inSubmenu = true;
+                    keyH.spacePressed = false;
+                }
+            }
+        }else {
+            if(keyH.leftPressed) {
+                if (currentUIState == STATE_WEAPONS) {
+                    selectPreviousWeapon();
+                }
+                // Add similar for items when implemented
+                keyH.leftPressed = false;
+            }
+            if(keyH.rightPressed) {
+                if (currentUIState == STATE_WEAPONS) {
+                    selectNextWeapon();
+                }
+                // Add similar for items when implemented
+                keyH.rightPressed = false;
+            }
 
+            // Exit submenu on space
+            if(keyH.spacePressed) {
+                if (currentUIState == STATE_ATTACK) {
+                    performPlayerAttack();
+                } else if (currentUIState == STATE_DEFEND) {
+                    battleMessage = "Defense stance!";
+                    isPlayerTurn = false;
+                    performEnemyAttack();
+                }
+                inSubmenu = false;
+                keyH.spacePressed = false;
+            }
+        }
     }
+
+
+
 
     public void stopBattleThread(){
         battleThread = null;

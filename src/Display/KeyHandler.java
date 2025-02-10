@@ -11,11 +11,14 @@ public class KeyHandler implements KeyListener {
     public boolean spacePressed;
 
 
+
     public void keyTyped(KeyEvent e) {}
 
 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+
+        // Movement controls (WASD)
         if (keyCode == KeyEvent.VK_W) {
             upPressed = true;
         }
@@ -29,29 +32,35 @@ public class KeyHandler implements KeyListener {
             rightPressed = true;
         }
 
-        // REMOVE THIS LATER
-        if (keyCode == KeyEvent.VK_B) {  // "B" to start battle
+        // Menu navigation (Arrow Keys)
+        if (keyCode == KeyEvent.VK_UP) {
+            upPressed = true;
+        }
+        if (keyCode == KeyEvent.VK_DOWN) {
+            downPressed = true;
+        }
+        if (keyCode == KeyEvent.VK_LEFT) {
+            leftPressed = true;
+        }
+        if (keyCode == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
+        }
+
+        // Battle test key
+        if (keyCode == KeyEvent.VK_B) {
             battleTestKey = true;
         }
 
-
-        // Weapon selection controls
-
-        if (keyCode == KeyEvent.VK_LEFT) {
-            weaponLeft = true;
-        }
-        if (keyCode == KeyEvent.VK_RIGHT) {
-            weaponRight = true;
-        }
+        // Action controls
         if (keyCode == KeyEvent.VK_SPACE) {
             spacePressed = true;
         }
-
     }
 
-
-     public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
+
+        // Movement controls (WASD)
         if (keyCode == KeyEvent.VK_W) {
             upPressed = false;
         }
@@ -65,22 +74,28 @@ public class KeyHandler implements KeyListener {
             rightPressed = false;
         }
 
-        // REMOVE THIS LATER
-         if (keyCode == KeyEvent.VK_B) {
-             battleTestKey = false;
-         }
+        // Menu navigation (Arrow Keys)
+        if (keyCode == KeyEvent.VK_UP) {
+            upPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_DOWN) {
+            downPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
+        }
 
-         // Weapon stuff
+        // Battle test key
+        if (keyCode == KeyEvent.VK_B) {
+            battleTestKey = false;
+        }
 
-         if (keyCode == KeyEvent.VK_LEFT) {
-             weaponLeft = false;
-         }
-         if (keyCode == KeyEvent.VK_RIGHT) {
-             weaponRight = false;
-         }
-         if (keyCode == KeyEvent.VK_SPACE) {
-             spacePressed = false;
-         }
-
-     }
+        // Action controls
+        if (keyCode == KeyEvent.VK_SPACE) {
+            spacePressed = false;
+        }
+    }
 }
