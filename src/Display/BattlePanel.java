@@ -19,10 +19,10 @@ public class BattlePanel extends JPanel implements Runnable {
     private Enemy currentEnemy;
 
     // Battle positions
-    private int playerBaseX = 100;
-    private int playerBaseY = 300;
-    private int enemyBaseX = 500;
-    private int enemyBaseY = 300;
+    private int playerBaseX = 150;
+    private int playerBaseY = 400;
+    private int enemyBaseX = 600;
+    private int enemyBaseY = 150;
     private int playerX = playerBaseX;
     private int playerY = playerBaseY;
     private int enemyX = enemyBaseX;
@@ -32,9 +32,8 @@ public class BattlePanel extends JPanel implements Runnable {
     private boolean isPlayerAttacking = false;
     private boolean isEnemyAttacking = false;
     private int attackAnimationTicks = 0;
-    private final int ATTACK_ANIMATION_DURATION = 60; // 1 second at 60 FPS
-    private final int JUMP_HEIGHT = 100;
-    private final int HORIZONTAL_JUMP_DISTANCE = 200;
+    private final int ATTACK_ANIMATION_DURATION = 10; // 1 second at 60 FPS
+    int juttDistance = 30; // Smaller distance
 
 
     private double heroMaxHealth;
@@ -98,15 +97,14 @@ public class BattlePanel extends JPanel implements Runnable {
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
                 // Calculate progress (0.0-1.0)
                 float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
-                // Calculate jump height (follow the sin wave)
-                float jumpHeight = (float) Math.sin(progress * Math.PI) * JUMP_HEIGHT; // bounce animation lol
 
-                // Move character forward + up according to progress
-                playerX = (int) (playerBaseX + (HORIZONTAL_JUMP_DISTANCE * progress));
-                playerY = (int) (playerBaseY - jumpHeight);
+
+                // Calculate jutt movement
+                playerX = (int) (playerBaseX + (juttDistance * progress));
+                playerY = (int) (playerBaseY - (juttDistance * progress));
 
                 // Right at reverse, take damage
-            } else if (attackAnimationTicks == 30){
+            } else if (attackAnimationTicks == 5){
                 Weapon selectedWeapon = getSelectedWeapon();
                 gamePanel.hero.attack(currentEnemy, selectedWeapon);
 
@@ -115,11 +113,11 @@ public class BattlePanel extends JPanel implements Runnable {
 
                 // Calculate progress
                 float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
-                float jumpHeight = (float) Math.sin((1 - progress) * Math.PI) * JUMP_HEIGHT;
+
 
                 // Move character back to start + down according to progress
-                playerX = (int) (playerBaseX + HORIZONTAL_JUMP_DISTANCE * (1 - progress));
-                playerY = (int) (playerBaseY - jumpHeight);
+                playerX = (int) (playerBaseX + (juttDistance * (1- progress)));
+                playerY = (int) (playerBaseY - (juttDistance * (1- progress)));
             } else {
                 isPlayerAttacking = false;
                 playerX = playerBaseX;
@@ -134,23 +132,18 @@ public class BattlePanel extends JPanel implements Runnable {
                 // Calculate progress (0.0-1.0)
                 float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
                 // Calculate jump height (follow the sin wave)
-                float jumpHeight = (float) Math.sin(progress * Math.PI) * JUMP_HEIGHT; // bounce animation lol
 
-                // Move character forward + up according to progress
-                enemyX = (int) (enemyBaseX - (HORIZONTAL_JUMP_DISTANCE * progress));
-                enemyY = (int) (enemyBaseY - jumpHeight);
-            } else if (attackAnimationTicks == 30){
+                enemyX = (int) (enemyBaseX - (juttDistance * progress));
+                enemyY = (int) (enemyBaseY + (juttDistance * progress));
+            } else if (attackAnimationTicks == 5){
                 Weapon weapon = currentEnemy.getWeapon();
                 currentEnemy.attack(gamePanel.hero, weapon);
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
                 // Calculate progress
                 float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
-                float jumpHeight = (float) Math.sin((1 - progress) * Math.PI) * JUMP_HEIGHT;
-
-                // Move character back to start + down according to progress
-                enemyX = (int) (enemyBaseX - HORIZONTAL_JUMP_DISTANCE * (1 - progress));
-                enemyY = (int) (enemyBaseY - jumpHeight);
+                enemyX = (int) (enemyBaseX - (juttDistance * (1- progress)));
+                enemyY = (int) (enemyBaseY + (juttDistance * (1- progress)));
             } else {
                 isEnemyAttacking = false;
                 enemyX = enemyBaseX;
@@ -207,16 +200,10 @@ public class BattlePanel extends JPanel implements Runnable {
         isPlayerTurn = false;
         battleMessage = "Enemy's turn!";
 
-//        try{
-//            TimeUnit.SECONDS.sleep(3);
-//        }catch(InterruptedException _){
-//        }
-
         performEnemyAttack();
     }
 
     private void performEnemyAttack(){
-
 
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
