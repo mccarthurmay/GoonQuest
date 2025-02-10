@@ -105,8 +105,14 @@ public class BattlePanel extends JPanel implements Runnable {
                 playerX = (int) (playerBaseX + (HORIZONTAL_JUMP_DISTANCE * progress));
                 playerY = (int) (playerBaseY - jumpHeight);
 
+                // Right at reverse, take damage
+            } else if (attackAnimationTicks == 30){
+                Weapon selectedWeapon = getSelectedWeapon();
+                gamePanel.hero.attack(currentEnemy, selectedWeapon);
+
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
+
                 // Calculate progress
                 float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
                 float jumpHeight = (float) Math.sin((1 - progress) * Math.PI) * JUMP_HEIGHT;
@@ -122,6 +128,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 performEnemyAttack();
             }
             attackAnimationTicks++;
+
         } else if (isEnemyAttacking) {
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
                 // Calculate progress (0.0-1.0)
@@ -132,7 +139,9 @@ public class BattlePanel extends JPanel implements Runnable {
                 // Move character forward + up according to progress
                 enemyX = (int) (enemyBaseX - (HORIZONTAL_JUMP_DISTANCE * progress));
                 enemyY = (int) (enemyBaseY - jumpHeight);
-
+            } else if (attackAnimationTicks == 30){
+                Weapon weapon = currentEnemy.getWeapon();
+                currentEnemy.attack(gamePanel.hero, weapon);
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
                 // Calculate progress
@@ -182,15 +191,13 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private void performPlayerAttack(){
         if (isPlayerTurn && !waitingForAnimation){
-            Weapon selectedWeapon = getSelectedWeapon();
-            gamePanel.hero.attack(currentEnemy, selectedWeapon);
+
 
             isPlayerAttacking = true;
             attackAnimationTicks = 0;
             waitingForAnimation = false;
             isPlayerTurn = false;
             battleMessage = "Attacking!";
-
 
             if (currentEnemy.getHP() <= 0) {
                 battleMessage = "Enemy was defeated!";
@@ -209,8 +216,7 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void performEnemyAttack(){
-        Weapon weapon = currentEnemy.getWeapon();
-        currentEnemy.attack(gamePanel.hero, weapon);
+
 
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
