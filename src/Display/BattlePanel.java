@@ -417,7 +417,7 @@ public class BattlePanel extends JPanel implements Runnable {
         int visibleWeapons = 7;
         float scale = 4.0f;
 
-        int startIndex = Math.max(0, selectedItemIndex - (visibleWeapons/2));
+        int startIndex = Math.max(0, selectedWeaponIndex - (visibleWeapons/2));
         startIndex = Math.min(startIndex, Math.max(0, weapons.size() - visibleWeapons));
 
         int totalVisibleWidth = Math.min(weapons.size(), visibleWeapons) * (weaponBoxSize + padding) - padding;
@@ -445,7 +445,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 weaponY -= 10;  // Fixed lift amount
                 g2.setColor(Color.WHITE);
                 g2.setFont(customFont.deriveFont(16f));
-                String weaponName = weapons.get(i).getName();
+                String weaponName = weapons.get(weaponIndex).getName();
                 FontMetrics metrics = g2.getFontMetrics();
                 int textWidth = metrics.stringWidth(weaponName);
 
@@ -514,7 +514,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 itemY -= 10;
                 g2.setColor(Color.WHITE);
                 g2.setFont(customFont.deriveFont(16f));
-                String itemName = items.get(i).getName();
+                String itemName = items.get(itemIndex).getName();
                 FontMetrics metrics = g2.getFontMetrics();
                 int textWidth = metrics.stringWidth(itemName);
 
