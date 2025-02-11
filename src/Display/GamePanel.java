@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public Hero hero = loadHero(this, keyH);
+    public Superobjects obj[] = new Superobjects[10];
 
     public Enemy foe = EnemyFactory.createDefaultEnemy(this);
     public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
@@ -98,7 +99,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() { // add things to the game world, play music, etc
         //aSetter.setEnemy();
+
         System.out.println("enemy set");
+        aSetter.setObject();
         playMusic(0 );
     }
 
@@ -219,8 +222,21 @@ public class GamePanel extends JPanel implements Runnable {
                 enemy[i].draw(bufferG);
             }
         }
+
+        // Tile
         tileM.draw(bufferG);
+
+        // Player
         hero.drawHero(bufferG);
+
+        // Object
+        for(int i = 0; i<obj.length; i++ ){
+            if (obj[i] != null){
+                obj[i].draw(g2, this);
+            }
+        }
+
+
 
 
         // Create fog layer
