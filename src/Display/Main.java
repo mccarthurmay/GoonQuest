@@ -9,7 +9,6 @@ public class Main{
 
 
         GamePanel gamePanel = new GamePanel();
-        gamePanel.setupGame();
 
         // Create battle system
         Battle battle = new Battle(gamePanel, window);
@@ -22,6 +21,7 @@ public class Main{
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        gamePanel.setupGame();
         gamePanel.startGameThread();
 
     }

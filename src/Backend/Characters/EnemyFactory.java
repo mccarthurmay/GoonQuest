@@ -15,8 +15,7 @@ public class EnemyFactory {
         Stats defaultStats = new Stats(15.0, 8.0, 500.0, 0.1, 0.75);
         Weapon defaultWeapon = new Weapon("Claws", 10, "Basic weapon", 1, 2, "Sharp claws", "");
         ArrayList<Item> defaultItems = new ArrayList<>();
-
-        Enemy enemy = new Enemy(defaultStats, defaultWeapon, "Default Enemy", defaultItems);
+        Enemy enemy = new Enemy(defaultStats, defaultWeapon, "Default Enemy", defaultItems, "src/Backend/Images/sprites/glargo_star.png");
         enemy.gp = gp;
         enemy.direction = "down";
         enemy.speed = 3;
