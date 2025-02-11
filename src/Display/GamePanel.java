@@ -40,9 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Enemy foe = EnemyFactory.createDefaultEnemy(this);
     public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
 
-    public void setUpGame(){
-        playMusic(0 );
-    }
+
 
 
 
@@ -101,6 +99,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() { // add things to the game world, play music, etc
         //aSetter.setEnemy();
         System.out.println("enemy set");
+        playMusic(0 );
     }
 
     public void startGameThread() {

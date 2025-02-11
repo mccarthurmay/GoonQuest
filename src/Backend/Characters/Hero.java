@@ -97,8 +97,8 @@ public class Hero extends CharacterManager {
 
     // Display and movement methods
     public void setDefaultValues() {
-        worldY = gp.tileSize * 20;
-        worldX = gp.tileSize * 20;
+        worldY = gp.tileSize * 30;
+        worldX = gp.tileSize * 30;
         speed = 20;
         direction = "down";
     }
