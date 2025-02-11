@@ -1,14 +1,11 @@
 package Backend.ObjectsRendering;
 
-import Backend.Weapons.Weapon;
-
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class WeaponRendering extends Superobjects {
-
-    public WeaponRendering(String path){
-        name  = "Weapon";
+public class ItemRendering extends Superobjects{
+    public ItemRendering(String path){
+        name  = "Item";
         try{
             image = ImageIO.read(getClass().getResourceAsStream(path));
 

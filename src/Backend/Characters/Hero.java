@@ -142,6 +142,7 @@ public class Hero extends CharacterManager {
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);
             int obj_index = gp.collisionChecker.checkObject(this, true);
+            pickUpObject(obj_index, weapon);
             int enemyIndex = gp.collisionChecker.checkEnemy(this, gp.enemy); // check if any enemies are colliding with the player
             // fight enemy!
 
@@ -169,6 +170,24 @@ public class Hero extends CharacterManager {
                 spriteNum = (spriteNum % 4) + 1;
                 spriteCounter = 0;
             }
+
+        }
+    }
+
+    public void pickUpObject(int i, Weapon weapon){
+        if(i!= 999){
+            gp.obj[i] = null;
+            ownedWeapons.add(weapon);
+            //String objectName = gp.obj[i].name;
+
+
+
+//            switch(objectName){
+//                case("Weapon"){
+//
+//                }
+//            }
+
         }
     }
 
