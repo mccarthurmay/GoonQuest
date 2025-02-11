@@ -341,7 +341,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
     public void drawBattleUI(Graphics2D g2){
         // Main UI background
-        g2.setColor(Color.GRAY);  // This is a neat way to shorthand if statements
+        g2.setColor(new Color(175, 0, 0));
         g2.fill(BattleUI);
         g2.setColor(Color.WHITE);
         g2.draw(BattleUI);
@@ -369,7 +369,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
                 buttons[i] = new Rectangle(x, y, buttonWidth, buttonHeight);
 
-                g2.setColor(!inSubmenu && i == selectedButtonIndex ? Color.YELLOW : Color.GRAY);
+                g2.setColor(!inSubmenu && i == selectedButtonIndex ? Color.DARK_GRAY : Color.GRAY);
                 g2.fill(buttons[i]);
 
                 g2.setColor(Color.WHITE);
@@ -410,42 +410,66 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.fillRect(x, y, width, height);
 
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        int weaponBoxSize = 80;
-        int weaponsPerRow = width / (weaponBoxSize + 10);
-        int startX = x + 10;
+        if (weapons.isEmpty()) return;
+
+        int weaponBoxSize = 50;
+        int padding = 27;
+        int visibleWeapons = 7;
+        float scale = 4.0f;
+
+        int startIndex = Math.max(0, selectedItemIndex - (visibleWeapons/2));
+        startIndex = Math.min(startIndex, Math.max(0, weapons.size() - visibleWeapons));
+
+        int totalVisibleWidth = Math.min(weapons.size(), visibleWeapons) * (weaponBoxSize + padding) - padding;
+        int startX = x + (width - totalVisibleWidth) / 2;
         int startY = y + (height - weaponBoxSize) / 2;
 
+        if (startIndex > 0) {
+            g2.setColor(Color.WHITE);
+            g2.setFont(customFont.deriveFont(28f));
+            g2.drawString("<", x + 15, y + height/2+ 10);
+        }
+        if (startIndex + visibleWeapons < weapons.size()) {
+            g2.setColor(Color.WHITE);
+            g2.setFont(customFont.deriveFont(28f));
+            g2.drawString(">", x + width - 25, y + height/2 + 10);
+        }
 
-        for (int i = 0; i < weapons.size(); i++) {
-            int row = i / weaponsPerRow;
-            int col = i % weaponsPerRow;
 
-            int weaponX = startX + col * (weaponBoxSize + 10);
-            int weaponY = startY + row * (weaponBoxSize + 10);
+        for (int i = 0; i < Math.min(visibleWeapons, weapons.size() - startIndex); i++) {
+            int weaponIndex = startIndex + i;
+            int weaponX = startX + i * (weaponBoxSize + padding);
+            int weaponY = startY;
 
-            if (i == selectedWeaponIndex) {
+            if (weaponIndex == selectedWeaponIndex) {
                 weaponY -= 10;  // Fixed lift amount
+                g2.setColor(Color.WHITE);
+                g2.setFont(customFont.deriveFont(16f));
+                String weaponName = weapons.get(i).getName();
+                FontMetrics metrics = g2.getFontMetrics();
+                int textWidth = metrics.stringWidth(weaponName);
+
+                int textX = weaponX + (weaponBoxSize - textWidth) / 2;
+                int textY = weaponY + weaponBoxSize + 24 ;
+                g2.drawString(weaponName, textX, textY);
             }
 
-            g2.setColor(i == selectedWeaponIndex ? Color.YELLOW : Color.WHITE);
-            g2.fillRect(weaponX, weaponY, weaponBoxSize, weaponBoxSize);
+            BufferedImage weaponSprite = weapons.get(weaponIndex).getSprite();
 
-            int spriteSize = 48;
-            BufferedImage weaponSprite = weapons.get(i).getSprite();
-            int spriteX = weaponX + (weaponBoxSize-spriteSize)/2;
-            int spriteY = weaponY + 5;
-            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
+            int scaledWidth = (int)(weaponSprite.getWidth() * scale);
+            int scaledHeight = (int)(weaponSprite.getHeight() * scale);
 
-            g2.setColor(Color.BLACK);
-            g2.setFont(customFont);
-            String weaponName = weapons.get(i).getName();
-            FontMetrics metrics = g2.getFontMetrics();
-            int textWidth = metrics.stringWidth(weaponName);
+            // Center the scaled sprite in the box
+            int spriteX = weaponX + (weaponBoxSize - scaledWidth) / 2;
+            int spriteY = weaponY + (weaponBoxSize - scaledHeight) / 2;
 
-            int textX = weaponX + (weaponBoxSize - textWidth) / 2;
-            int textY = weaponY + weaponBoxSize -10;
+            g2.drawImage(weaponSprite, spriteX, spriteY, scaledWidth, scaledHeight, null);
 
-            g2.drawString(weaponName, textX, textY);
+//            int spriteSize = 48;
+//            BufferedImage weaponSprite = weapons.get(i).getSprite();
+//            int spriteX = weaponX + (weaponBoxSize-spriteSize)/2;
+//            int spriteY = weaponY + 5;
+//            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
         }
     }
 
@@ -453,29 +477,31 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
 
-        ArrayList<Item> items = gamePanel.hero.getOwnedItems();  // You'll need to create this method
+        ArrayList<Item> items = gamePanel.hero.getOwnedItems();
         if (items.isEmpty()) return;
 
         int itemBoxSize = 50;
-        int padding = 10;
+        int padding = 27;
         int visibleItems = 7;
+
+
 
         int startIndex = Math.max(0, selectedItemIndex - (visibleItems/2));
         startIndex = Math.min(startIndex, Math.max(0, items.size() - visibleItems));
 
-        int totalVisibleWidth = Math.min(items.size(), visibleItems) * (itemBoxSize + padding);
+        int totalVisibleWidth = Math.min(items.size(), visibleItems) * (itemBoxSize + padding) - padding;
         int startX = x + (width - totalVisibleWidth)/2;
         int startY = y + (height - itemBoxSize) / 2;
 
         if (startIndex > 0) {
             g2.setColor(Color.WHITE);
-            g2.setFont(customFont.deriveFont(24f));
-            g2.drawString("<", x + 10, y + height/2);
+            g2.setFont(customFont.deriveFont(28f));
+            g2.drawString("<", x + 15, y + height/2+ 10);
         }
         if (startIndex + visibleItems < items.size()) {
             g2.setColor(Color.WHITE);
-            g2.setFont(customFont.deriveFont(24f));
-            g2.drawString(">", x + width - 25, y + height/2);
+            g2.setFont(customFont.deriveFont(28f));
+            g2.drawString(">", x + width - 25, y + height/2 + 10);
         }
 
 
@@ -486,24 +512,25 @@ public class BattlePanel extends JPanel implements Runnable {
 
             if (itemIndex == selectedItemIndex) {
                 itemY -= 10;
+                g2.setColor(Color.WHITE);
+                g2.setFont(customFont.deriveFont(16f));
+                String itemName = items.get(i).getName();
+                FontMetrics metrics = g2.getFontMetrics();
+                int textWidth = metrics.stringWidth(itemName);
+
+                int textX = itemX + (itemBoxSize - textWidth) / 2;
+                int textY = itemY + itemBoxSize + 24 ;
+                g2.drawString(itemName, textX, textY);
             }
 
 
-            int spriteSize = 32;
+            int spriteSize = 48;
             BufferedImage itemSprite = items.get(i).getSprite();
             int spriteX = itemX + (itemBoxSize-spriteSize)/2;
             int spriteY = itemY + 5;
             g2.drawImage(itemSprite, spriteX, spriteY, spriteSize, spriteSize, null);
 
-            g2.setColor(Color.WHITE);
-            g2.setFont(customFont.deriveFont(16f));
-            String itemName = items.get(i).getName();
-            FontMetrics metrics = g2.getFontMetrics();
-            int textWidth = metrics.stringWidth(itemName);
 
-            int textX = itemX + (itemBoxSize - textWidth) / 2;
-            int textY = itemY + itemBoxSize -10 ;
-            g2.drawString(itemName, textX, textY);
         }
     }
 
