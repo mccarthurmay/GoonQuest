@@ -38,7 +38,7 @@ public class Hero extends CharacterManager {
 
         // Display and movement initialization
         this.gp = gp;
-        System.out.println(this.gp);
+        //System.out.println(this.gp);
         this.keyH = keyH;
         this.screenX = gp.screenWidth/2 - (gp.tileSize/2);
         this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -97,9 +97,9 @@ public class Hero extends CharacterManager {
 
     // Display and movement methods
     public void setDefaultValues() {
-        worldY = gp.tileSize * 20;
-        worldX = gp.tileSize * 20;
-        speed = 20;
+        worldY = gp.tileSize * 30;
+        worldX = gp.tileSize * 30;
+        speed = 5;
         direction = "down";
     }
 

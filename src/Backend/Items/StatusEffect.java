@@ -106,6 +106,10 @@ public class StatusEffect extends Item{
         return duration;
     }
 
+    public String toString(){
+        return "StatusEffect" + ',' + this.getName() + ',' + this.classification + ',' + this.buff + ',' +this.numChange + ',' + this.getDuration();
+    }
+
     // Battle logic:
     // continually call "if buffWasUsed" then "reduce duration" "if duration == 0, removeBuff"
     // just have to track "if buffWasUsed" variable

@@ -1,0 +1,17 @@
+<name>
+Player
+</name>
+<weapon>
+Stick,2.0,Basic weapon,2.0,3.0,A simple stick, 
+Stick2,2.0,Basic,2.0,3.0,A simple stick, 
+</weapon>
+<item>
+HpItem,Health Potion,10.0
+StatusEffect,Strength Boost,dmg,true,5.0,3
+</item>
+<stats>
+100.0,10.0,200.0,0.15,0.85
+</stats>
+<location>
+1920,5505
+</location>
