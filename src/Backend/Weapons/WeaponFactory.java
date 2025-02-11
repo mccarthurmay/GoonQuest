@@ -23,7 +23,7 @@ public class WeaponFactory {
         Weapon club = new Weapon("Club", 18, "wind", 15,99,"Man, it's windy", "./src/Backend/Images/Weapons/Club/Sprite.png");
         Weapon Lance = new Weapon("Knight's lance", 22, "wind", 11,90,"Man, it's windy", "./src/Backend/Images/Weapons/Lance/Sprite.png");
         Weapon katana = new Weapon("Kusanagi-no-tsurugi", 30, "wind", 10,80,"Man, it's windy", "./src/Backend/Images/Weapons/Katana/Sprite.png");
-        Weapon hammer = new Weapon("Sledgehammer.", 14, "wind", 12,99,"Man, it's windy", "./src/Backend/Images/Weapons/Hammer/Sprite.png");
+        Weapon hammer = new Weapon("Sledgehammer.", 14, "wind", 12,99,"Man, it's wind1y", "./src/Backend/Images/Weapons/Hammer/Sprite.png");
         Weapon sword = new Weapon("Dawnbreaker", 20, "wind", 20,100,"Man, it's windy", "./src/Backend/Images/Weapons/Sword/Sprite.png");
 
 

@@ -415,6 +415,7 @@ public class BattlePanel extends JPanel implements Runnable {
         int startX = x + 10;
         int startY = y + (height - weaponBoxSize) / 2;
 
+
         for (int i = 0; i < weapons.size(); i++) {
             int row = i / weaponsPerRow;
             int col = i % weaponsPerRow;
@@ -429,15 +430,20 @@ public class BattlePanel extends JPanel implements Runnable {
             g2.setColor(i == selectedWeaponIndex ? Color.YELLOW : Color.WHITE);
             g2.fillRect(weaponX, weaponY, weaponBoxSize, weaponBoxSize);
 
+            int spriteSize = 48;
+            BufferedImage weaponSprite = weapons.get(i).getSprite();
+            int spriteX = weaponX + (weaponBoxSize-spriteSize)/2;
+            int spriteY = weaponY + 5;
+            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
+
             g2.setColor(Color.BLACK);
             g2.setFont(customFont);
             String weaponName = weapons.get(i).getName();
             FontMetrics metrics = g2.getFontMetrics();
             int textWidth = metrics.stringWidth(weaponName);
-            int textHeight = metrics.getHeight();
 
             int textX = weaponX + (weaponBoxSize - textWidth) / 2;
-            int textY = weaponY + (weaponBoxSize + textHeight) / 2;
+            int textY = weaponY + weaponBoxSize -10;
 
             g2.drawString(weaponName, textX, textY);
         }
@@ -465,16 +471,20 @@ public class BattlePanel extends JPanel implements Runnable {
             g2.setColor(i == selectedItemIndex ? Color.YELLOW : Color.WHITE);
             g2.fillRect(itemX, itemY, itemBoxSize, itemBoxSize);
 
+            int spriteSize = 48;
+            BufferedImage weaponSprite = items.get(i).getSprite();
+            int spriteX = itemX + (itemBoxSize-spriteSize)/2;
+            int spriteY = itemY + 5;
+            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
+
             g2.setColor(Color.BLACK);
-            g2.setFont(customFont);
+            g2.setFont(customFont.deriveFont(16f));
             String itemName = items.get(i).getName();
             FontMetrics metrics = g2.getFontMetrics();
             int textWidth = metrics.stringWidth(itemName);
-            int textHeight = metrics.getHeight();
 
             int textX = itemX + (itemBoxSize - textWidth) / 2;
-            int textY = itemY + (itemBoxSize + textHeight) / 2;
-
+            int textY = itemY + itemBoxSize -10 ;
             g2.drawString(itemName, textX, textY);
         }
     }
