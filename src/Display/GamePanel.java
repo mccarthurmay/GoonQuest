@@ -29,14 +29,20 @@ public class GamePanel extends JPanel implements Runnable {
 
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
+    Sound sound = new Sound();
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    Thread gameThread;
+
 
     public Hero hero = loadHero(this, keyH);
 
     public Enemy foe = EnemyFactory.createDefaultEnemy(this);
     public CharacterManager enemy[] = new Enemy[10]; // can have up to 10 enemies
+
+    public void setUpGame(){
+        playMusic(0 );
+    }
 
 
 
@@ -278,6 +284,23 @@ public class GamePanel extends JPanel implements Runnable {
         if (index >= 0 && index < foggyRegions.size()) {
             foggyRegions.remove(index);
         }
+    }
+
+    public void playMusic(int i) {
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+
+    }
+
+    public void stopMusic() {
+        sound.stop();
+    }
+
+    public void playSE(int i){
+        sound.setFile(i);
+        sound.play();
+
     }
 
 }
