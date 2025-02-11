@@ -1,5 +1,6 @@
 package Display;
 import Backend.Characters.*;
+import Backend.SaveLoad;
 import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
@@ -147,12 +148,16 @@ public class GamePanel extends JPanel implements Runnable {
         if(keyH.battleTestKey) {
             battle.testBattleTransition();
         }
+        if(keyH.saveFile){
+            SaveLoad.save(hero);
+        }
 
         battle.checkBattle();
 
         if (battle != null){
             battle.update();
         }
+
     }
 
     public Hero loadHero(GamePanel gp, KeyHandler keyH) {
@@ -163,8 +168,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (response.equals("y") || response.equals("Y")) {
             System.out.println("Input your save file directory (ex: src/saves/mySav.sav)");
             response = input.nextLine();
-
-            hero = HeroFactory.load(response, gp, keyH);
+            hero = SaveLoad.load(response, gp, keyH);
 
         }else {
             hero = HeroFactory.createDefaultHero(this, keyH);

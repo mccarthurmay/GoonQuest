@@ -9,6 +9,7 @@ public class KeyHandler implements KeyListener {
     public boolean battleTestKey; // since enemies don't work, just made a set battle key
     public boolean weaponLeft, weaponRight;
     public boolean spacePressed;
+    public boolean saveFile; // save the game state
 
 
 
@@ -51,6 +52,11 @@ public class KeyHandler implements KeyListener {
             battleTestKey = true;
         }
 
+        // Save state
+        if (keyCode == KeyEvent.VK_P) {
+            saveFile = true;
+        }
+
         // Action controls
         if (keyCode == KeyEvent.VK_SPACE) {
             spacePressed = true;
@@ -91,6 +97,11 @@ public class KeyHandler implements KeyListener {
         // Battle test key
         if (keyCode == KeyEvent.VK_B) {
             battleTestKey = false;
+        }
+
+        // Save state
+        if (keyCode == KeyEvent.VK_P) {
+            saveFile = false;
         }
 
         // Action controls

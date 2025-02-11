@@ -1,0 +1,7 @@
+<name>
+Player
+</name>
+<weapon>
+Stick,2.0,Basic weapon,2.0,A simple stick,
+Stick2,2.0,Basic,2.0,A simple stick,
+</weapon>

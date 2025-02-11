@@ -14,6 +14,7 @@ public class Weapon {
     double hit;
     String message;
     BufferedImage sprite;
+    String spritePath;
 // double durability???
 
     /**
@@ -34,7 +35,7 @@ public class Weapon {
         this.crit = crit;
         this.hit = hit;
         this.message = message;
-
+        this.spritePath = spritePath;
         try {
             if (spritePath == null || spritePath.isEmpty()) {
                 spritePath = "./src/Backend/Images/weaponSprites/default.png";
@@ -70,5 +71,9 @@ public class Weapon {
             return sprite;
         }
 
+    @Override
+    public String toString() {
+        return this.name + ',' + this.dmg +  ',' + this.effect + ',' + this.crit + ',' + this.message + ',' + this.spritePath;
     }
+}
 
