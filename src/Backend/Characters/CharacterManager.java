@@ -156,15 +156,7 @@ abstract public class CharacterManager {
                 ", stats=" + stats +
                 '}';
     }
-    public void draw(Graphics2D g2){
-        BufferedImage image = down1;
-        int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
-        int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
-        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        }
-    }
     public void setAction() {
 
     }
