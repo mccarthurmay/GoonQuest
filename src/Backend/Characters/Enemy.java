@@ -14,8 +14,9 @@ public class Enemy extends CharacterManager{
     GamePanel gp;
     String path;
     int actionLockCounter = 0;
-    public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems, String path){
+    public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems, GamePanel gp, String path){
         super(stats, weapon, name);
+        this.gp = gp;
         this.ownedItems = ownedItems;
         this.path = path;
     }

@@ -69,22 +69,22 @@ public class HeroFactory {
     /**
      *Character test hero creation - no gp no key handler
      */
-    public static Hero createCharacterTestHero(){
-        // Create default weapon
-        Weapon defaultWeapon = new Weapon("Stick", 2, "Basic weapon", 2, 3, "A simple stick", "");
-        ArrayList<Weapon> weapons = new ArrayList<>();
-        weapons.add(defaultWeapon);
-
-        // Create default items
-        ArrayList<Item> items = new ArrayList<>();
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
-
-        // Create default stats
-        Stats stats = new Stats(100.0, 10.0, 5.0, 0.15, 0.85);
-
-        return new Hero("Player", weapons, items, stats);
-    }
+//    public static Hero createCharacterTestHero(){
+//        // Create default weapon
+//        Weapon defaultWeapon = new Weapon("Stick", 2, "Basic weapon", 2, 3, "A simple stick", "");
+//        ArrayList<Weapon> weapons = new ArrayList<>();
+//        weapons.add(defaultWeapon);
+//
+//        // Create default items
+//        ArrayList<Item> items = new ArrayList<>();
+//        items.add(new HpItem("Health Potion", 10, ""));
+//        items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
+//
+//        // Create default stats
+//        Stats stats = new Stats(100.0, 10.0, 5.0, 0.15, 0.85);
+//
+//        return new Hero("Player", weapons, items, stats);
+//    }
 
 
     /**
