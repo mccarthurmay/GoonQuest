@@ -1,12 +1,9 @@
 package Backend.ObjectsRendering;
 
-import Display.Superobjects;
-
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
 
-public class WeaponRendering  extends Superobjects {
+public class WeaponRendering extends Superobjects {
 
     public WeaponRendering(){
         name  = "Sword";

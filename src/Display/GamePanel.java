@@ -1,12 +1,12 @@
 package Display;
 import Backend.Characters.*;
+import Backend.ObjectsRendering.Superobjects;
 import Backend.SaveLoad;
 import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -232,12 +232,9 @@ public class GamePanel extends JPanel implements Runnable {
         // Object
         for(int i = 0; i<obj.length; i++ ){
             if (obj[i] != null){
-                obj[i].draw(g2, this);
+                obj[i].draw(bufferG, this);
             }
         }
-
-
-
 
         // Create fog layer
         if (isInFoggyRegion) {

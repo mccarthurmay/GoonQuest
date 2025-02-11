@@ -19,7 +19,7 @@ public class AssetSetter {
     public void setObject () {
         gp.obj[0] = new WeaponRendering();
         gp.obj[0].worldX = gp.tileSize * 30;
-        gp.obj[0].worldY = gp.tileSize * 30;
+        gp.obj[0].worldY = gp.tileSize * 32;
 
     }
 }

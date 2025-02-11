@@ -1,4 +1,6 @@
-package Display;
+package Backend.ObjectsRendering;
+
+import Display.GamePanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
