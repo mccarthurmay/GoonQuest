@@ -124,7 +124,11 @@ public class Hero extends CharacterManager {
             } else if(keyH.rightPressed) {
                 direction = "right";
             }
-
+        if(keyH.shiftPressed){
+            speed = 20;
+        } else{
+            speed = 4;
+        }
             // Check Tile Collision
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);

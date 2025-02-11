@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean shiftPressed;
     public boolean battleTestKey; // since enemies don't work, just made a set battle key
     public boolean weaponLeft, weaponRight;
     public boolean spacePressed;
@@ -31,6 +32,9 @@ public class KeyHandler implements KeyListener {
         }
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = true;
+        }
+        if (keyCode == KeyEvent.VK_SHIFT){
+            shiftPressed = true;
         }
 
         // Menu navigation (Arrow Keys)
@@ -82,6 +86,9 @@ public class KeyHandler implements KeyListener {
         }
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_SHIFT){
+            shiftPressed = false;
         }
 
         // Menu navigation (Arrow Keys)
