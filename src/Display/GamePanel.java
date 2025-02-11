@@ -98,9 +98,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
+        if (gameThread == null) {
+            gameThread = new Thread(this);
+            gameThread.start();
+        }
     }
+
 
     /**
      * In this loop, we will constantly be updating the charcater position and
@@ -129,8 +132,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void stopGameThread(){
+    public void stopGameThread() {
         gameThread = null;
+        try {
+            // Give time for thread to properly terminate
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void update() {

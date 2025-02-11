@@ -55,23 +55,28 @@ abstract public class CharacterManager {
         return name;
     }
 
-    public void attack(CharacterManager foe, Weapon weapon){
+    public String attack(CharacterManager foe, Weapon weapon){
         Random rand = new Random();
         double hitDecider = rand.nextDouble();
         double critDecider = rand.nextDouble();
         double hitVal = 0;
+        String status = "";
         if (hitDecider < stats.hitChance){
             System.out.println("Attack connects!");
             weapon.attack(); // print out a special message
             if (critDecider < stats.crit){
                 System.out.println("Critical hit! Double damage!");
                 hitVal = 2* (stats.attackMod + weapon.getDamage());
+                status = "crit";
             }
             else {
                hitVal = stats.attackMod + weapon.getDamage();
             }
+        } else {
+            status = "miss";
         }
         foe.takeDamage(hitVal);
+        return status;
     }
 
     public void guard(){
@@ -81,14 +86,17 @@ abstract public class CharacterManager {
 
     public void takeDamage(double hitVal){
         if (guarding){
-            stats.HP -= (hitVal);
             System.out.println("Got hit for " + hitVal + ", but was guarding!");
+            hitVal = hitVal * .1;
+            stats.HP -= hitVal;
             System.out.println(name + " HP is now " + stats.HP);
+            guarding = false;
         }
         System.out.println("hitval: " + hitVal);
         stats.HP -= (hitVal);
         System.out.println("Got hit for " + hitVal);
         System.out.println(name + " HP is now " + stats.HP);
+
     }
     ArrayList<Item> ownedItems = new ArrayList<>();
 

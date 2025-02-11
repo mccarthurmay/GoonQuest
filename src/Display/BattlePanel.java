@@ -90,8 +90,25 @@ public class BattlePanel extends JPanel implements Runnable {
     private final ArrayList<String> playerAttackMessage = new ArrayList<String>();
     private final ArrayList<String> enemyAttackMessage = new ArrayList<String>();
     private final ArrayList<String> playerDefenseMessage = new ArrayList<String>();
+    private final ArrayList<String> playerCritMessage = new ArrayList<>();
+    private final ArrayList<String> enemyCritMessage = new ArrayList<>();
+    private final ArrayList<String> playerMissMessage = new ArrayList<>();
+    private final ArrayList<String> enemyMissMessage = new ArrayList<>();
 
     private final Random random = new Random();
+
+    private boolean usedItemThisTurn = false;
+
+    // popups
+    private String critPopupText = "CRITICAL!";
+    private int critPopupTimer = 0;
+    private int critPopupX = 0;
+    private int critPopupY = 0;
+
+    private String missPopupText = "MISS!";
+    private int missPopupTimer = 0;
+    private int missPopupX = 0;
+    private int missPopupY = 0;
 
     public BattlePanel(GamePanel gamePanel, Enemy enemy, JFrame window) {
         this.gamePanel = gamePanel;
@@ -123,7 +140,7 @@ public class BattlePanel extends JPanel implements Runnable {
         try {
         customFont = Font.createFont(Font.TRUETYPE_FONT,
                         getClass().getResourceAsStream("/Backend/font/undertale.ttf"))
-                .deriveFont(24f);
+                .deriveFont(22f);
         } catch (Exception _) {
         }
 
@@ -131,7 +148,7 @@ public class BattlePanel extends JPanel implements Runnable {
         addMessages();
 
         // Start message
-        showTypewriterText("You have approached ____");
+        showTypewriterText("You have approached " + enemy.getName());
 
 
     }
@@ -148,7 +165,20 @@ public class BattlePanel extends JPanel implements Runnable {
                 // Right at reverse, take damage
             } else if (attackAnimationTicks == 5){
                 Weapon selectedWeapon = getSelectedWeapon();
-                gamePanel.hero.attack(currentEnemy, selectedWeapon);
+                String status = gamePanel.hero.attack(currentEnemy, selectedWeapon);
+                if (status.equals("crit")){
+                    showTypewriterText(playerCritMessage.get(random.nextInt(playerCritMessage.size())));
+                    critPopupX = enemyX + 50;
+                    critPopupY = enemyY;
+                    critPopupTimer = 60;
+                } else if (status.equals("miss")){
+                    showTypewriterText(playerMissMessage.get(random.nextInt(playerMissMessage.size())));
+                    missPopupX = enemyX + 50;
+                    missPopupY = enemyY;
+                    missPopupTimer = 60;
+                } else {
+                    showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
+                }
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
                 // Calculate progress
@@ -172,7 +202,21 @@ public class BattlePanel extends JPanel implements Runnable {
                 enemyY = (int) (enemyBaseY + (juttDistance * progress));
             } else if (attackAnimationTicks == 5){
                 Weapon weapon = currentEnemy.getWeapon();
-                currentEnemy.attack(gamePanel.hero, weapon);
+                String status = currentEnemy.attack(gamePanel.hero, weapon);
+                if (status.equals("crit")){
+                    showTypewriterText(enemyCritMessage.get(random.nextInt(enemyCritMessage.size())));
+                    critPopupX = playerX + 50;
+                    critPopupY = playerY;
+                    critPopupTimer = 60;
+                } else if (status.equals("miss")){
+                    showTypewriterText(enemyMissMessage.get(random.nextInt(enemyMissMessage.size())));
+                    missPopupX = playerX + 50;
+                    missPopupY = playerY;
+                    missPopupTimer = 60;
+                } else {
+                    showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
+                }
+
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
                 // Calculate progress
@@ -244,26 +288,46 @@ public class BattlePanel extends JPanel implements Runnable {
         enemyAttackMessage.add("With a mighty blow, the enemy crushes your guard!");
 
         // Adding Player defense messages
-        playerDefenseMessage.add("You raise your shield just in time to block the attack!");
-        playerDefenseMessage.add("You narrowly dodge the incoming strike!");
-        playerDefenseMessage.add("Your armor absorbs most of the blow!");
-        playerDefenseMessage.add("You parry the enemy's sword with perfect timing!");
-        playerDefenseMessage.add("You block the attack, but feel the impact!");
-        playerDefenseMessage.add("The enemy’s strike bounces off your shield!");
-        playerDefenseMessage.add("With quick reflexes, you sidestep the monster's charge!");
-        playerDefenseMessage.add("Your quick roll saves you from the enemy’s deadly strike!");
-        playerDefenseMessage.add("You manage to block with your sword, but it’s a close call!");
-        playerDefenseMessage.add("You deflect the attack with a swift parry!");
-        playerDefenseMessage.add("Your agility saves you from the monster’s claw!");
-        playerDefenseMessage.add("You brace yourself as the monster’s blow hits your shield!");
-        playerDefenseMessage.add("With a swift block, you stop the enemy's strike!");
-        playerDefenseMessage.add("Your shield takes the brunt of the blow, but you're still standing!");
-        playerDefenseMessage.add("You narrowly escape, feeling the wind of the attack!");
-        playerDefenseMessage.add("The monster’s claws scrape across your armor, but you survive!");
-        playerDefenseMessage.add("You dodge at the last moment, avoiding the deadly blow!");
-        playerDefenseMessage.add("You leap backward, avoiding the enemy's strike!");
-        playerDefenseMessage.add("Your shield takes the hit, protecting you from harm!");
-        playerDefenseMessage.add("You manage to dodge the attack and get into a defensive stance!");
+        playerDefenseMessage.add("Your defensive technique reduces the attack's effectiveness!");
+        playerDefenseMessage.add("You partially redirect the force of the blow!");
+        playerDefenseMessage.add("Your battle stance helps minimize the damage!");
+        playerDefenseMessage.add("You manage to reduce the impact through proper positioning!");
+        playerDefenseMessage.add("Your defensive maneuver lessens the attack's power!");
+        playerDefenseMessage.add("Your guard reduces the impact of the enemy's strike!");
+        playerDefenseMessage.add("Your defensive stance lessens the blow!");
+        playerDefenseMessage.add("You brace yourself, reducing the damage!");
+        playerDefenseMessage.add("Your guard stance softens the enemy's attack!");
+
+        //player  crit messages
+        playerCritMessage.add("A devastating strike! Your weapon does massive damage!");
+        playerCritMessage.add("The stars align as your weapon finds a vital point! ");
+        playerCritMessage.add("Your precision is rewarded! Critical damage!");
+        playerCritMessage.add("CRITICAL HIT! Your attack channels extraordinary power!");
+        playerCritMessage.add("You expose a weakness! Your strike hits with crushing force!");
+
+        // enemy crit messages
+        enemyCritMessage.add("The enemy's attack finds your weak spot! A terrible blow!");
+        enemyCritMessage.add("CRITICAL! The enemy's attack pierces your guard!");
+        enemyCritMessage.add("A devastating hit! Attack hits with doubled force!");
+        enemyCritMessage.add("The enemy exploits an opening! Massive damage!");
+        enemyCritMessage.add("A perfect hit! Attack connects with brutal efficiency!");
+
+
+        // player miss message
+        playerMissMessage.add("Your attack slices through empty air!");
+        playerMissMessage.add("The enemy evades your strike with surprising agility!");
+        playerMissMessage.add("Your weapon fails to find its mark!");
+        playerMissMessage.add("The enemy shifts away at the last moment!");
+        playerMissMessage.add("Your attack goes wide, missing the target!");
+
+
+        // Enemy miss messages
+        enemyMissMessage.add("You deftly dodge the enemy's attack!");
+        enemyMissMessage.add("The enemy's strike misses by a hair's breadth!");
+        enemyMissMessage.add("Their attack meets nothing but air!");
+        enemyMissMessage.add("You skillfully evade the enemy's assault!");
+        enemyMissMessage.add("The enemy's attack fails to connect!");
+
     }
 
 
@@ -332,7 +396,6 @@ public class BattlePanel extends JPanel implements Runnable {
                 drawItemsList(g2, contentX, contentY, contentWidth, contentHeight);
             } else if (currentUIState == STATE_ATTACK) {
                 drawAttackMessage(g2, contentX, contentY, contentWidth, contentHeight);
-                performPlayerAttack();
             } else if (currentUIState == STATE_DEFEND) {
                 drawDefendMessage(g2, contentX, contentY, contentWidth, contentHeight);
             }
@@ -488,7 +551,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 return;
             }
 
-            showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
+
 
         }
     }
@@ -504,7 +567,7 @@ public class BattlePanel extends JPanel implements Runnable {
             showTypewriterText("You were defeated!");
             return;
         }
-
+        usedItemThisTurn = false;
         isPlayerTurn = true;
     }
 
@@ -558,6 +621,22 @@ public class BattlePanel extends JPanel implements Runnable {
             drawVictoryMessage(g2);
         }
 
+        if (critPopupTimer > 0) {
+            g2.setFont(customFont.deriveFont(36f));  // Bigger font
+            g2.setColor(Color.RED);
+            g2.drawString(critPopupText, critPopupX + 1, critPopupY + 1);
+            g2.setColor(Color.RED);
+            g2.drawString(critPopupText, critPopupX, critPopupY);
+        }
+
+        if (missPopupTimer > 0) {
+            g2.setFont(customFont.deriveFont(36f));
+            g2.setColor(Color.RED);
+            g2.drawString(missPopupText, missPopupX + 1, missPopupY + 1);
+            g2.setColor(Color.WHITE);
+            g2.drawString(missPopupText, missPopupX, missPopupY);
+        }
+
         g2.dispose();
     }
 
@@ -605,7 +684,7 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw main text
         g2.setColor(Color.YELLOW);
         g2.drawString(message, x, y);
-        Timer timer = new Timer(4000, e -> returnToGame());
+        Timer timer = new Timer(2000, e -> returnToGame());
         timer.setRepeats(false);
         timer.start();
 
@@ -637,6 +716,16 @@ public class BattlePanel extends JPanel implements Runnable {
         updateAttackAnimation();
         updateTypewriterText();
 
+        if (critPopupTimer > 0) {
+            critPopupTimer--;
+            critPopupY--; // Float up
+        }
+
+        if (missPopupTimer > 0) {
+            missPopupTimer--;
+            missPopupY--; // Float up
+        }
+
         if (!inSubmenu) {
             if (keyH.upPressed) {
                 selectedButtonIndex = (selectedButtonIndex + 2) % 4;
@@ -662,10 +751,17 @@ public class BattlePanel extends JPanel implements Runnable {
             if (keyH.spacePressed) {
                 if (selectedButtonIndex == 0) {
                     if (isPlayerTurn && !waitingForAnimation){
-                        performPlayerAttack();
+                        if (usedItemThisTurn) {
+                            showTypewriterText("Cannot attack after using an item!");
+                        } else {
+                            performPlayerAttack();
+                        }
                     }
                 } else if (selectedButtonIndex == 2) {
                     if (isPlayerTurn && !waitingForAnimation){
+                        showTypewriterText("Defense stance!");
+                        isPlayerTurn = false;
+                        gamePanel.hero.guard();
                         performEnemyAttack();
                     }
                 }
@@ -696,13 +792,6 @@ public class BattlePanel extends JPanel implements Runnable {
 
             // Exit submenu on space
             if(keyH.spacePressed) {
-                if (currentUIState == STATE_ATTACK) {
-                    performPlayerAttack();
-                } else if (currentUIState == STATE_DEFEND) {
-                    showTypewriterText("Defense stance!");
-                    isPlayerTurn = false;
-                    performEnemyAttack();
-                }
                 inSubmenu = false;
                 keyH.spacePressed = false;
             }
@@ -714,10 +803,11 @@ public class BattlePanel extends JPanel implements Runnable {
                         Item selectedItem = items.get(selectedItemIndex);
                         gamePanel.hero.useItem(selectedItem);
                         showTypewriterText("Used " + selectedItem.getName() + "!");
+                        usedItemThisTurn = true;
                     }
                 }
-                keyH.enterPressed = false;
                 inSubmenu = false;
+                keyH.enterPressed = false;
             }
         }
     }
@@ -730,13 +820,16 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void returnToGame() {
+        // Stop battle thread before switching panels
         stopBattleThread();
+
         window.remove(this);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
-        gamePanel.startGameThread();
+
         gamePanel.requestFocusInWindow();
+        gamePanel.startGameThread();
     }
 
 
