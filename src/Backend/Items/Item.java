@@ -25,6 +25,9 @@ public abstract class Item {
             this.sprite = null;
         }
     }
+    public BufferedImage getSprite () {
+        return sprite;
+    }
 
     public abstract void useItem(CharacterManager character);
 
