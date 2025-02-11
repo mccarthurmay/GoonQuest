@@ -16,13 +16,13 @@ public class ItemUsageExample {
 
 
         // Create HP Item
-        HpItem milk = new HpItem("milk", 10);
+        HpItem milk = new HpItem("milk", 10, "");
 
         // Create deBuff item
-        StatusEffect poisonarrow = new StatusEffect("Poison Arrow", "hp", false, 20, 1);
+        StatusEffect poisonarrow = new StatusEffect("Poison Arrow", "hp", false, 20, 1,"");
 
         // Create buff item
-        StatusEffect SlurpJuice = new StatusEffect("Slurp Juice", "dmg", true, 10000, 2);
+        StatusEffect SlurpJuice = new StatusEffect("Slurp Juice", "dmg", true, 10000, 2,"");
 
         // Add items
         ArrayList<Item> items = new ArrayList<>();

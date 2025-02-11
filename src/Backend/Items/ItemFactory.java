@@ -1,16 +1,15 @@
 package Backend.Items;
 
-public class ItemsTest {
+public class ItemFactory {
     public static void main(String[] args) {
-        HpItem Milk = new HpItem("Milk", 10.0);
-        HpItem Chicken = new HpItem("Chicken", 20.0);
+        HpItem beaf = new HpItem("Beaf", 10.0,"./src/Backend/Images/itemSprites/default.png");
+        HpItem treasureChest = new HpItem("Mystery Chest", 20.0,"./src/Backend/Images/itemSprites/default.png");
+        HpItem calamari = new HpItem("Calamari", 30.0,"./src/Backend/Images/itemSprites/default.png");
+        HpItem fish = new HpItem("Fish", 40.0,"./src/Backend/Images/itemSprites/default.png");
 
-        DmgItems Grenade = new DmgItems("Grenade", 100);
-        DmgItems MagicSpear = new DmgItems("Magic Spear", 200);
 
-        StatusEffect SmokeBomb = new StatusEffect("Smoke Bomb", "hit_chance", false,50, 1);
-        StatusEffect BadScroll = new StatusEffect("Bad Scroll", "defense", false, 5, 2);
-        StatusEffect GoodScroll = new StatusEffect("Good Scroll", "dmg", true, 1, 3);
-
+        StatusEffect invincibility = new StatusEffect("Seed", "hp", true, 1000, 1, "./src/Backend/Images/itemSprites/default.png");
+        StatusEffect fortune = new StatusEffect("Fortune Cookie", "hit_chance", true, 100, 1, "./src/Backend/Images/itemSprites/default.png");
+        StatusEffect goldCoin = new StatusEffect("Gold Coin", "crit", true, 100, 1, "./src/Backend/Images/itemSprites/default.png");
     }
 }

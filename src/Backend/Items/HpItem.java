@@ -5,8 +5,8 @@ public class HpItem extends Item {
 
     double hpGain;
 
-    public HpItem(String name, double hpGain) {
-        super(name);
+    public HpItem(String name, double hpGain, String spritePath) {
+        super(name, spritePath);
         this.hpGain = hpGain;
     }
 

@@ -17,8 +17,8 @@ public class StatusEffect extends Item{
      * @param numChange Input the value of the change. ex, 20 with false is -20 whatevers (dmg maybe)
      * @param duration Input number of rounds this effect will last.
      */
-    public StatusEffect(String name, String classification, boolean buff, double numChange, int duration) {
-        super(name);
+    public StatusEffect(String name, String classification, boolean buff, double numChange, int duration, String spritePath) {
+        super(name, spritePath);
         this.classification = classification;
         this.buff = buff;
         this.numChange = numChange;

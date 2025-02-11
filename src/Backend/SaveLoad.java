@@ -93,17 +93,29 @@ public class SaveLoad {
                     while (!(newline.equals("</item>"))) {
                         Item nextItem;
                         String[] lineBroken = newline.split(",");
+                        String itemPath = " ";
+
                         if (lineBroken[0].equals("HpItem")) { // if the item is a healing item
                             String hpName = lineBroken[1];
                             double hpGain = Double.parseDouble(lineBroken[2]);
-                            nextItem = new HpItem(hpName, hpGain);
+                            try {
+                                itemPath = lineBroken[3];
+                            } catch(Exception e){
+                                itemPath = " ";
+                            }
+                            nextItem = new HpItem(hpName, hpGain,itemPath);
                         } else { // damage item
                             String statusName = lineBroken[1];
                             String statusClassification = lineBroken[2];
                             boolean statusBuff = Boolean.parseBoolean(lineBroken[3]);
                             double statusNumChange = Double.parseDouble(lineBroken[4]);
                             double statusDuration = Double.parseDouble(lineBroken[5]);
-                            nextItem = new StatusEffect(statusName, statusClassification, statusBuff, statusNumChange, (int) statusDuration);
+                            try {
+                                itemPath = lineBroken[6];
+                            } catch(Exception e){
+                                itemPath = " ";
+                            }
+                            nextItem = new StatusEffect(statusName, statusClassification, statusBuff, statusNumChange, (int) statusDuration,itemPath);
                         }
                         items.add(nextItem);
                         newline = fileread.nextLine();
