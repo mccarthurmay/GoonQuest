@@ -70,6 +70,7 @@ public class Weapon {
         public BufferedImage getSprite () {
             return sprite;
         }
+        public String getSpritePath () {return spritePath;}
 
     @Override
     public String toString() {
