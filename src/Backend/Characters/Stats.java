@@ -1,5 +1,6 @@
 package Backend.Characters;
 
+
 public class Stats {
     double attackMod;
     double defMod;
@@ -23,6 +24,9 @@ public class Stats {
         this.hitChance = hitChance;
     }
 
+    /**
+     * Getters and Setters
+     */
     public void setAttackMod(double attackMod){
         this.attackMod = attackMod;
     }
@@ -63,7 +67,10 @@ public class Stats {
         return hitChance;
     }
 
-
+    /**
+     * ToString for stats
+     * @return formatting allows the save files to be easily read
+     */
     public String toString(){
         return "" + getAttackMod() + ',' + getDefMod() + ',' + getHP() + ',' + getCrit() + ',' + getHitChance();
         //return "Attack: " + attackMod + "\n" + "Defense: " + defMod+ "\n"+"HP: " + HP + "\n"+ "Crit Chance: " + crit + "\n" + "Hit Chance: " + hitChance;
