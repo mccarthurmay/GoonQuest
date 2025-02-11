@@ -28,6 +28,8 @@ abstract public class CharacterManager {
 
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // default collision for characters
 
+    public int solidAreaDefaultX, solidAreaDefaultY;
+
     public boolean collisionsOn = false;
 
 

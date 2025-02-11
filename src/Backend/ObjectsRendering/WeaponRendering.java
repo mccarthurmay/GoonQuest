@@ -13,6 +13,7 @@ public class WeaponRendering extends Superobjects {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        collision = true;
 
     }
 }

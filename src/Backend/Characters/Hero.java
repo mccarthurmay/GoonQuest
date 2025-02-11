@@ -81,6 +81,10 @@ public class Hero extends CharacterManager {
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
+
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
         solidArea.width = 32;
         solidArea.height = 32;
 
@@ -137,6 +141,7 @@ public class Hero extends CharacterManager {
             // Check Tile Collision
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);
+            int obj_index = gp.collisionChecker.checkObject(this, true);
             int enemyIndex = gp.collisionChecker.checkEnemy(this, gp.enemy); // check if any enemies are colliding with the player
             // fight enemy!
 
