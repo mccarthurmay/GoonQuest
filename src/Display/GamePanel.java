@@ -149,7 +149,9 @@ public class GamePanel extends JPanel implements Runnable {
             battle.testBattleTransition();
         }
         if(keyH.saveFile){
+            System.out.println("Saving...");
             SaveLoad.save(hero);
+            System.out.println("Saved at out.sav!");
         }
 
         battle.checkBattle();

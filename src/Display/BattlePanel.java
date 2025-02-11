@@ -1,6 +1,6 @@
 package Display;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -15,6 +15,7 @@ import Backend.Items.*;
 public class BattlePanel extends JPanel implements Runnable {
 
     GamePanel gamePanel; // copy original panel
+    private JFrame window;
     private KeyHandler keyH;
     private Thread battleThread;
     private Enemy currentEnemy;
@@ -61,6 +62,8 @@ public class BattlePanel extends JPanel implements Runnable {
     private int messageEndDelay = 0;
     private final int MESSAGE_DELAY_TIME = 60; // abt 1 second (60 fps)
     private boolean waitingForMessage = false;
+    private boolean enemyDefeated = false;
+    private boolean showingDefeatMessage = false;
 
     // Health bar settings
     private double heroMaxHealth;
@@ -90,10 +93,11 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private final Random random = new Random();
 
-    public BattlePanel(GamePanel gamePanel, Enemy enemy) {
+    public BattlePanel(GamePanel gamePanel, Enemy enemy, JFrame window) {
         this.gamePanel = gamePanel;
         this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
         this.currentEnemy = enemy;
+        this.window = window;
 
         // Set up the battle panel properties
         this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
@@ -477,12 +481,15 @@ public class BattlePanel extends JPanel implements Runnable {
             waitingForAnimation = true;
             isPlayerTurn = false;
 
-            showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
-
-            if (currentEnemy.getHP() <= 0) {
+            if (currentEnemy.getHP() <= 0 && !enemyDefeated) {
+                enemyDefeated = true;
+                showingDefeatMessage = true;
                 showTypewriterText("Enemy was defeated!");
                 return;
             }
+
+            showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
+
         }
     }
 
@@ -547,6 +554,9 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw attack button
         drawBattleUI(g2);
 
+        if (currentEnemy.getHP() <= 0) {
+            drawVictoryMessage(g2);
+        }
 
         g2.dispose();
     }
@@ -566,6 +576,41 @@ public class BattlePanel extends JPanel implements Runnable {
     public Weapon getSelectedWeapon() {
         return gamePanel.hero.getOwnedWeapons().get(selectedWeaponIndex);
     }
+
+    public void selectNextItem() {
+        ArrayList<Item> items = gamePanel.hero.getOwnedItems();
+        selectedItemIndex = (selectedItemIndex + 1) % items.size();
+    }
+    public void selectPreviousItem() {
+        ArrayList<Item> items = gamePanel.hero.getOwnedItems();
+        selectedItemIndex--;
+        if(selectedItemIndex < 0) {
+            selectedItemIndex = items.size() - 1;
+        }
+    }
+    private void drawVictoryMessage(Graphics2D g2) {
+        String message = "Enemy Defeated!";
+        g2.setFont(customFont.deriveFont(48f));
+        FontMetrics metrics = g2.getFontMetrics();
+        int messageWidth = metrics.stringWidth(message);
+
+        // Center of screen
+        int x = (getWidth() - messageWidth) / 2;
+        int y = getHeight() / 2;
+
+        // Draw shadow/outline effect
+        g2.setColor(Color.BLACK);
+        g2.drawString(message, x + 2, y + 2);
+
+        // Draw main text
+        g2.setColor(Color.YELLOW);
+        g2.drawString(message, x, y);
+        Timer timer = new Timer(4000, e -> returnToGame());
+        timer.setRepeats(false);
+        timer.start();
+
+    }
+
 
 
     @Override
@@ -633,6 +678,8 @@ public class BattlePanel extends JPanel implements Runnable {
             if(keyH.leftPressed) {
                 if (currentUIState == STATE_WEAPONS) {
                     selectPreviousWeapon();
+                } else if (currentUIState == STATE_ITEMS) {
+                    selectPreviousItem();
                 }
                 // Add similar for items when implemented
                 keyH.leftPressed = false;
@@ -640,6 +687,8 @@ public class BattlePanel extends JPanel implements Runnable {
             if(keyH.rightPressed) {
                 if (currentUIState == STATE_WEAPONS) {
                     selectNextWeapon();
+                } else if (currentUIState == STATE_ITEMS) {
+                    selectNextItem();
                 }
                 // Add similar for items when implemented
                 keyH.rightPressed = false;
@@ -657,6 +706,19 @@ public class BattlePanel extends JPanel implements Runnable {
                 inSubmenu = false;
                 keyH.spacePressed = false;
             }
+
+            if(keyH.enterPressed) {
+                if (currentUIState == STATE_ITEMS) {
+                    ArrayList<Item> items = gamePanel.hero.getOwnedItems();
+                    if (!items.isEmpty()) {
+                        Item selectedItem = items.get(selectedItemIndex);
+                        gamePanel.hero.useItem(selectedItem);
+                        showTypewriterText("Used " + selectedItem.getName() + "!");
+                    }
+                }
+                keyH.enterPressed = false;
+                inSubmenu = false;
+            }
         }
     }
 
@@ -666,4 +728,16 @@ public class BattlePanel extends JPanel implements Runnable {
     public void stopBattleThread(){
         battleThread = null;
     }
+
+    private void returnToGame() {
+        stopBattleThread();
+        window.remove(this);
+        window.add(gamePanel);
+        window.revalidate();
+        window.repaint();
+        gamePanel.startGameThread();
+        gamePanel.requestFocusInWindow();
+    }
+
+
 }

@@ -10,7 +10,7 @@ public class KeyHandler implements KeyListener {
     public boolean weaponLeft, weaponRight;
     public boolean spacePressed;
     public boolean saveFile; // save the game state
-
+    public boolean enterPressed;
 
 
     public void keyTyped(KeyEvent e) {}
@@ -61,6 +61,10 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_SPACE) {
             spacePressed = true;
         }
+
+        if (keyCode == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -107,6 +111,10 @@ public class KeyHandler implements KeyListener {
         // Action controls
         if (keyCode == KeyEvent.VK_SPACE) {
             spacePressed = false;
+        }
+
+        if (keyCode == KeyEvent.VK_ENTER) {
+            enterPressed = false;
         }
     }
 }

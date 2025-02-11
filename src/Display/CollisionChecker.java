@@ -34,10 +34,10 @@ public class CollisionChecker {
                 break;
 
             case ("down"):
-                System.out.println(entity);
-                System.out.println( entityBottomWorldY + ", " + entity.speed);
+                //System.out.println(entity);
+                //System.out.println( entityBottomWorldY + ", " + entity.speed);
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
-                System.out.println(entityBottomRow);
+                //System.out.println(entityBottomRow);
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
                 if (gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {

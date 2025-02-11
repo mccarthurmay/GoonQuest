@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class SaveLoad {
     public static void save(Hero hero){
         try {
-            PrintStream writer = new PrintStream(new File("out.txt"));
+            PrintStream writer = new PrintStream(new File("out.sav"));
             writer.println("<name>");
             writer.println(hero.getName());
             writer.println("</name>");
@@ -28,6 +28,17 @@ public class SaveLoad {
                 writer.println(weapon.toString());
             }
             writer.println("</weapon>");
+            writer.println("<item>");
+            for (Item item : hero.getOwnedItems()){
+                writer.println(item.toString());
+            }
+            writer.println("</item>");
+            writer.println("<stats>");
+            writer.println(hero.getStats());
+            writer.println("</stats>");
+            writer.println("<location>");
+            writer.println(hero.worldX + "," + hero.worldY);
+            writer.println("</location>");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -42,14 +53,14 @@ public class SaveLoad {
             ArrayList<Weapon> weapons = new ArrayList<>();
             ArrayList<Item> items = new ArrayList<>();
             Stats stats = new Stats(1, 1, 1, 1, 1);
-
+            int worldX= 20; int worldY= 20;
             while (fileread.hasNextLine()) {
                 String newline = fileread.nextLine();
                 if (newline.equals("<name>")) {
                     newline = fileread.nextLine();
                     while (!(newline.equals("</name>"))) {
                         name = newline;
-                        System.out.println(name);
+                        //System.out.println(name);
                         newline = fileread.nextLine();
                     }
                 }
@@ -57,7 +68,7 @@ public class SaveLoad {
                 if (newline.equals("<weapon>")) {
                     newline = fileread.nextLine();
                     while (!(newline.equals("</weapon>"))) {
-                        System.out.println(newline);
+                        //System.out.println(newline);
                         String[] lineBroken = newline.split(",");
                         String weaponName = lineBroken[0];
                         double weaponDmg = Double.parseDouble(lineBroken[1]);
@@ -65,7 +76,12 @@ public class SaveLoad {
                         double weaponCrit = Double.parseDouble(lineBroken[3]);
                         double weaponHit = Double.parseDouble(lineBroken[4]);
                         String weaponMessage = lineBroken[5];
-                        String weaponPath = lineBroken[6];
+                        String weaponPath = " ";
+                        try {
+                            weaponPath = lineBroken[6];
+                        } catch(Exception e){
+                            weaponPath = " ";
+                        }
                         Weapon nextWeapon = new Weapon(weaponName, weaponDmg, weaponEffect, weaponCrit, weaponHit, weaponMessage, weaponPath);
                         weapons.add(nextWeapon);
                         newline = fileread.nextLine();
@@ -91,14 +107,13 @@ public class SaveLoad {
                         }
                         items.add(nextItem);
                         newline = fileread.nextLine();
-
                     }
                 }
                 newline = fileread.nextLine();
                 if (newline.equals("<stats>")) {
                     newline = fileread.nextLine();
                     while (!(newline.equals("</stats>"))) {
-                        System.out.println(newline);
+                        //System.out.println(newline);
                         String[] lineBroken = newline.split(",");
                         double statAttack = Double.parseDouble(lineBroken[0]);
                         double statDef = Double.parseDouble(lineBroken[1]);
@@ -109,9 +124,23 @@ public class SaveLoad {
                         newline = fileread.nextLine();
                     }
                 }
+                newline = fileread.nextLine();
+                if (newline.equals("<location>")) {
+                    newline = fileread.nextLine();
+                    while (!(newline.equals("</location>"))) {
+                        //System.out.println(newline);
+                        String[] lineBroken = newline.split(",");
+                        worldX = Integer.parseInt(lineBroken[0]);
+                        worldY = Integer.parseInt(lineBroken[1]);
+                        newline = fileread.nextLine();
+                    }
+                }
             }
+            Hero newH = HeroFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
+            newH.worldX = worldX;
+            newH.worldY = worldY;
 
-            return HeroFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
+            return newH;
 
         } catch (FileNotFoundException e) {
             System.out.println("Bad file or file not found.");

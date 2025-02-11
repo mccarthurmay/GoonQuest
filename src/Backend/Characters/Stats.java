@@ -65,7 +65,8 @@ public class Stats {
 
 
     public String toString(){
-        return "Attack: " + attackMod + "\n" + "Defense: " + defMod+ "\n"+"HP: " + HP + "\n"+ "Crit Chance: " + crit + "\n" + "Hit Chance: " + hitChance;
+        return "" + getAttackMod() + ',' + getDefMod() + ',' + getHP() + ',' + getCrit() + ',' + getHitChance();
+        //return "Attack: " + attackMod + "\n" + "Defense: " + defMod+ "\n"+"HP: " + HP + "\n"+ "Crit Chance: " + crit + "\n" + "Hit Chance: " + hitChance;
     }
     
 }
