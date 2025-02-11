@@ -21,7 +21,7 @@ public class Battle {
         if(enemyIndex != 999) {
             gp.stopGameThread(); // Battle thread frozen if gamethread on
             // Create new battle panel
-            BattlePanel battlePanel = new BattlePanel(gp, currentEnemy);
+            BattlePanel battlePanel = new BattlePanel(gp, currentEnemy, window);
 
             // Remove game panel and add battle panel
             window.remove(gp);
@@ -41,7 +41,7 @@ public class Battle {
     // REMOVE THIS LATER
     public void testBattleTransition() {
         this.currentEnemy = EnemyFactory.createDefaultEnemy(gp);
-        BattlePanel battlePanel = new BattlePanel(gp, this.currentEnemy);
+        BattlePanel battlePanel = new BattlePanel(gp, this.currentEnemy, window);
 
         gp.stopGameThread(); // BattleThread was frozen if both threads on
 
