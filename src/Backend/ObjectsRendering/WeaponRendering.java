@@ -1,19 +1,20 @@
 package Backend.ObjectsRendering;
 
+import Backend.Weapons.Weapon;
+
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class WeaponRendering extends Superobjects {
 
-    public WeaponRendering(){
+    public WeaponRendering(Weapon weapon){
         name  = "Sword";
-        try{
-            image = ImageIO.read(getClass().getResourceAsStream("/Backend/Images/Weapons/Axe/Sprite.png"));
+        image = weapon.getSprite();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
+
+        // Add deletion code back into hero, charactermanager
+        // Add weapon in one of these.
 
     }
 }
