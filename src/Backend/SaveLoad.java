@@ -28,6 +28,10 @@ public class SaveLoad {
                 writer.println(weapon.toString());
             }
             writer.println("</weapon>");
+            writer.println("<item>");
+            for (Item item : hero.getOwnedItems()){
+                writer.println(item.toString());
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +46,7 @@ public class SaveLoad {
             ArrayList<Weapon> weapons = new ArrayList<>();
             ArrayList<Item> items = new ArrayList<>();
             Stats stats = new Stats(1, 1, 1, 1, 1);
-
+            int worldX= 20; int worldY= 20;
             while (fileread.hasNextLine()) {
                 String newline = fileread.nextLine();
                 if (newline.equals("<name>")) {
@@ -91,7 +95,6 @@ public class SaveLoad {
                         }
                         items.add(nextItem);
                         newline = fileread.nextLine();
-
                     }
                 }
                 newline = fileread.nextLine();
@@ -109,9 +112,23 @@ public class SaveLoad {
                         newline = fileread.nextLine();
                     }
                 }
+                newline = fileread.nextLine();
+                if (newline.equals("<location>")) {
+                    newline = fileread.nextLine();
+                    while (!(newline.equals("</location>"))) {
+                        System.out.println(newline);
+                        String[] lineBroken = newline.split(",");
+                        worldX = Integer.parseInt(lineBroken[0]);
+                        worldY = Integer.parseInt(lineBroken[1]);
+                        newline = fileread.nextLine();
+                    }
+                }
             }
+            Hero newH = HeroFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
+            newH.worldX = worldX;
+            newH.worldY = worldY;
 
-            return HeroFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
+            return newH;
 
         } catch (FileNotFoundException e) {
             System.out.println("Bad file or file not found.");

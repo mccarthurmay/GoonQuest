@@ -12,3 +12,6 @@ StatusEffect, Strength Boost, dmg, true, 5, 3
 <stats>
 100, 10, 42069, 0.15, 0.85
 </stats>
+<location>
+2000,2000
+</location>
