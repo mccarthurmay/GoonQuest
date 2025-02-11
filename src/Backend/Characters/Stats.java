@@ -6,7 +6,7 @@ public class Stats {
     double defMod;
     double HP;
     double crit;
-    double hitChance; //
+    double hitChance;
 
     /**
      * Stats object for all enemies and the hero
