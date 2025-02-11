@@ -11,10 +11,15 @@ public abstract class Item {
     BufferedImage sprite;
     String spritePath;
 
-
+    /**
+     * Abstract constructor for item. Needs to be an HpItem or StatusEffect eventually
+     * @param name Name of the item
+     * @param spritePath Path of the item's image
+     */
     public Item(String name, String spritePath) {
         this.name = name;
         this.spritePath = spritePath;
+        // try to set item's image, using a default if the path is invalid
         try {
             if (spritePath == null || spritePath.isEmpty()) {
                 spritePath = "./src/Backend/Images/itemSprites/default.png";
@@ -25,6 +30,8 @@ public abstract class Item {
             this.sprite = null;
         }
     }
+
+
     public BufferedImage getSprite () {
         return sprite;
     }

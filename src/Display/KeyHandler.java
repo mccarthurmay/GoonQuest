@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+    // Initialize variables
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean shiftPressed;
     public boolean battleTestKey; // since enemies don't work, just made a set battle key
@@ -16,7 +17,7 @@ public class KeyHandler implements KeyListener {
 
     public void keyTyped(KeyEvent e) {}
 
-
+    // Check if a key is in the "pressed" position
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
@@ -33,6 +34,7 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = true;
         }
+        // Sprint
         if (keyCode == KeyEvent.VK_SHIFT){
             shiftPressed = true;
         }
@@ -71,6 +73,7 @@ public class KeyHandler implements KeyListener {
         }
     }
 
+    // Check if the key has been let go
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
@@ -87,6 +90,7 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_D) {
             rightPressed = false;
         }
+        // Sprint
         if (keyCode == KeyEvent.VK_SHIFT){
             shiftPressed = false;
         }

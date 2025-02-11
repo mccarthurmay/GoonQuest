@@ -10,7 +10,7 @@ public class StatusEffect extends Item{
 
 
     /**
-     * Give buff/debuff to any character
+     * Give buff/debuff to any character. Buff = increases a stat, Debuff = decreases a stat
      * @param name Input name of effect
      * @param classification Input class: "defense", "hp", "dmg", "crit", or "hitchance"
      * @param buff Input bool of buff; true = Buff, false = DeBuff
@@ -33,54 +33,66 @@ public class StatusEffect extends Item{
         }
     }
 
+    /**
+     * Tells you what kind of buff will be applied
+     * @param character the character receiving  the buff
+     */
     public void sortBuff(CharacterManager character){
-        if (classification.equals("defense")){
+        if (classification.equals("defense")){ // changes defense
             double defense = character.getDefense();
             double newDefense = defense + numChange;
             character.setDefense(newDefense);
-        } else if (classification.equals("hp")){
+        } else if (classification.equals("hp")){ // changes hp
             double HP = character.getHP();
             double newHP = HP + numChange;
             character.setHP(newHP);
-        } else if (classification.equals("dmg")) {
+        } else if (classification.equals("dmg")) { // changes damage
             double dmg = character.getDamage();
             double newDmg = dmg + numChange;
             character.setDamage(newDmg);
-        } else if (classification.equals("crit")){
+        } else if (classification.equals("crit")){ // changes crit
             double crit = character.getCrit();
             double newCrit = crit + numChange;
             character.setCrit(newCrit);
-        } else if (classification.equals("hitchance")){
+        } else if (classification.equals("hitchance")){ // changes hitchance
             double hc = character.getHitChance();
             double newHc = hc + numChange;
             character.setHitChance(newHc);
         }
     }
 
+    /**
+     *Tells you what kind of debuff will be applied
+     * @param character the character receiving the debuff
+     */
     public void sortDebuff(CharacterManager character){
-        if (classification.equals("defense")){
+        if (classification.equals("defense")){ // changes defense
             double defense = character.getDefense();
             double newDefense = defense - numChange;
             character.setDefense(newDefense);
-        } else if (classification.equals("hp")){
+        } else if (classification.equals("hp")){ // changes hp
             double HP = character.getHP();
             double newHP = HP - numChange;
             character.setHP(newHP);
-        } else if (classification.equals("dmg")) {
+        } else if (classification.equals("dmg")) { // changes damage
             double dmg = character.getDamage();
             double newDmg = dmg - numChange;
             character.setDamage(newDmg);
-        } else if (classification.equals("crit")){
+        } else if (classification.equals("crit")){ // changes crit
             double crit = character.getCrit();
             double newCrit = crit - numChange;
             character.setCrit(newCrit);
-        } else if (classification.equals("hitchance")){
+        } else if (classification.equals("hitchance")){ // changes hit chance
             double hc = character.getHitChance();
             double newHc = hc - numChange;
             character.setHitChance(newHc);
         }
     }
 
+    /**
+     * Gets rid of the buff by doing the opposite: if it's a buff, debuff back to normal. If it's a debuff, buff back to normal.
+     * @param character character to be returned to normal
+     */
     public void removeBuff(CharacterManager character){
         if (buff){
             sortDebuff(character);
@@ -91,6 +103,11 @@ public class StatusEffect extends Item{
     }
 
     // Debuffs should never lower duration... can fix later when battle is created
+
+    /**
+     * Tick the buff/debuff's duration until it reaches 0, so battle can keep track of when to run removeBuff
+     * @param character
+     */
     public void reduceDuration(CharacterManager character){
         if (duration > 0) {
             duration--;

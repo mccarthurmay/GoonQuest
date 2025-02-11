@@ -14,7 +14,6 @@ public class AssetSetter {
 
 
     public AssetSetter(GamePanel gp){
-
         this.gp = gp;
     }
     public void setEnemy() {
