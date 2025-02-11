@@ -3,6 +3,7 @@ package Display;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import Backend.Characters.Hero;
 import Backend.Characters.HeroFactory;
@@ -10,7 +11,7 @@ import Backend.Weapons.Weapon;
 import java.util.ArrayList;
 import Backend.Characters.Enemy;
 import Backend.Characters.EnemyFactory;
-
+import Backend.Items.*;
 public class BattlePanel extends JPanel implements Runnable {
 
     GamePanel gamePanel; // copy original panel
@@ -45,13 +46,25 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private int currentUIState = STATE_WEAPONS;
     private int selectedButtonIndex = 0;
+    private int selectedItemIndex = 0;
     private Rectangle[] buttons = new Rectangle[4];
     private final String[] buttonLabels = {"Attack", "Weapon", "Defend", "Items"};
 
-    private double heroMaxHealth;
-    private double enemyMaxHealth;
+    // UI Message
+    private String currentMessage = "";
+    private String targetMessage = "";
+    private int charIndex = 0;
+    private int frameCount = 0;
+    private final int TEXT_SPEED = 2; // higher is slower, default 3
+    private Font customFont;
+    private boolean isMessageComplete = false;
+    private int messageEndDelay = 0;
+    private final int MESSAGE_DELAY_TIME = 60; // abt 1 second (60 fps)
+    private boolean waitingForMessage = false;
 
     // Health bar settings
+    private double heroMaxHealth;
+    private double enemyMaxHealth;
     int healthBarWidth = 100;
     int healthBarHeight = 20;
 
@@ -68,38 +81,54 @@ public class BattlePanel extends JPanel implements Runnable {
     // Battle Metrics
     private Rectangle BattleUI;
     private boolean isPlayerTurn = true;
-    private String battleMessage = "ATTACK IT";
     private boolean waitingForAnimation = false;
 
-    // Item UI
-    private Rectangle itemButton;
+    // Message
+    private final ArrayList<String> playerAttackMessage = new ArrayList<String>();
+    private final ArrayList<String> enemyAttackMessage = new ArrayList<String>();
+    private final ArrayList<String> playerDefenseMessage = new ArrayList<String>();
+
+    private final Random random = new Random();
 
     public BattlePanel(GamePanel gamePanel, Enemy enemy) {
-            this.gamePanel = gamePanel;
-            this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
-            this.currentEnemy = enemy;
+        this.gamePanel = gamePanel;
+        this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
+        this.currentEnemy = enemy;
 
-            // Set up the battle panel properties
-            this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
-            this.setBackground(Color.BLACK); // black because I didn't look at your map code
-            this.setDoubleBuffered(true);
+        // Set up the battle panel properties
+        this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
+        this.setBackground(Color.BLACK); // black because I didn't look at your map code
+        this.setDoubleBuffered(true);
 
-            // Initialize bounce effect
-            ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-            weaponBounceOffsets = new float[weapons.size()];
+        // Initialize bounce effect
+        ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
+        weaponBounceOffsets = new float[weapons.size()];
 
-            // Initialize buttons
+        // Initialize buttons
+        BattleUI = new Rectangle(0, 575, 960, 145);
 
-            BattleUI = new Rectangle(0, 575, 960, 145);
+        // Initialize max healths
+        this.heroMaxHealth = gamePanel.hero.getHP();
+        this.enemyMaxHealth = currentEnemy.getHP();
 
-            // Initialize max healths
-            this.heroMaxHealth = gamePanel.hero.getHP();
-            this.enemyMaxHealth = currentEnemy.getHP();
+        // Key listeners
+        this.addKeyListener(keyH);
+        this.setFocusable(true);
+        startBattleThread();
 
-            // Key listeners
-            this.addKeyListener(keyH);
-            this.setFocusable(true);
-            startBattleThread();
+        try {
+        customFont = Font.createFont(Font.TRUETYPE_FONT,
+                        getClass().getResourceAsStream("/Backend/font/undertale.ttf"))
+                .deriveFont(24f);
+        } catch (Exception _) {
+        }
+
+        // Add messages to list
+        addMessages();
+
+        // Start message
+        showTypewriterText("You have approached ____");
+
 
     }
 
@@ -109,24 +138,17 @@ public class BattlePanel extends JPanel implements Runnable {
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
                 // Calculate progress (0.0-1.0)
                 float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
-
-
                 // Calculate jutt movement
                 playerX = (int) (playerBaseX + (juttDistance * progress));
                 playerY = (int) (playerBaseY - (juttDistance * progress));
-
                 // Right at reverse, take damage
             } else if (attackAnimationTicks == 5){
                 Weapon selectedWeapon = getSelectedWeapon();
                 gamePanel.hero.attack(currentEnemy, selectedWeapon);
-
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
-
                 // Calculate progress
                 float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
-
-
                 // Move character back to start + down according to progress
                 playerX = (int) (playerBaseX + (juttDistance * (1- progress)));
                 playerY = (int) (playerBaseY - (juttDistance * (1- progress)));
@@ -134,8 +156,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 isPlayerAttacking = false;
                 playerX = playerBaseX;
                 playerY = playerBaseY;
-                waitingForAnimation = false;
-                performEnemyAttack();
+                waitingForMessage = true;
             }
             attackAnimationTicks++;
 
@@ -143,8 +164,6 @@ public class BattlePanel extends JPanel implements Runnable {
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
                 // Calculate progress (0.0-1.0)
                 float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
-                // Calculate jump height (follow the sin wave)
-
                 enemyX = (int) (enemyBaseX - (juttDistance * progress));
                 enemyY = (int) (enemyBaseY + (juttDistance * progress));
             } else if (attackAnimationTicks == 5){
@@ -160,11 +179,87 @@ public class BattlePanel extends JPanel implements Runnable {
                 isEnemyAttacking = false;
                 enemyX = enemyBaseX;
                 enemyY = enemyBaseY;
-                waitingForAnimation = false;
+                waitingForMessage = true;
             }
+
             attackAnimationTicks++;
         }
+        if (waitingForMessage && isMessageComplete && messageEndDelay >= MESSAGE_DELAY_TIME) {
+            waitingForMessage = false;
+            if (!isPlayerTurn && !isEnemyAttacking) {
+                performEnemyAttack(); // Start enemy attack after message completes
+            } else if (isPlayerTurn) {
+                waitingForAnimation = false; // Allow next turn to start
+            }
+        }
+    }
 
+    public void addMessages(){
+        // Adding Player attack messages
+        playerAttackMessage.add("You strike with all your might!");
+        playerAttackMessage.add("Your attack lands with a fierce blow!");
+        playerAttackMessage.add("The monster recoils as you slam it!");
+        playerAttackMessage.add("A powerful strike pierces the monster's defense!");
+        playerAttackMessage.add("You land a solid hit, shaking the creature!");
+        playerAttackMessage.add("The ground trembles as you deliver your attack!");
+        playerAttackMessage.add("With a mighty swing, you hit the monster!");
+        playerAttackMessage.add("Your weapon sings through the air, striking true!");
+        playerAttackMessage.add("You deliver a crushing blow to your enemy!");
+        playerAttackMessage.add("The monster shudders under your powerful attack!");
+        playerAttackMessage.add("You feel the impact as your strike lands!");
+        playerAttackMessage.add("Your weapon finds its mark with deadly precision!");
+        playerAttackMessage.add("The monster is rocked by the force of your strike!");
+        playerAttackMessage.add("You cleave through the air, hitting your target!");
+        playerAttackMessage.add("With a battle cry, your attack strikes hard!");
+        playerAttackMessage.add("Your weapon crashes into the foe with force!");
+        playerAttackMessage.add("You make a swift, brutal attack on the monster!");
+        playerAttackMessage.add("The monster crumples under the weight of your blow!");
+        playerAttackMessage.add("You strike with relentless fury!");
+        playerAttackMessage.add("Your strike lands with a satisfying thud!");
+
+        // Adding Enemy attack messages
+        enemyAttackMessage.add("The enemy strikes with brutal force!");
+        enemyAttackMessage.add("You feel the sting of the enemy's attack!");
+        enemyAttackMessage.add("The monster lunges at you, slashing with claws!");
+        enemyAttackMessage.add("The enemy's sword slashes across your armor!");
+        enemyAttackMessage.add("A heavy blow from the creature sends you reeling!");
+        enemyAttackMessage.add("You dodge just in time, but the monster grazes you!");
+        enemyAttackMessage.add("The enemy’s tail whips at you, leaving a mark!");
+        enemyAttackMessage.add("The monster slams into you, knocking you back!");
+        enemyAttackMessage.add("With terrifying speed, the enemy strikes again!");
+        enemyAttackMessage.add("The beast's fiery breath scorches you!");
+        enemyAttackMessage.add("The creature's teeth sink deep into your arm!");
+        enemyAttackMessage.add("You barely avoid the enemy's crushing blow!");
+        enemyAttackMessage.add("The enemy's roar echoes as it swings its weapon!");
+        enemyAttackMessage.add("The creature's claws tear through your defenses!");
+        enemyAttackMessage.add("The monster's charge hits you with full force!");
+        enemyAttackMessage.add("You feel a sharp pain as the enemy's strike lands!");
+        enemyAttackMessage.add("The enemy's attack is overwhelming, but you stand strong!");
+        enemyAttackMessage.add("The monster’s venomous bite poisons you!");
+        enemyAttackMessage.add("The enemy's strike almost knocks you off your feet!");
+        enemyAttackMessage.add("With a mighty blow, the enemy crushes your guard!");
+
+        // Adding Player defense messages
+        playerDefenseMessage.add("You raise your shield just in time to block the attack!");
+        playerDefenseMessage.add("You narrowly dodge the incoming strike!");
+        playerDefenseMessage.add("Your armor absorbs most of the blow!");
+        playerDefenseMessage.add("You parry the enemy's sword with perfect timing!");
+        playerDefenseMessage.add("You block the attack, but feel the impact!");
+        playerDefenseMessage.add("The enemy’s strike bounces off your shield!");
+        playerDefenseMessage.add("With quick reflexes, you sidestep the monster's charge!");
+        playerDefenseMessage.add("Your quick roll saves you from the enemy’s deadly strike!");
+        playerDefenseMessage.add("You manage to block with your sword, but it’s a close call!");
+        playerDefenseMessage.add("You deflect the attack with a swift parry!");
+        playerDefenseMessage.add("Your agility saves you from the monster’s claw!");
+        playerDefenseMessage.add("You brace yourself as the monster’s blow hits your shield!");
+        playerDefenseMessage.add("With a swift block, you stop the enemy's strike!");
+        playerDefenseMessage.add("Your shield takes the brunt of the blow, but you're still standing!");
+        playerDefenseMessage.add("You narrowly escape, feeling the wind of the attack!");
+        playerDefenseMessage.add("The monster’s claws scrape across your armor, but you survive!");
+        playerDefenseMessage.add("You dodge at the last moment, avoiding the deadly blow!");
+        playerDefenseMessage.add("You leap backward, avoiding the enemy's strike!");
+        playerDefenseMessage.add("Your shield takes the hit, protecting you from harm!");
+        playerDefenseMessage.add("You manage to dodge the attack and get into a defensive stance!");
     }
 
 
@@ -224,6 +319,8 @@ public class BattlePanel extends JPanel implements Runnable {
         int contentWidth = listSectionWidth - 20;
         int contentHeight = uiHeight - 20;
 
+        drawAttackMessage(g2, contentX, contentY, contentWidth, contentHeight);
+
         if (inSubmenu) {
             if (currentUIState == STATE_WEAPONS) {
                 drawWeaponsList(g2, contentX, contentY, contentWidth, contentHeight);
@@ -248,41 +345,82 @@ public class BattlePanel extends JPanel implements Runnable {
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
         int weaponBoxSize = 80;
         int weaponsPerRow = width / (weaponBoxSize + 10);
+        int startX = x + 10;
+        int startY = y + (height - weaponBoxSize) / 2;
 
         for (int i = 0; i < weapons.size(); i++) {
             int row = i / weaponsPerRow;
             int col = i % weaponsPerRow;
 
-            int weaponX = x + col * (weaponBoxSize + 10);
-            int weaponY = y + row * (weaponBoxSize + 10);
+            int weaponX = startX + col * (weaponBoxSize + 10);
+            int weaponY = startY + row * (weaponBoxSize + 10);
+
+            if (i == selectedWeaponIndex) {
+                weaponY -= 10;  // Fixed lift amount
+            }
 
             g2.setColor(i == selectedWeaponIndex ? Color.YELLOW : Color.WHITE);
-
             g2.fillRect(weaponX, weaponY, weaponBoxSize, weaponBoxSize);
 
             g2.setColor(Color.BLACK);
-            g2.setFont(new Font("Arial", Font.BOLD, 12));
+            g2.setFont(customFont);
             String weaponName = weapons.get(i).getName();
-            g2.drawString(weaponName, weaponX + 5, weaponY + weaponBoxSize / 2);
+            FontMetrics metrics = g2.getFontMetrics();
+            int textWidth = metrics.stringWidth(weaponName);
+            int textHeight = metrics.getHeight();
+
+            int textX = weaponX + (weaponBoxSize - textWidth) / 2;
+            int textY = weaponY + (weaponBoxSize + textHeight) / 2;
+
+            g2.drawString(weaponName, textX, textY);
         }
     }
 
-    private void drawItemsList(Graphics g2, int x, int y, int width, int height){
+    private void drawItemsList(Graphics g2, int x, int y, int width, int height) {
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
 
-        g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Arial", Font.BOLD, 24));
+        ArrayList<Item> items = gamePanel.hero.getOwnedItems();  // You'll need to create this method
+        int itemBoxSize = 80;
+        int padding = 20;
 
+        int startX = x + padding * 2;
+        int startY = y + (height - itemBoxSize) / 2;
+
+        for (int i = 0; i < items.size(); i++) {
+            int itemX = startX + i * (itemBoxSize + padding);
+            int itemY = startY;
+
+            if (i == selectedItemIndex) {
+                itemY -= 10;
+            }
+
+            g2.setColor(i == selectedItemIndex ? Color.YELLOW : Color.WHITE);
+            g2.fillRect(itemX, itemY, itemBoxSize, itemBoxSize);
+
+            g2.setColor(Color.BLACK);
+            g2.setFont(customFont);
+            String itemName = items.get(i).getName();
+            FontMetrics metrics = g2.getFontMetrics();
+            int textWidth = metrics.stringWidth(itemName);
+            int textHeight = metrics.getHeight();
+
+            int textX = itemX + (itemBoxSize - textWidth) / 2;
+            int textY = itemY + (itemBoxSize + textHeight) / 2;
+
+            g2.drawString(itemName, textX, textY);
+        }
     }
+
+
 
     private void drawAttackMessage(Graphics g2, int x, int y, int width, int height){
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
 
         g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Arial", Font.BOLD, 24));
-        g2.drawString("Select option!", x + 20, y + 20);
+        g2.setFont(customFont);
+        g2.drawString(currentMessage , x + 15, y + 25);
 
 
     }
@@ -308,7 +446,29 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    private void showTypewriterText(String message) {
+        targetMessage = message;
+        currentMessage = "";
+        charIndex = 0;
+    }
 
+    private void updateTypewriterText() {
+        if (charIndex < targetMessage.length()) {
+            frameCount++;
+            if (frameCount >= TEXT_SPEED){
+                currentMessage = targetMessage.substring(0, charIndex + 1);
+                charIndex++;
+                frameCount = 0;
+                isMessageComplete = false;
+                messageEndDelay=0;
+            }
+        } else {
+            isMessageComplete = true;
+        if (messageEndDelay < MESSAGE_DELAY_TIME) {
+            messageEndDelay++;
+        }
+        }
+    }
 
     private void performPlayerAttack(){
         if (isPlayerTurn && !waitingForAnimation){
@@ -316,61 +476,29 @@ public class BattlePanel extends JPanel implements Runnable {
             attackAnimationTicks = 0;
             waitingForAnimation = true;
             isPlayerTurn = false;
-            battleMessage = "Attacking!";
+
+            showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
 
             if (currentEnemy.getHP() <= 0) {
-                battleMessage = "Enemy was defeated!";
+                showTypewriterText("Enemy was defeated!");
                 return;
             }
         }
-        isPlayerTurn = false;
-        battleMessage = "Enemy's turn!";
-
-        performEnemyAttack();
     }
 
     private void performEnemyAttack(){
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
         waitingForAnimation = true;
-        battleMessage = "Enemy Attacking!";
+        showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
 
 
         if (gamePanel.hero.getHP() <= 0) {
-            battleMessage = "You were defeated!";
+            showTypewriterText("You were defeated!");
             return;
         }
 
         isPlayerTurn = true;
-        battleMessage = "ATTACK AGAIN";
-    }
-    public void drawWeaponSelect(Graphics2D g2) {
-        ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        int startX = getWidth()/2 - (weapons.size() * 60)/2; // Center the weapons
-
-        for(int i = 0; i < weapons.size(); i++) {
-            int x = startX + (i * 60);
-            int y = WEAPON_Y;
-
-            // Selected weapon bounces up
-            if(i == selectedWeaponIndex) {
-                float bounce = (float)(Math.sin(bounceTime) * BOUNCE_HEIGHT);  // ngl, had to look this one up becuase I don't know math in java
-                y += bounce;
-            }
-
-
-            // CAN CHANGE THIS TO JUST SHOW ICON OF WEAPON
-
-            // Draw weapon box
-            g2.setColor(i == selectedWeaponIndex ? Color.YELLOW : Color.WHITE);
-            g2.fillRect(x, y, 50, 50);
-
-            // Draw weapon name
-            g2.setColor(Color.BLACK);
-            g2.setFont(new Font("Arial", Font.BOLD, 10));
-            String weaponName = weapons.get(i).getName();
-            g2.drawString(weaponName, x + 5, y + 30);
-        }
     }
 
     public void drawHeroBattle(Graphics2D g2) {
@@ -383,7 +511,6 @@ public class BattlePanel extends JPanel implements Runnable {
         drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), heroMaxHealth);
 
     }
-
 
     public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, double maxHealth) {
         g2.setColor(Color.GRAY);
@@ -417,23 +544,9 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.fillRect(enemyX, enemyY, 150, 100);
         drawHealthBar(g2, enemyX, enemyY + 60, currentEnemy.getHP(), enemyMaxHealth);
 
-        // Draw weapon selection
-        drawWeaponSelect(g2);
-
         // Draw attack button
         drawBattleUI(g2);
-        // Draw item button
 
-
-        // Battle UI
-        g2.setColor(Color.WHITE);
-        g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g2.drawString("In Battle with + Enemy name", getWidth()/2 - 500, 50);
-
-        // Draw battle message
-        g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Arial", Font.BOLD, 20));
-        g2.drawString(battleMessage, getWidth()/2 - 150, 50);
 
         g2.dispose();
     }
@@ -453,6 +566,7 @@ public class BattlePanel extends JPanel implements Runnable {
     public Weapon getSelectedWeapon() {
         return gamePanel.hero.getOwnedWeapons().get(selectedWeaponIndex);
     }
+
 
     @Override
     public void run() {
@@ -476,6 +590,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
     public void update() {
         updateAttackAnimation();
+        updateTypewriterText();
 
         if (!inSubmenu) {
             if (keyH.upPressed) {
@@ -535,7 +650,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 if (currentUIState == STATE_ATTACK) {
                     performPlayerAttack();
                 } else if (currentUIState == STATE_DEFEND) {
-                    battleMessage = "Defense stance!";
+                    showTypewriterText("Defense stance!");
                     isPlayerTurn = false;
                     performEnemyAttack();
                 }

@@ -107,6 +107,8 @@ public class Hero extends CharacterManager {
         return ownedWeapons;
     }
 
+    public ArrayList<Item> getOwnedItems() {return ownedItems;}
+
 
 
     // I just followed the underlined stuff... don't need boolean == here

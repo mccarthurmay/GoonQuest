@@ -11,5 +11,5 @@ public abstract class Item {
 
     public abstract void useItem(CharacterManager character);
 
-
+    public String getName() {return name;}
 }
