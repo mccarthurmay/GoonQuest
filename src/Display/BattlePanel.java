@@ -454,30 +454,48 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.fillRect(x, y, width, height);
 
         ArrayList<Item> items = gamePanel.hero.getOwnedItems();  // You'll need to create this method
-        int itemBoxSize = 80;
-        int padding = 20;
+        if (items.isEmpty()) return;
 
-        int startX = x + padding * 2;
+        int itemBoxSize = 50;
+        int padding = 10;
+        int visibleItems = 7;
+
+        int startIndex = Math.max(0, selectedItemIndex - (visibleItems/2));
+        startIndex = Math.min(startIndex, Math.max(0, items.size() - visibleItems));
+
+        int totalVisibleWidth = Math.min(items.size(), visibleItems) * (itemBoxSize + padding);
+        int startX = x + (width - totalVisibleWidth)/2;
         int startY = y + (height - itemBoxSize) / 2;
 
-        for (int i = 0; i < items.size(); i++) {
+        if (startIndex > 0) {
+            g2.setColor(Color.WHITE);
+            g2.setFont(customFont.deriveFont(24f));
+            g2.drawString("<", x + 10, y + height/2);
+        }
+        if (startIndex + visibleItems < items.size()) {
+            g2.setColor(Color.WHITE);
+            g2.setFont(customFont.deriveFont(24f));
+            g2.drawString(">", x + width - 25, y + height/2);
+        }
+
+
+        for (int i = 0; i < Math.min(visibleItems, items.size() - startIndex); i++) {
+            int itemIndex = startIndex + i;
             int itemX = startX + i * (itemBoxSize + padding);
             int itemY = startY;
 
-            if (i == selectedItemIndex) {
+            if (itemIndex == selectedItemIndex) {
                 itemY -= 10;
             }
 
-            g2.setColor(i == selectedItemIndex ? Color.YELLOW : Color.WHITE);
-            g2.fillRect(itemX, itemY, itemBoxSize, itemBoxSize);
 
-            int spriteSize = 48;
-            BufferedImage weaponSprite = items.get(i).getSprite();
+            int spriteSize = 32;
+            BufferedImage itemSprite = items.get(i).getSprite();
             int spriteX = itemX + (itemBoxSize-spriteSize)/2;
             int spriteY = itemY + 5;
-            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
+            g2.drawImage(itemSprite, spriteX, spriteY, spriteSize, spriteSize, null);
 
-            g2.setColor(Color.BLACK);
+            g2.setColor(Color.WHITE);
             g2.setFont(customFont.deriveFont(16f));
             String itemName = items.get(i).getName();
             FontMetrics metrics = g2.getFontMetrics();

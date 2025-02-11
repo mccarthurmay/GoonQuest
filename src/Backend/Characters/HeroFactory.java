@@ -29,6 +29,17 @@ public class HeroFactory {
         ArrayList<Item> items = new ArrayList<>();
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
+        items.add(new HpItem("Health Potion", 10, ""));
 
         // Create default stats
         Stats stats = new Stats(100.0, 10.0, 200.0, 0.15, 0.85);

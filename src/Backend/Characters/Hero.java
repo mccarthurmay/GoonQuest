@@ -109,7 +109,12 @@ public class Hero extends CharacterManager {
 
     public ArrayList<Item> getOwnedItems() {return ownedItems;}
 
-
+    public void addWeapon(Weapon weapon) {
+        ownedWeapons.add(weapon);
+    }
+    public void addItem(Item item) {
+        ownedItems.add(item);
+    }
 
     // I just followed the underlined stuff... don't need boolean == here
     public void update() {
