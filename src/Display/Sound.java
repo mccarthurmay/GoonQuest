@@ -11,6 +11,7 @@ public class Sound {
 
     public Sound() {
         soundURL[0] = getClass().getResource("/Backend/Music/sound1.wav");
+        soundURL[1] = getClass().getResource("/Backend/Music/sound2.wav");
     }
 
     public void setFile(int i) {

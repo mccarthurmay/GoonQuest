@@ -150,6 +150,15 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         hero.update();
 
+//        if(hero.worldX < 60 && hero.worldY < 80){
+//            stopMusic();
+//            playMusic(1);
+//        }else{
+//            stopMusic();
+//            playMusic(0);
+//        }
+
+
         for (int i = 0; i < enemy.length; i++){
             if (enemy[i] != null){
                 enemy[i].update();

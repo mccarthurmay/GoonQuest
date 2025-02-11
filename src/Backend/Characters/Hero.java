@@ -113,6 +113,7 @@ public class Hero extends CharacterManager {
 
     // I just followed the underlined stuff... don't need boolean == here
     public void update() {
+
         if(keyH.rightPressed || keyH.leftPressed || keyH.upPressed || keyH.downPressed) {
             if(keyH.upPressed) {
                 direction = "up";
