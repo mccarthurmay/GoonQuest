@@ -93,7 +93,6 @@ public class TileManager {
 
         // re-assign the collision value to true if you should have collision
         for (Integer collisionTile : collisionTiles) {
-            //System.out.println(collisionTile);
             tile[collisionTile].collision = true;
         }
     }
@@ -101,29 +100,29 @@ public class TileManager {
 
     public void loadMap(String map){
         try{
-            InputStream is = getClass().getResourceAsStream(map); //
+            InputStream is = getClass().getResourceAsStream(map); // reads from a file
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
             int row = 0;
 
-            while(col < gp.maxWorldCol && row < gp.maxWorldRow){
+            while(col < gp.maxWorldCol && row < gp.maxWorldRow){ // while there are more tiles to load
                 String line = br.readLine();
-                while(col < gp.maxWorldCol){
+                while(col < gp.maxWorldCol){ // nested for loop to handle column within row
                     String numbers[] = line.split(" ");
 
                     // Changing the numbers from string to integers
                     int num = Integer.parseInt(numbers[col]);
 
-                    mapTileNum[col][row] = num;
+                    mapTileNum[col][row] = num; // fills in the mapTileNum 2D array with the correct values
                     col++;
                 }
-                if( col == gp.maxWorldCol){
-                    col = 0;
-                    row++;
+                if( col == gp.maxWorldCol){ // if we reach the last column,
+                    col = 0; // reset the column count
+                    row++; // and go to the next row
                 }
             }
-            br.close();
+            br.close(); // free up memory by closing the bufferedreader
 
 
         }catch(Exception e){}
@@ -138,24 +137,24 @@ public class TileManager {
         int worldRow = 0;
 
 
-        while(worldCol< gp.maxWorldCol && worldRow< gp.maxWorldRow) {
+        while(worldCol< gp.maxWorldCol && worldRow< gp.maxWorldRow) { // while there is more to draw
 
-            int tileNum = mapTileNum[worldCol][worldRow];
+            int tileNum = mapTileNum[worldCol][worldRow]; // get the current tile
 
-            int worldX = worldCol * gp.tileSize;
-            int worldY = worldRow * gp.tileSize;
-            int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
+            int worldX = worldCol * gp.tileSize; // gets the x position of the tile
+            int worldY = worldRow * gp.tileSize; // gets the x position of the tile
+            int screenX = worldX - gp.hero.worldX + gp.hero.screenX; // calculates the position on the screen using the hero's coordinates
             int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
+            // if the tile is onscreen
             if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-                //System.out.println(tileNum);
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null); // draw the tile relative to the player's position
             }
             worldCol++;
 
-            if(worldCol == gp.maxWorldCol) {
-                worldCol = 0;
-                worldRow++;
+            if(worldCol == gp.maxWorldCol) { // if we reach the last column,
+                worldCol = 0; // reset the column count
+                worldRow++; // and go to the next row
 
             }
         }
