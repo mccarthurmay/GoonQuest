@@ -36,14 +36,6 @@ public class Enemy extends CharacterManager{
         this.worldY = worldY;
     }
 
-    public Enemy(GamePanel gp, String path){
-        super(gp);
-        this.gp = gp;
-        this.path = path;
-        direction = "down";
-        speed = 3;
-        getImage();
-    }
     public void update() {
         collisionsOn = true;
         //gp.collisionChecker.checkTile(this);

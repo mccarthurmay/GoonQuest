@@ -1,5 +1,6 @@
 package Backend.ObjectsRendering;
 
+import Backend.Characters.Enemy;
 import Backend.Weapons.Weapon;
 
 import javax.imageio.ImageIO;
@@ -9,12 +10,13 @@ import java.io.IOException;
 
 public class EnemyRendering extends Superobjects {
 
-    public EnemyRendering(String path, int worldX, int worldY) {
-        super(worldX, worldY);
+    public EnemyRendering(Enemy enemy) {
+        super(enemy.worldX, enemy.worldY);
         name = "Enemy";
-        spritePath = path;
+        spritePath = enemy.getSpritePath();
         try {
-            image = ImageIO.read(getClass().getResourceAsStream(path));
+            System.out.println();
+            image = ImageIO.read(getClass().getResourceAsStream(spritePath.replace("src", "")));
 
             // Scale the image by a factor of 5
             int newWidth = image.getWidth() * 2;

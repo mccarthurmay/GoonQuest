@@ -2,6 +2,7 @@ package Display;
 
 import Backend.Characters.Enemy;
 import Backend.Characters.Hero;
+import Backend.Characters.HeroFactory;
 import Backend.Characters.Stats;
 import Backend.Items.Item;
 import Backend.ObjectsRendering.EnemyRendering;
@@ -48,9 +49,9 @@ public class AssetSetter {
 //            gp.obj[i].worldY = gp.tileSize * 32;
 //        }
 
-        String enemy = "/Backend/Images/sprites/glargo_holy.png";
-        gp.obj[9] = new EnemyRendering(enemy, 9808 ,9377);
-        gp.obj[9].worldX = gp.tileSize * (40);
-        gp.obj[9].worldY = gp.tileSize * 32;
+        for (int i = 0; i < HeroFactory.unfoundEnemies.size(); i++){
+            System.out.println("adding" + HeroFactory.unfoundEnemies.get(i).getName());
+            gp.obj[i + 9] = new EnemyRendering(HeroFactory.unfoundEnemies.get(i));
+        }
     }
 }

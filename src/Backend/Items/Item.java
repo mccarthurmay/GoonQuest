@@ -40,8 +40,6 @@ public abstract class Item {
         return spritePath;
     }
 
-
-
     public abstract void useItem(CharacterManager character);
 
     public String getName() {return name;}

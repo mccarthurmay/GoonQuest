@@ -205,6 +205,7 @@ public class GamePanel extends JPanel implements Runnable {
         // Object
         for(int i = 0; i<obj.length; i++ ){
             if (obj[i] != null){
+                System.out.println("drawing");
                 obj[i].draw(bufferG, this);
             }
         }

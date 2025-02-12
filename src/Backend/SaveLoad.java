@@ -67,6 +67,7 @@ public class SaveLoad {
      * @return the newly restored hero
      */
     public static Hero load(String filepath, GamePanel gp, KeyHandler keyH) {
+        Hero myNull = HeroFactory.createDefaultHero(gp, keyH);
         try {
             // initialize
             File f = new File(filepath);
