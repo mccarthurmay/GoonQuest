@@ -2,8 +2,7 @@
 Player
 </name>
 <weapon>
-Stick,2.0,Basic weapon,2.0,3.0,A simple stick,
-Kusanagi-no-tsurugi,30.0,wind,10.0,80.0,Man, it's windy,./src/Backend/Images/Weapons/Katana/Sprite.png
+Book,2.0,Basic weapon,2.0,3.0,a book ,./src/Backend/Images/Weapons/Book/Sprite.png
 </weapon>
 <item>
 HpItem,Health Potion,10.0
@@ -24,5 +23,5 @@ HpItem,Health P6623otion,10.0
 100.0,10.0,200.0,0.15,0.85
 </stats>
 <location>
-9748,8276
+1908,2132
 </location>

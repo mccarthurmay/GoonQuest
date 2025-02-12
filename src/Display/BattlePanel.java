@@ -633,6 +633,7 @@ public class BattlePanel extends JPanel implements Runnable {
         if (weapon != null){
             String path = weapon.getSpritePath().replace("./src", "").replace("Sprite.png", "SpriteInHand.png");
             try{
+                System.out.println(path);
                 image = ImageIO.read(getClass().getResourceAsStream(path));
 
             } catch (IOException e) {
