@@ -198,7 +198,7 @@ public class Hero extends CharacterManager {
                  * On the case of Enemy, we initiate a fight.
                  */
                 case ("Weapon"):
-
+                    gp.playSE(3);
                     for (int j = 0; j < unfoundWeapons.size(); j++) {
                         if (unfoundWeapons.get(j).getSpritePath().contains(objectPath)) {
                             addWeapon(unfoundWeapons.get(j));
