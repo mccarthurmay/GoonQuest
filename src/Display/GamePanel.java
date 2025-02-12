@@ -1,9 +1,7 @@
 package Display;
 import Backend.Characters.*;
-import Backend.Items.Item;
 import Backend.ObjectsRendering.Superobjects;
 import Backend.SaveLoad;
-import Backend.Weapons.Weapon;
 import Backend.WorldBuilding.TileManager;
 
 import javax.swing.JPanel;
@@ -12,39 +10,40 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Runnable allows us to implement Thread objects
 public class GamePanel extends JPanel implements Runnable {
+
+
     // Screen settings
-    public int originalTileSize = 20;
+    public int originalTileSize = 20; // 20x20 tiles
     public int scale = 3;
-    public int tileSize = originalTileSize * scale;
+    public int tileSize = originalTileSize * scale; // 60x60 tiles
     public final int maxScreenCol= 16;
     public final int maxScreenRow= 12;
-    public final int screenWidth = maxScreenCol * tileSize;
-    public final int screenHeight = maxScreenRow * tileSize;
+    public final int screenWidth = maxScreenCol * tileSize; // 960 pixels
+    public final int screenHeight = maxScreenRow * tileSize; // 720 pixels
 
     // World Settings
     public final int maxWorldCol = 199;
     public final int maxWorldRow = 199;;
-
 
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Sound sound = new Sound();
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+
+    // Allows us to use the concept of time in the game, in order to update the
+    // drawings constantly at a certain speed
     Thread gameThread;
 
     public Hero hero = loadHero(this, keyH);
     public Superobjects obj[] = new Superobjects[30];
 
 
-
-
-
     // Composite controls how pixels overlap existing pixels
     // Src_over draws pixels on top of existing, taking in account of transparency
     // DstOut makes existing pixels more transparent where drawn (cut holes)\
-    // CHANGE ALPHA TO CHANGE HOW TRANSPARENT THE FOG IS
     private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
     private int visibilityRadius = 200;
 
@@ -55,26 +54,35 @@ public class GamePanel extends JPanel implements Runnable {
     private ArrayList<Rectangle> foggyRegions;
     private boolean isInFoggyRegion = false;
 
-    // Battle
+    // Initialize a battle object
     public Battle battle;
 
     public GamePanel() {
+
+        // Sets the size of this class
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.WHITE);
 
+        // If set to true, all the drawings from this component will
+        // be done offscreen
+        // Painting buffer
         this.setDoubleBuffered(true);
+
+        // Adds keyListener so that this gamePanel can recognize inputs
         this.addKeyListener(keyH);
+
+        // With this, gamePanel can be focused/ready to receive input
         this.setFocusable(true);
 
         // Initialize game buffer
         gameBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
 
-
-        // define foggy regions with coordinates
+        // Define foggy regions with coordinates
         foggyRegions = new ArrayList<>();
-        // EXAMPLEEEEEE
         addFoggyRegion(1,140,60,54);
     }
+
+    // Check if player is in fog
     private boolean checkFoggyRegion() {
         Point playerWorldPos = new Point(hero.worldX, hero.worldY);
 
@@ -86,14 +94,16 @@ public class GamePanel extends JPanel implements Runnable {
         return false;
     }
 
-    public void setupGame() { // add things to the game world, play music, etc
-        //aSetter.setEnemy();
-
+    // Add things to the game world, play music, etc.
+    public void setupGame() {
         aSetter.setObject();
         playMusic(0 );
     }
 
     public void startGameThread() {
+        /**
+         * In order to instantiate a thread object, we need to pass a GamePanel object
+         */
         if (gameThread == null) {
             gameThread = new Thread(this);
             gameThread.start();
@@ -102,25 +112,37 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     /**
-     * In this loop, we will constantly be updating the charcater position and
-     * draw the sprites on the screen
+     * In this loop, we will constantly be updating the character position and
+     * draw the sprites on the scree. Also, this function is necessary to use when working with Thread objects.
+     * In this method we create a Game loop.
      */
     public void run(){
 
+        /**
+         * These following variable help set time intervals that slow down
+         * the number of times we update our program per second.
+         * We restrict it to only update 60 times per second.
+         */
         int FPS = 60;
         double drawInterval = (double) 1000000000 /FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
-
+        /**
+         * As long as this gameThreadExists, it represents the process that
+         * is written inside this bracket.
+         */
         while(gameThread != null) {
-//            System.out.println("FPS: " + FPS);
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if(delta >= 1) {
+
+                // Updates information as character position
                 update();
+
+                // Draw the screen with the updated information
                 repaint();
                 delta--;
             }
@@ -140,15 +162,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         hero.update();
-
-//        if(hero.worldX < 60 && hero.worldY < 80){
-//            stopMusic();
-//            playMusic(1);
-//        }else{
-//            stopMusic();
-//            playMusic(0);
-//        }
-
         isInFoggyRegion = checkFoggyRegion();
 
 
@@ -187,12 +200,25 @@ public class GamePanel extends JPanel implements Runnable {
         return hero;
     }
 
+    /**
+     * Build in method in java, standard method to draw on JPanel
+     * @Graphics: A class that has the necessary functions to draw on the screen
+     */
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+
+        /**
+         * Graphics2D class extends the Graphic class to provide more sophisticated control
+         * over geometry, coordinate transformations, color management, and text layout.
+         */
         Graphics2D g2 = (Graphics2D) g;
 
         Graphics2D bufferG = gameBuffer.createGraphics();
 
+        /**
+         * This method typically returns the background color
+         * of the component that contains bufferG. It is inherited from Component in AWT/Swing.
+         */
         bufferG.setColor(getBackground());
         bufferG.fillRect(0, 0, screenWidth, screenHeight);
 
@@ -263,9 +289,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.visibilityRadius = radius;
     }
 
-    public void setFogDensity(float density){
-        this.fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, density);
-    }
 
     public void addFoggyRegion(int tileX, int tileY, int width, int height) {
         foggyRegions.add(new Rectangle(

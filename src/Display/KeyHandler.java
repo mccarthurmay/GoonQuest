@@ -9,8 +9,6 @@ public class KeyHandler implements KeyListener {
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean upArrow, downArrow, leftArrow, rightArrow;
     public boolean shiftPressed;
-    public boolean battleTestKey; // since enemies don't work, just made a set battle key
-    public boolean weaponLeft, weaponRight;
     public boolean spacePressed;
     public boolean saveFile; // save the game state
     public boolean enterPressed;
@@ -19,7 +17,10 @@ public class KeyHandler implements KeyListener {
 
     public void keyTyped(KeyEvent e) {}
 
-    // Check if a key is in the "pressed" position
+    /**
+     * Check if a key is in the "pressed" position
+     * @param e the event to be processed
+     */
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
@@ -55,11 +56,6 @@ public class KeyHandler implements KeyListener {
             rightArrow = true;
         }
 
-        // Battle test key
-        if (keyCode == KeyEvent.VK_B) {
-            battleTestKey = true;
-        }
-
         // Save state
         if (keyCode == KeyEvent.VK_P) {
             saveFile = true;
@@ -78,7 +74,10 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    // Check if the key has been let go
+    /**
+     * Check if the key has been let go
+     * @param e the event to be processed
+     */
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
@@ -114,11 +113,6 @@ public class KeyHandler implements KeyListener {
             rightArrow = false;
         }
 
-        // Battle test key
-        if (keyCode == KeyEvent.VK_B) {
-            battleTestKey = false;
-        }
-
         // Save state
         if (keyCode == KeyEvent.VK_P) {
             saveFile = false;
@@ -129,10 +123,13 @@ public class KeyHandler implements KeyListener {
             spacePressed = false;
         }
 
+        // Action to confirm use of items in battlePanel
         if (keyCode == KeyEvent.VK_ENTER) {
             enterPressed = false;
         }
 
+        // Used mostly for items layout purposes and get some players
+        // coordinates
         if (keyCode == KeyEvent.VK_Q) {
             qPressed = false;
         }

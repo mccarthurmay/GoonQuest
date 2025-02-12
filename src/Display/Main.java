@@ -11,16 +11,22 @@ public class Main{
         // close ("x") button.
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Blocks the user from making the screen bigger
         window.setResizable(false);
 
-        //Sets a title to the window
+        // Sets a title to the window
         window.setTitle("Goon Quest");
+
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
+
+        // Causes this window to be sized to fit the preferred size
+        // and layouts of its subcomponents
         window.pack();
         window.setLocationRelativeTo(null);
-        window.setVisible(true);
 
+        // Lets you see the window
+        window.setVisible(true);
 
         // Create battle system
         Battle battle = new Battle(gamePanel, window);
