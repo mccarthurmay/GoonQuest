@@ -23,7 +23,14 @@ public class Battle {
         window.remove(gp);
         gp.stopMusic();
         gp.playMusic(2);
-        BattlePanel battlePanel = new BattlePanel(gp, enemy, window);
+
+        // Create and set up new battle panel
+        if (battlePanel != null) {
+            battlePanel.cleanupResources(); // Clean up old battle panel if it exists
+        }
+        battlePanel = new BattlePanel(gp, enemy, window);
+
+        // Switch to battle panel
         window.add(battlePanel);
         battlePanel.requestFocusInWindow();
         window.revalidate();

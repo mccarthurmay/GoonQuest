@@ -933,21 +933,56 @@ public class BattlePanel extends JPanel implements Runnable {
         battleThread = null;
     }
 
+    void cleanupResources() {
+        // Stop the battle thread properly
+        if (battleThread != null) {
+            Thread tempThread = battleThread;
+            battleThread = null;
+            try {
+                tempThread.join(1000); // Wait up to 1 second for thread to finish
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Clear any pending animations
+        isPlayerAttacking = false;
+        isEnemyAttacking = false;
+        waitingForAnimation = false;
+        waitingForMessage = false;
+
+        // Reset message system
+        currentMessage = "";
+        targetMessage = "";
+        charIndex = 0;
+        frameCount = 0;
+        isMessageComplete = false;
+        messageEndDelay = 0;
+
+        // Clear any popups
+        critPopupTimer = 0;
+        missPopupTimer = 0;
+    }
+
     private void returnToGame() {
-        // Stop battle thread before switching panels
-        stopBattleThread();
+        // Clean up resources before switching back
+        cleanupResources();
+
         gamePanel.stopMusic();
         gamePanel.playMusic(0);
+
+        // Remove battle panel and restore game panel
         window.remove(this);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
+
+        // Ensure game panel has focus and restart its thread
         gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
-
     }
-
-
-
-
 }
+
+
+
+
