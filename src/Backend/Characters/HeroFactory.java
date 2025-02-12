@@ -47,8 +47,21 @@ public class HeroFactory {
 
         // Create default items
         ArrayList<Item> items = new ArrayList<>();
-        HpItem beaf = new HpItem("Beaf", 100.0,"./src/Backend/Images/itemSprites/default.png");
+        HpItem beaf = new HpItem("Beaf", 100.0,"./src/Backend/Images/itemSprites/Beaf.png");
+        HpItem medipack = new HpItem("MediPack", 200,"./src/Backend/Images/itemSprites/Medipack.png");
+        HpItem calamari = new HpItem("Calamari", 75,"./src/Backend/Images/itemSprites/Calamari.png");
+        HpItem fortune = new HpItem("Fortune Cookie", 50,"./src/Backend/Images/itemSprites/FortuneCookie.png");
+        HpItem onigiri = new HpItem("Onigiri", 50,"./src/Backend/Images/itemSprites/Onigiri.png");
+        StatusEffect milk = new StatusEffect("Milk", "defense", true, 30, 3, "./src/Backend/Images/itemSprites/MilkPot.png");
+        StatusEffect noodle = new StatusEffect("Noodles", "dmg", true, 30, 3, "./src/Backend/Images/itemSprites/Noodle.png");
+
         unfoundItems.add(beaf);
+        unfoundItems.add(medipack);
+        unfoundItems.add(calamari);
+        unfoundItems.add(fortune);
+        unfoundItems.add(onigiri);
+        unfoundItems.add(milk);
+        unfoundItems.add(noodle);
 
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
