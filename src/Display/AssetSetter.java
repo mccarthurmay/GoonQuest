@@ -60,8 +60,7 @@ public class AssetSetter {
 
         // create new renderable enemies (locations have already been defined within unfoundEnemies)
         for (int i = 0; i < CharacterFactory.unfoundEnemies.size(); i++){
-            System.out.println("adding" + CharacterFactory.unfoundEnemies.get(i).getName());
-            gp.obj[i + 14] = new EnemyRendering(CharacterFactory.unfoundEnemies.get(i));
+            gp.obj[i + 15] = new EnemyRendering(CharacterFactory.unfoundEnemies.get(i)); // start at 15 since we already have some items in the list that we don't want to overwrite
         }
     }
 }
