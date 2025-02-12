@@ -77,23 +77,23 @@ public class AssetSetter {
         gp.obj[13] = new ItemRendering(fortune, 9008, 11041);
         gp.obj[14] = new ItemRendering(calamari, 468, 2816);
 
-        gp.obj[15] = new ItemRendering(lifePot, 1920, 1880);
-        gp.obj[16] = new ItemRendering(treasure, 2112, 2060);
-        gp.obj[17] = new ItemRendering(goldCoin, 10460, 8760); //
-        gp.obj[18] = new ItemRendering(octopus, 8940, 904); // done
-        gp.obj[19] = new ItemRendering(seed, 8704, 5672); //
-        gp.obj[20] = new ItemRendering(seedLarge, 10164, 6536); //
-        gp.obj[21] = new ItemRendering(sushi2, 9596, 6408); //
-        gp.obj[22] = new ItemRendering(sushi, 6868, 7388); // done
-        gp.obj[23] = new ItemRendering(waterPot, 3740, 8256); // done
+        gp.obj[15] = new ItemRendering(lifePot, 6816, 3988);
+        gp.obj[16] = new ItemRendering(treasure, 5936, 3052);
+        gp.obj[17] = new ItemRendering(goldCoin, 10460, 8760);
+        gp.obj[18] = new ItemRendering(octopus, 8940, 904);
+        gp.obj[19] = new ItemRendering(seed, 8704, 5672);
+        gp.obj[20] = new ItemRendering(seedLarge, 10164, 6536);
+        gp.obj[21] = new ItemRendering(sushi2, 9596, 6408);
+        gp.obj[22] = new ItemRendering(sushi, 6868, 7388);
+        gp.obj[23] = new ItemRendering(waterPot, 3740, 8256);
 
-        gp.obj[24] = new WeaponRendering(fork, 6844, 6240); // done
-        gp.obj[25] = new WeaponRendering(ninjaku, 1920, 1880);
-        gp.obj[26] = new WeaponRendering(pickaxe, 3720, 7800); //done
-        gp.obj[27] = new WeaponRendering(rapier, 8216, 11084); //
-        gp.obj[28] = new WeaponRendering(sai, 1920, 1880); //
-        gp.obj[29] = new WeaponRendering(sword2, 11284, 3672); //
-        gp.obj[30] = new WeaponRendering(whip, 5908, 8340); // done
+        gp.obj[24] = new WeaponRendering(fork, 6844, 6240);
+        gp.obj[25] = new WeaponRendering(ninjaku, 6692, 1508);
+        gp.obj[26] = new WeaponRendering(pickaxe, 3720, 7800);
+        gp.obj[27] = new WeaponRendering(rapier, 8216, 11084);
+        gp.obj[28] = new WeaponRendering(sai, 4136, 5000);
+        gp.obj[29] = new WeaponRendering(sword2, 11284, 3672);
+        gp.obj[30] = new WeaponRendering(whip, 5908, 8340);
 
 
 
