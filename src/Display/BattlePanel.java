@@ -7,18 +7,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import Backend.Characters.Hero;
-import Backend.Characters.HeroFactory;
 import Backend.Weapons.Weapon;
 import java.util.ArrayList;
 import Backend.Characters.Enemy;
-import Backend.Characters.EnemyFactory;
 import Backend.Items.*;
-import Display.Battle;
 public class BattlePanel extends JPanel implements Runnable {
 
-    GamePanel gamePanel; // copy original panel
+    GamePanel gamePanel;
     private JFrame window;
     private KeyHandler keyH;
     private Thread battleThread;
@@ -67,7 +62,7 @@ public class BattlePanel extends JPanel implements Runnable {
     private final int MESSAGE_DELAY_TIME = 60; // abt 1 second (60 fps)
     private boolean waitingForMessage = false;
     private boolean enemyDefeated = false;
-    private boolean showingDefeatMessage = false;
+    private boolean heroDefeated = false;
 
     // Health bar settings
     private double heroMaxHealth;
@@ -77,13 +72,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
     // Weapon fields
     private int selectedWeaponIndex = 0;
-    private float[] weaponBounceOffsets; // For bouncing animation
-    private final int WEAPON_Y = 500; // Position at bottom of screen
 
-    // Animation fields
-    private float bounceTime = 0;
-    private final float BOUNCE_SPEED = 0.1f;
-    private final float BOUNCE_HEIGHT = 10;
 
     // Battle Metrics
     private Rectangle BattleUI;
@@ -91,9 +80,9 @@ public class BattlePanel extends JPanel implements Runnable {
     private boolean waitingForAnimation = false;
 
     // Message
-    private final ArrayList<String> playerAttackMessage = new ArrayList<String>();
-    private final ArrayList<String> enemyAttackMessage = new ArrayList<String>();
-    private final ArrayList<String> playerDefenseMessage = new ArrayList<String>();
+    private final ArrayList<String> playerAttackMessage = new ArrayList<>();
+    private final ArrayList<String> enemyAttackMessage = new ArrayList<>();
+    private final ArrayList<String> playerDefenseMessage = new ArrayList<>();
     private final ArrayList<String> playerCritMessage = new ArrayList<>();
     private final ArrayList<String> enemyCritMessage = new ArrayList<>();
     private final ArrayList<String> playerMissMessage = new ArrayList<>();
@@ -126,14 +115,13 @@ public class BattlePanel extends JPanel implements Runnable {
 
         // Initialize bounce effect
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        weaponBounceOffsets = new float[weapons.size()];
 
         // Initialize buttons
         BattleUI = new Rectangle(0, 575, 960, 145);
 
         // Initialize max healths
-        this.heroMaxHealth = gamePanel.hero.getHP();
-        this.enemyMaxHealth = currentEnemy.getHP();
+        heroMaxHealth = gamePanel.hero.getHP();
+        enemyMaxHealth = currentEnemy.getHP();
 
         // Key listeners
         this.addKeyListener(keyH);
@@ -151,8 +139,7 @@ public class BattlePanel extends JPanel implements Runnable {
         addMessages();
 
         // Start message
-        showTypewriterText("You have approached " + enemy.getName());
-
+        showTypewriterText(enemy.getName() + " has transported you to another dimension!");
 
     }
 
@@ -182,6 +169,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 } else {
                     showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
                 }
+
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
                 // Calculate progress
@@ -219,6 +207,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 } else {
                     showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
                 }
+
 
                 // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
@@ -596,18 +585,14 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void performPlayerAttack(){
+        if (enemyDefeated){
+            return;
+        }
         if (isPlayerTurn && !waitingForAnimation){
             isPlayerAttacking = true;
             attackAnimationTicks = 0;
             waitingForAnimation = true;
             isPlayerTurn = false;
-
-            if (currentEnemy.getHP() <= 0 && !enemyDefeated) {
-                enemyDefeated = true;
-                showingDefeatMessage = true;
-                showTypewriterText("Enemy was defeated!");
-                return;
-            }
 
 
 
@@ -615,29 +600,43 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void performEnemyAttack(){
+        if (heroDefeated){
+            return;
+        }
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
         waitingForAnimation = true;
         showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
 
-
-        if (gamePanel.hero.getHP() <= 0) {
-            showTypewriterText("You were defeated!");
-            return;
-        }
         usedItemThisTurn = false;
         isPlayerTurn = true;
     }
 
     public void drawHeroBattle(Graphics2D g2) {
-        BufferedImage image = gamePanel.hero.right1; //Sets him looking up
+        BufferedImage image = gamePanel.hero.right1;
 
-        // Draw hero but big
         int battleSize = gamePanel.tileSize * 2;
         g2.drawImage(image, playerX, playerY, battleSize, battleSize, null);
-
         drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), heroMaxHealth);
 
+        Weapon weapon = getSelectedWeapon();
+        if (weapon != null){
+            String path = weapon.getSpritePath().replace("./src", "").replace("Sprite.png", "SpriteInHand.png");
+            try{
+                image = ImageIO.read(getClass().getResourceAsStream(path));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            BufferedImage weaponSprite = image;
+            int weaponX = playerX + battleSize - 75;
+            int weaponY = playerY + battleSize/2 + 30;
+            float weaponScale = 3.0f;
+            int weaponWidth = (int)(weaponSprite.getWidth() * weaponScale);
+            int weaponHeight = (int)(weaponSprite.getHeight() * weaponScale);
+
+            g2.drawImage(weaponSprite, weaponX, weaponY, weaponWidth, weaponHeight, null);
+        }
     }
 
     public void drawEnemyBattle(Graphics2D g2) {
@@ -645,7 +644,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
         int battleSize = gamePanel.tileSize *4;
         g2.drawImage(image, enemyX, enemyY, battleSize, battleSize, null);
-        drawHealthBar(g2, enemyX, enemyY + battleSize + 10, currentEnemy.getHP(), heroMaxHealth );
+        drawHealthBar(g2, enemyX, enemyY + battleSize + 10, currentEnemy.getHP(), enemyMaxHealth );
     }
 
     public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, double maxHealth) {
@@ -678,6 +677,7 @@ public class BattlePanel extends JPanel implements Runnable {
             g2.drawImage(image, 0,0,null);
         } catch (IOException _) {
         }
+
         // Draw hero
         drawHeroBattle(g2);
 
@@ -688,9 +688,11 @@ public class BattlePanel extends JPanel implements Runnable {
         drawBattleUI(g2);
 
 
-
         if (currentEnemy.getHP() <= 0) {
             drawVictoryMessage(g2);
+        }
+        if (gamePanel.hero.getHP() <= 0) {
+            drawDefeatedMessage(g2);
         }
 
         if (critPopupTimer > 0) {
@@ -741,6 +743,7 @@ public class BattlePanel extends JPanel implements Runnable {
     }
     private void drawVictoryMessage(Graphics2D g2) {
         String message = "Enemy Defeated!";
+        this.enemyDefeated = true;
         g2.setFont(customFont.deriveFont(48f));
         FontMetrics metrics = g2.getFontMetrics();
         int messageWidth = metrics.stringWidth(message);
@@ -756,7 +759,31 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw main text
         g2.setColor(Color.YELLOW);
         g2.drawString(message, x, y);
-        Timer timer = new Timer(2000, e -> returnToGame());
+        Timer timer = new Timer(3000, e -> returnToGame());
+        timer.setRepeats(false);
+        timer.start();
+
+    }
+
+    private void drawDefeatedMessage(Graphics2D g2) {
+        String message = "Better luck next time...";
+        this.heroDefeated = true;
+        g2.setFont(customFont.deriveFont(48f));
+        FontMetrics metrics = g2.getFontMetrics();
+        int messageWidth = metrics.stringWidth(message);
+
+        // Center of screen
+        int x = (getWidth() - messageWidth) / 2;
+        int y = getHeight() / 2;
+
+        // Draw shadow/outline effect
+        g2.setColor(Color.BLACK);
+        g2.drawString(message, x + 2, y + 2);
+
+        // Draw main text
+        g2.setColor(Color.YELLOW);
+        g2.drawString(message, x, y);
+        Timer timer = new Timer(2000, e -> System.exit(0));
         timer.setRepeats(false);
         timer.start();
 

@@ -22,7 +22,7 @@ public class HeroFactory {
 
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
-        Weapon defaultWeapon = new Weapon("Stick", 2, "Basic weapon", 2, 3, "A simple stick", "");
+        Weapon defaultWeapon = new Weapon("Book", 2, "Basic weapon", 2, 3, "a book ", "./src/Backend/Images/Weapons/Book/Sprite.png");
         Weapon battleAxe = new Weapon("Battle Axe", 25, "wind", 8, 85, "Man, it's windy", "./src/Backend/Images/Weapons/Axe/Sprite.png");
         Weapon normalAxe = new Weapon("Basic Axe", 8, "wind", 5, 85, "Man, it's windy", "./src/Backend/Images/Weapons/AxeTool/Sprite.png");
         Weapon bigSword = new Weapon("Big sword", 28, "wind", 7, 85, "Man, it's windy", "./src/Backend/Images/Weapons/BigSword/Sprite.png");
