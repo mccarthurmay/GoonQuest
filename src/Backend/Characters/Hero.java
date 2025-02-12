@@ -209,6 +209,7 @@ public class Hero extends CharacterManager {
                     break;
 
                 case ("Item"):
+                    gp.playSE(4);
                     for (int j = 0; j < unfoundItems.size(); j++) {
                         System.out.println(unfoundItems.get(j).getSpritePath());
                         System.out.println(objectPath);

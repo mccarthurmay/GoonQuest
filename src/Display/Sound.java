@@ -25,7 +25,8 @@ public class Sound {
         soundURL[0] = getClass().getResource("/Backend/Music/sound1.wav");
         soundURL[1] = getClass().getResource("/Backend/Music/sound2.wav");
         soundURL[2] = getClass().getResource("/Backend/Music/battle.wav");
-        soundURL[3] = getClass().getResource("/Backend/Music/getItemSoundEffect.wav");
+        soundURL[3] = getClass().getResource("/Backend/Music/weaponSoundEffect.wav");
+        soundURL[4] = getClass().getResource("/Backend/Music/itemSoundEffect.wav");
     }
 
     /**
