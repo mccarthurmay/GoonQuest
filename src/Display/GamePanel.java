@@ -156,6 +156,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * End gamethread for switching between battle and overworld gamepanels
+     */
     public void stopGameThread() {
         gameThread = null;
         try {
@@ -166,10 +169,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * update the world conditions
+     */
     public void update() {
         hero.update();
         isInFoggyRegion = checkFoggyRegion();
-
 
         if(keyH.qPressed){
             System.out.println(hero.worldX + " " + hero.worldY);
@@ -181,7 +186,6 @@ public class GamePanel extends JPanel implements Runnable {
             System.out.println("Saved at out.sav!");
             keyH.saveFile = false;
         }
-
 
         if (battle != null){
             battle.update();
@@ -205,10 +209,9 @@ public class GamePanel extends JPanel implements Runnable {
             response = input.nextLine(); // take in the user response
             hero = SaveLoad.load(response, gp, keyH); // load the information from that save file
 
-        }else { // create default hero
+        }else { // if no file to load from, create default hero
             hero = CharacterFactory.createDefaultHero(this, keyH);
         }
-
         return hero;
     }
 
@@ -300,7 +303,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.visibilityRadius = radius;
     }
 
-
+    /**
+     * create a foggy region (currently only over the forest maze)
+     * @param tileX X coordinate of top left corner of the fog box
+     * @param tileY Y coordinate of top left corner
+     * @param width width of the fog box
+     * @param height height of the fog box
+     */
     public void addFoggyRegion(int tileX, int tileY, int width, int height) {
         foggyRegions.add(new Rectangle(
                 tileX * tileSize,
@@ -310,6 +319,10 @@ public class GamePanel extends JPanel implements Runnable {
         ));
     }
 
+    /**
+     * method to play music file
+     * @param i the index of the song to play (songs must be manually added in the Sound class)
+     */
     public void playMusic(int i) {
         sound.setFile(i);
         sound.play();
@@ -317,10 +330,17 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    /**
+     * stop playing music
+     */
     public void stopMusic() {
         sound.stop();
     }
 
+    /**
+     * play a sound effect (without looping it)
+     * @param i index of the sound effect to be played
+     */
     public void playSE(int i){
         sound.setFile(i);
         sound.play();
