@@ -9,6 +9,9 @@ public class Sound {
     Clip clip;
     URL soundURL[] = new URL[30];
 
+    /**
+     * This following function
+     */
     public Sound() {
         soundURL[0] = getClass().getResource("/Backend/Music/sound1.wav");
         soundURL[1] = getClass().getResource("/Backend/Music/sound2.wav");

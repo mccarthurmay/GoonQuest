@@ -6,7 +6,12 @@ public class Main{
 
         // Initialize the window info
         JFrame window = new JFrame();
+
+        // This let the window properly close when the user clicks on the
+        // close ("x") button.
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        window.setResizable(false);
 
         //Sets a title to the window
         window.setTitle("Goon Quest");
