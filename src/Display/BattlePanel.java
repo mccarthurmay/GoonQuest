@@ -134,7 +134,7 @@ public class BattlePanel extends JPanel implements Runnable {
         customFont = Font.createFont(Font.TRUETYPE_FONT,
                         getClass().getResourceAsStream("/Backend/font/undertale.ttf"))
                 .deriveFont(22f);
-        } catch (Exception _) {
+        } catch (Exception e) {
         }
 
         // Add messages to list
@@ -686,7 +686,7 @@ public class BattlePanel extends JPanel implements Runnable {
         try {
             BufferedImage image = ImageIO.read(new File("src/Backend/Images/Space-Background.jpg"));
             g2.drawImage(image, 0,0,null);
-        } catch (IOException _) {
+        } catch (IOException e) {
         }
 
         // Draw hero
