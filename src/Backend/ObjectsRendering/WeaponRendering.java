@@ -7,7 +7,20 @@ import java.io.IOException;
 
 public class WeaponRendering extends Superobjects {
 
+    /**
+     * We re-use a lot of the variables from superObjects
+     * @param path  Unlike enemy, we input a string path that marks to an specific image
+     *                rather than passing an item object and getting the sprite.
+     *                this is done for developer facilitation
+     * @param worldX coordinates
+     * @param worldY coordinates
+     */
     public WeaponRendering(String path, int worldX, int worldY){
+
+        /**
+         * We use name and spritePath to connect the images we draw on the world to
+         * an actual enemy object when we collide.
+         */
         super(worldX, worldY);
         name  = "Weapon";
         spritePath = path;

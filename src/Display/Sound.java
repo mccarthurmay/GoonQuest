@@ -5,6 +5,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.net.URL;
 
+/**
+ * --IMPORTANT--
+ * Default java library can only read .Wav
+ */
 public class Sound {
     Clip clip;
     URL soundURL[] = new URL[30];
