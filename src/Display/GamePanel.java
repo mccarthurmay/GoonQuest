@@ -57,6 +57,9 @@ public class GamePanel extends JPanel implements Runnable {
     // Initialize a battle object
     public Battle battle;
 
+    // Initialize tutorial bool
+    public static boolean isFirstEnemy = true;
+
     public GamePanel() {
 
         // Sets the size of this class

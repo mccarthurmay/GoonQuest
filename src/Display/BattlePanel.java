@@ -11,8 +11,13 @@ import Backend.Weapons.Weapon;
 import java.util.ArrayList;
 import Backend.Characters.Enemy;
 import Backend.Items.*;
+
+import static Display.GamePanel.isFirstEnemy;
+
+// Runnable allows us to implement Thread objects
 public class BattlePanel extends JPanel implements Runnable {
 
+    // Screen settings
     GamePanel gamePanel;
     private JFrame window;
     private KeyHandler keyH;
@@ -41,12 +46,13 @@ public class BattlePanel extends JPanel implements Runnable {
     private final int STATE_ITEMS = 1;
     private final int STATE_ATTACK = 2;
     private final int STATE_DEFEND = 3;
-
     private boolean inSubmenu = false;
-
     private int currentUIState = STATE_WEAPONS;
     private int selectedButtonIndex = 0;
     private int selectedItemIndex = 0;
+    private int selectedWeaponIndex = 0;
+
+    // UI Buttons
     private Rectangle[] buttons = new Rectangle[4];
     private final String[] buttonLabels = {"Attack", "Weapon", "Defend", "Items"};
 
@@ -61,20 +67,25 @@ public class BattlePanel extends JPanel implements Runnable {
     private boolean enemyDefeated = false;
     private boolean heroDefeated = false;
 
+    // Tutorial Message
+
+    private int tutorialStep = 0;
+    private static final int TUTORIAL_NAVIGATION = 0;
+    private static final int TUTORIAL_SPACE = 1;
+    private static final int TUTORIAL_ENTER = 2;
+    private static final int TUTORIAL_COMPLETE = 3;
+
     // Health bar settings
     private double heroMaxHealth;
     private double enemyMaxHealth;
     int healthBarWidth = 100;
     int healthBarHeight = 20;
 
-    // Weapon fields
-    private int selectedWeaponIndex = 0;
-
-
     // Battle Metrics
     private Rectangle BattleUI;
     private boolean isPlayerTurn = true;
     private boolean waitingForAnimation = false;
+    private boolean usedItemThisTurn = false;
 
     // Message
     private final ArrayList<String> playerAttackMessage = new ArrayList<>();
@@ -85,26 +96,31 @@ public class BattlePanel extends JPanel implements Runnable {
     private final ArrayList<String> playerMissMessage = new ArrayList<>();
     private final ArrayList<String> enemyMissMessage = new ArrayList<>();
 
+    // Random initialization
     private final Random random = new Random();
 
-    private boolean usedItemThisTurn = false;
-
-    // popups
+    // Battle popups
     private String critPopupText = "CRITICAL!";
     private int critPopupTimer = 0;
     private int critPopupX = 0;
     private int critPopupY = 0;
-
     private String missPopupText = "MISS!";
     private int missPopupTimer = 0;
     private int missPopupX = 0;
     private int missPopupY = 0;
 
+    // "Volatility" ensures threads to "skip" reading these values
     private volatile boolean isRunning = true;
     private volatile String currentMessage = "";
     private volatile String targetMessage = "";
     private volatile int charIndex = 0;
 
+    /**
+     * Creates battlePanel object that allows for battle to initiate.
+     * @param gamePanel gamePanel logic to be created
+     * @param enemy Enemy to be in battle with
+     * @param window JFrame window to be created
+     */
     public BattlePanel(GamePanel gamePanel, Enemy enemy, JFrame window) {
         this.gamePanel = gamePanel;
         this.keyH = gamePanel.keyH; // steal gamePanel keyhandler
@@ -114,9 +130,6 @@ public class BattlePanel extends JPanel implements Runnable {
         // Set up the battle panel properties
         this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
         this.setDoubleBuffered(true);
-
-        // Initialize bounce effect
-        ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
 
         // Initialize buttons
         BattleUI = new Rectangle(0, 575, 960, 145);
@@ -130,6 +143,7 @@ public class BattlePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         startBattleThread();
 
+        // Create custom font
         try {
         customFont = Font.createFont(Font.TRUETYPE_FONT,
                         getClass().getResourceAsStream("/Backend/font/undertale.ttf"))
@@ -140,70 +154,79 @@ public class BattlePanel extends JPanel implements Runnable {
         // Add messages to list
         addMessages();
 
-        // Start message
-        showTypewriterText(enemy.getName() + " has transported you to another dimension!");
-
+        // Tutorial messages
+        if (isFirstEnemy) {
+            showTypewriterText("Use arrow keys to navigate the menu!");
+        } else {
+            showTypewriterText(enemy.getName() + " has transported you to another dimension!");
+        }
     }
 
+    /**
+     * Attack animation handling - goes through entire attack sequence
+     */
     private void updateAttackAnimation() {
+        // If enemy is defeated, stop any ongoing animations
         if (currentEnemy.getHP() <= 0) {
-            // If enemy is defeated, stop any ongoing animations
             isEnemyAttacking = false;
             isPlayerAttacking = false;
             enemyX = enemyBaseX;
             enemyY = enemyBaseY;
             playerX = playerBaseX;
             playerY = playerBaseY;
-            if (!enemyDefeated) {
-                enemyDefeated = true;
-                showTypewriterText("Enemy was defeated!");
-            }
             return;
         }
+
+
         if (isPlayerAttacking) {
-            // First half of animation going towards enemy (0-30 ticks)
+
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
-                // Calculate progress (0.0-1.0)
-                float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
-                // Calculate jutt movement
+                // First half of animation going towards enemy (0-5 ticks)
+                float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2); // Calculate progress (0% to 100%)
+                // Do "jutt" movement
                 playerX = (int) (playerBaseX + (juttDistance * progress));
                 playerY = (int) (playerBaseY - (juttDistance * progress));
-                // Right at reverse, take damage
             } else if (attackAnimationTicks == 5){
+                // During middle of animation, do damage to enemy
                 Weapon selectedWeapon = getSelectedWeapon();
                 String status = gamePanel.hero.attack(currentEnemy, selectedWeapon);
+
                 if (status.equals("crit")){
+                    // Print custom "critical attack" message
                     showTypewriterText(playerCritMessage.get(random.nextInt(playerCritMessage.size())));
                     critPopupX = enemyX + 50;
                     critPopupY = enemyY;
                     critPopupTimer = 60;
                 } else if (status.equals("miss")){
+                    // Print custom "miss attack" message
                     showTypewriterText(playerMissMessage.get(random.nextInt(playerMissMessage.size())));
                     missPopupX = enemyX + 50;
                     missPopupY = enemyY;
                     missPopupTimer = 60;
                 } else {
+                    // Print regular attack message
                     showTypewriterText(playerAttackMessage.get(random.nextInt(playerAttackMessage.size())));
                 }
 
-                // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
-                // Calculate progress
-                float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
-                // Move character back to start + down according to progress
+                // Second half (6-10 ticks)
+                float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);// Calculate progress (0% to 100%)
+                // Move character back to start according to progress
                 playerX = (int) (playerBaseX + (juttDistance * (1- progress)));
                 playerY = (int) (playerBaseY - (juttDistance * (1- progress)));
             } else {
+                // Return character to original spot.
                 isPlayerAttacking = false;
                 playerX = playerBaseX;
                 playerY = playerBaseY;
                 waitingForMessage = true;
             }
-            attackAnimationTicks++;
+            attackAnimationTicks++; // Move to next frame of animation
 
         } else if (isEnemyAttacking) {
+
+            // Follows mirrored logic as above
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
-                // Calculate progress (0.0-1.0)
                 float progress = (float) attackAnimationTicks / (ATTACK_ANIMATION_DURATION / 2);
                 enemyX = (int) (enemyBaseX - (juttDistance * progress));
                 enemyY = (int) (enemyBaseY + (juttDistance * progress));
@@ -223,11 +246,7 @@ public class BattlePanel extends JPanel implements Runnable {
                 } else {
                     showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
                 }
-
-
-                // Second half (31-60 ticks)
             } else if (attackAnimationTicks < ATTACK_ANIMATION_DURATION) {
-                // Calculate progress
                 float progress = (float) (attackAnimationTicks - (ATTACK_ANIMATION_DURATION / 2)) / (ATTACK_ANIMATION_DURATION / 2);
                 enemyX = (int) (enemyBaseX - (juttDistance * (1- progress)));
                 enemyY = (int) (enemyBaseY + (juttDistance * (1- progress)));
@@ -237,9 +256,10 @@ public class BattlePanel extends JPanel implements Runnable {
                 enemyY = enemyBaseY;
                 waitingForMessage = true;
             }
-
             attackAnimationTicks++;
         }
+
+        // Checks for message to be complete, running enemy attack after short delay
         if (waitingForMessage && isMessageComplete && messageEndDelay >= MESSAGE_DELAY_TIME) {
             waitingForMessage = false;
             if (!isPlayerTurn && !isEnemyAttacking) {
@@ -251,6 +271,7 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     public void addMessages(){
+
         // Adding Player attack messages
         playerAttackMessage.add("You strike with all your might!");
         playerAttackMessage.add("Your attack lands with a fierce blow!");
@@ -306,30 +327,28 @@ public class BattlePanel extends JPanel implements Runnable {
         playerDefenseMessage.add("You brace yourself, reducing the damage!");
         playerDefenseMessage.add("Your guard stance softens the enemy's attack!");
 
-        //player  crit messages
+        // Adding player crit messages
         playerCritMessage.add("A devastating strike! Your weapon does massive damage!");
         playerCritMessage.add("The stars align as your weapon finds a vital point! ");
         playerCritMessage.add("Your precision is rewarded! Critical damage!");
-        playerCritMessage.add("CRITICAL HIT! Your attack channels extraordinary power!");
-        playerCritMessage.add("You expose a weakness! Your strike hits with crushing force!");
+        playerCritMessage.add("CRITICAL HIT! The attack channels extraordinary power!");
+        playerCritMessage.add("You expose a weakness! Crushing force was applied!");
 
-        // enemy crit messages
-        enemyCritMessage.add("The enemy's attack finds your weak spot! A terrible blow!");
+        // Adding enemy crit messages
+        enemyCritMessage.add("The enemy's attack finds your weakness! A terrible blow!");
         enemyCritMessage.add("CRITICAL! The enemy's attack pierces your guard!");
         enemyCritMessage.add("A devastating hit! Attack hits with doubled force!");
         enemyCritMessage.add("The enemy exploits an opening! Massive damage!");
         enemyCritMessage.add("A perfect hit! Attack connects with brutal efficiency!");
 
-
-        // player miss message
+        // Adding player miss message
         playerMissMessage.add("Your attack slices through empty air!");
         playerMissMessage.add("The enemy evades your strike with surprising agility!");
         playerMissMessage.add("Your weapon fails to find its mark!");
         playerMissMessage.add("The enemy shifts away at the last moment!");
         playerMissMessage.add("Your attack goes wide, missing the target!");
 
-
-        // Enemy miss messages
+        // Adding enemy miss messages
         enemyMissMessage.add("You deftly dodge the enemy's attack!");
         enemyMissMessage.add("The enemy's strike misses by a hair's breadth!");
         enemyMissMessage.add("Their attack meets nothing but air!");
@@ -338,15 +357,18 @@ public class BattlePanel extends JPanel implements Runnable {
 
     }
 
-
-
-
+    /**
+     * Starts a thread handling battle animations, inputs, UI, and state
+     */
     public void startBattleThread() {
         battleThread = new Thread(this);
         battleThread.start();
     }
 
-
+    /**
+     * Draw Battle UI/buttons
+     * @param g2 Input Graphics2D object
+     */
     public void drawBattleUI(Graphics2D g2){
         // Main UI background
         g2.setColor(new Color(175, 0, 0));
@@ -357,7 +379,6 @@ public class BattlePanel extends JPanel implements Runnable {
         // Calculate dimensions
         int uiWidth = BattleUI.width;
         int uiHeight = BattleUI.height;
-        // Use thirds
         int buttonSectionWidth = uiWidth/3;
         int listSectionWidth = (uiWidth * 2) / 3;
 
@@ -366,104 +387,126 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.fillRect(BattleUI.x, BattleUI.y, buttonSectionWidth, uiHeight);
 
         // Button drawing
-        int buttonWidth = buttonSectionWidth/2 - 15;
-        int buttonHeight = uiHeight / 2 - 15; // - 15 is for padding
+        int buttonWidth = buttonSectionWidth/2 - 15; // -15 for padding
+        int buttonHeight = uiHeight / 2 - 15;
 
+        // Create a 2x2 button UI
         for (int row = 0; row < 2; row++) {
             for (int col = 0; col < 2; col++) {
                 int i = row * 2 + col;
                 int x = BattleUI.x + (col * (buttonWidth + 10)) + 10; // +10 for padding
                 int y = BattleUI.y + (row * (buttonHeight + 10)) + 10;
 
+                // Draw buttons
                 buttons[i] = new Rectangle(x, y, buttonWidth, buttonHeight);
-
-                g2.setColor(!inSubmenu && i == selectedButtonIndex ? Color.DARK_GRAY : Color.GRAY);
+                g2.setColor(!inSubmenu && i == selectedButtonIndex ? Color.DARK_GRAY : Color.GRAY);// If selected and not inSubmenu, change color
                 g2.fill(buttons[i]);
-
                 g2.setColor(Color.WHITE);
                 g2.draw(buttons[i]);
 
-                g2.setFont(new Font("Arial", Font.BOLD, 20));
+                g2.setFont(customFont);
+
+                // FontMetrics class calculates text dimensions
                 FontMetrics fm = g2.getFontMetrics();
                 int textX = buttons[i].x + (buttons[i].width - fm.stringWidth(buttonLabels[i])) / 2;
                 int textY = buttons[i].y + ((buttons[i].height + fm.getAscent()) / 2);
                 g2.drawString(buttonLabels[i], textX, textY);
             }
         }
+
+        // Calculates position and size of content area
         int contentX = BattleUI.x + buttonSectionWidth + 10;
         int contentY = BattleUI.y + 10;
         int contentWidth = listSectionWidth - 20;
         int contentHeight = uiHeight - 20;
 
+        // Always show attack message in content area
         drawAttackMessage(g2, contentX, contentY, contentWidth, contentHeight);
 
         if (inSubmenu) {
             if (currentUIState == STATE_WEAPONS) {
+                // Show scrollable weapon area
                 drawWeaponsList(g2, contentX, contentY, contentWidth, contentHeight);
             } else if (currentUIState == STATE_ITEMS) {
+                // Show scrollable item area
                 drawItemsList(g2, contentX, contentY, contentWidth, contentHeight);
             } else if (currentUIState == STATE_ATTACK) {
+                // Show attack message
                 drawAttackMessage(g2, contentX, contentY, contentWidth, contentHeight);
             } else if (currentUIState == STATE_DEFEND) {
+                // Show defend message
                 drawDefendMessage(g2, contentX, contentY, contentWidth, contentHeight);
             }
         }
-
-
-
     }
 
+    /**
+     * Draw scrollable weapon list onto UI
+     */
     private void drawWeaponsList(Graphics g2, int x, int y, int width, int height){
+        // Fill default rectangle for weapons to be drawn on
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
 
+        // Initialize ArrayList each time weapon list is drawn
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        if (weapons.isEmpty()) return;
+        if (weapons.isEmpty()) return; // If no weapons are present, end here
 
+        // Set parameters
         int weaponBoxSize = 50;
         int padding = 27;
         int visibleWeapons = 7;
         float scale = 4.0f;
 
+        // Set left-most visible item
         int startIndex = Math.max(0, selectedWeaponIndex - (visibleWeapons/2));
         startIndex = Math.min(startIndex, Math.max(0, weapons.size() - visibleWeapons));
 
+        // Calculate the total width of the visible weapons
         int totalVisibleWidth = Math.min(weapons.size(), visibleWeapons) * (weaponBoxSize + padding) - padding;
+
+        // Center list horizontally and vertically
         int startX = x + (width - totalVisibleWidth) / 2;
         int startY = y + (height - weaponBoxSize) / 2;
 
+        // Show left arrow when first index on the left is not visible
         if (startIndex > 0) {
             g2.setColor(Color.WHITE);
             g2.setFont(customFont.deriveFont(28f));
             g2.drawString("<", x + 15, y + height/2+ 10);
         }
+
+        // Show right arrow when last index on the right is not visible
         if (startIndex + visibleWeapons < weapons.size()) {
             g2.setColor(Color.WHITE);
             g2.setFont(customFont.deriveFont(28f));
             g2.drawString(">", x + width - 25, y + height/2 + 10);
         }
 
-
+        // Loop through visible weapons
         for (int i = 0; i < Math.min(visibleWeapons, weapons.size() - startIndex); i++) {
+            // Position calculation
             int weaponIndex = startIndex + i;
             int weaponX = startX + i * (weaponBoxSize + padding);
             int weaponY = startY;
 
+            // If weapon is selected
             if (weaponIndex == selectedWeaponIndex) {
-                weaponY -= 10;  // Fixed lift amount
+                weaponY -= 10;  // Raise weapon by 10 pixels
+
+                // Print weapon name
                 g2.setColor(Color.WHITE);
                 g2.setFont(customFont.deriveFont(16f));
                 String weaponName = weapons.get(weaponIndex).getName();
                 FontMetrics metrics = g2.getFontMetrics();
                 int textWidth = metrics.stringWidth(weaponName);
-
                 int textX = weaponX + (weaponBoxSize - textWidth) / 2;
                 int textY = weaponY + weaponBoxSize + 24 ;
                 g2.drawString(weaponName, textX, textY);
             }
 
+            // Get weapon sprite and scale image
             BufferedImage weaponSprite = weapons.get(weaponIndex).getSprite();
-
             int scaledWidth = (int)(weaponSprite.getWidth() * scale);
             int scaledHeight = (int)(weaponSprite.getHeight() * scale);
 
@@ -475,6 +518,10 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Draw scrollable weapon list onto UI.
+     * All logic follows previous method.
+     */
     private void drawItemsList(Graphics g2, int x, int y, int width, int height) {
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
@@ -485,8 +532,6 @@ public class BattlePanel extends JPanel implements Runnable {
         int itemBoxSize = 50;
         int padding = 27;
         int visibleItems = 7;
-
-
 
         int startIndex = Math.max(0, selectedItemIndex - (visibleItems/2));
         startIndex = Math.min(startIndex, Math.max(0, items.size() - visibleItems));
@@ -500,12 +545,12 @@ public class BattlePanel extends JPanel implements Runnable {
             g2.setFont(customFont.deriveFont(28f));
             g2.drawString("<", x + 15, y + height/2+ 10);
         }
+
         if (startIndex + visibleItems < items.size()) {
             g2.setColor(Color.WHITE);
             g2.setFont(customFont.deriveFont(28f));
             g2.drawString(">", x + width - 25, y + height/2 + 10);
         }
-
 
         for (int i = 0; i < Math.min(visibleItems, items.size() - startIndex); i++) {
             int itemIndex = startIndex + i;
@@ -525,19 +570,18 @@ public class BattlePanel extends JPanel implements Runnable {
                 g2.drawString(itemName, textX, textY);
             }
 
-
             int spriteSize = 48;
             BufferedImage itemSprite = items.get(i).getSprite();
             int spriteX = itemX + (itemBoxSize-spriteSize)/2;
             int spriteY = itemY + 5;
             g2.drawImage(itemSprite, spriteX, spriteY, spriteSize, spriteSize, null);
 
-
         }
     }
 
-
-
+    /**
+     * Draw attack message and background
+     */
     private void drawAttackMessage(Graphics g2, int x, int y, int width, int height){
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
@@ -545,9 +589,11 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.setColor(Color.WHITE);
         g2.setFont(customFont);
         g2.drawString(currentMessage , x + 15, y + 25);
-
-
     }
+
+    /**
+     * Draw defend message and background
+     */
     private void drawDefendMessage(Graphics g2, int x, int y, int width, int height){
         g2.setColor(new Color(40,40,40));
         g2.fillRect(x, y, width, height);
@@ -557,7 +603,9 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.drawString(currentMessage, x + 20, y + 20);
     }
 
-
+    /**
+     * Update UI state based on which button is selected
+     */
     private void updateUIState(){
         if (selectedButtonIndex == 0) {
             currentUIState = STATE_ATTACK;
@@ -570,30 +618,67 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Print text in typewriter style
+     * @param message Message to be printed
+     */
     private void showTypewriterText(String message) {
         targetMessage = message;
         currentMessage = "";
         charIndex = 0;
     }
 
+    /**
+     * Run through each letter of the text per number of frames
+     */
     private void updateTypewriterText() {
         if (charIndex < targetMessage.length()) {
             frameCount++;
-            if (frameCount >= TEXT_SPEED){
-                currentMessage = targetMessage.substring(0, charIndex + 1);
+            if (frameCount >= TEXT_SPEED) {
+                currentMessage = targetMessage.substring(0, charIndex + 1); // Go through each substring per tick
                 charIndex++;
                 frameCount = 0;
                 isMessageComplete = false;
-                messageEndDelay=0;
+                messageEndDelay = 0;
             }
         } else {
             isMessageComplete = true;
-        if (messageEndDelay < MESSAGE_DELAY_TIME) {
-            messageEndDelay++;
-        }
+            if (messageEndDelay < MESSAGE_DELAY_TIME) {
+                messageEndDelay++;
+            } else {
+                updateTutorial();
+            }
         }
     }
 
+    /**
+     * Run tutorial text printing if it is the first enemy encountered
+     */
+    private void updateTutorial() {
+        if (!isFirstEnemy || !isMessageComplete) return;
+
+        if (messageEndDelay >= MESSAGE_DELAY_TIME) {
+            switch (tutorialStep) {
+                case TUTORIAL_NAVIGATION:
+                    showTypewriterText("Press SPACE to use buttons!");
+                    tutorialStep = TUTORIAL_SPACE;
+                    break;
+                case TUTORIAL_SPACE:
+                    showTypewriterText("Press ENTER to use items!");
+                    tutorialStep = TUTORIAL_ENTER;
+                    break;
+                case TUTORIAL_ENTER:
+                    showTypewriterText(currentEnemy.getName() + " has transported you to another dimension!");
+                    tutorialStep = TUTORIAL_COMPLETE;
+                    isFirstEnemy = false;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Set player attack parameters, ensuring proper attack
+     */
     private void performPlayerAttack(){
         if (enemyDefeated){
             return;
@@ -603,12 +688,12 @@ public class BattlePanel extends JPanel implements Runnable {
             attackAnimationTicks = 0;
             waitingForAnimation = true;
             isPlayerTurn = false;
-
-
-
         }
     }
 
+    /**
+     * Set enemy attack parameters, ensuring proper attack
+     */
     private void performEnemyAttack(){
         if (heroDefeated){
             return;
@@ -616,30 +701,40 @@ public class BattlePanel extends JPanel implements Runnable {
         isEnemyAttacking = true;
         attackAnimationTicks = 0;
         waitingForAnimation = true;
-        showTypewriterText(enemyAttackMessage.get(random.nextInt(enemyAttackMessage.size())));
 
+        // Reset item restriction logic
         usedItemThisTurn = false;
         isPlayerTurn = true;
     }
 
+    /**
+     * Draw hero character and their weapon during battle
+     *  @Graphics: A class that has the necessary functions to draw on the screen
+     */
     public void drawHeroBattle(Graphics2D g2) {
+        // Hero character drawing
         BufferedImage image = gamePanel.hero.right1;
-
         int battleSize = gamePanel.tileSize * 2;
         g2.drawImage(image, playerX, playerY, battleSize, battleSize, null);
+
+        // Draw health bar under player
         drawHealthBar(g2, playerX, playerY + battleSize + 10, gamePanel.hero.getHP(), heroMaxHealth);
 
+        // Draw weapon on player
         Weapon weapon = getSelectedWeapon();
         if (weapon != null){
+            // Replace parts of path to get corresponding png
             String path = weapon.getSpritePath().replace("./src", "").replace("Sprite.png", "SpriteInHand.png");
+
             try{
                 image = ImageIO.read(getClass().getResourceAsStream(path));
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            // Weapon positioning and scaling
             BufferedImage weaponSprite = image;
-            int weaponX = playerX + battleSize - 75;
+            int weaponX = playerX + battleSize - 77;
             int weaponY = playerY + battleSize/2 + 30;
             float weaponScale = 3.0f;
             int weaponWidth = (int)(weaponSprite.getWidth() * weaponScale);
@@ -649,14 +744,21 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Draw enemy character
+     *  @Graphics: A class that has the necessary functions to draw on the screen
+     */
     public void drawEnemyBattle(Graphics2D g2) {
         BufferedImage image = currentEnemy.getImage();
-
-        int battleSize = gamePanel.tileSize *4;
+        int battleSize = gamePanel.tileSize * 4;
         g2.drawImage(image, enemyX, enemyY, battleSize, battleSize, null);
         drawHealthBar(g2, enemyX, enemyY + battleSize + 10, currentEnemy.getHP(), enemyMaxHealth );
     }
 
+    /**
+     * Draw health bar of characters
+     *  @Graphics: A class that has the necessary functions to draw on the screen
+     */
     public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, double maxHealth) {
         g2.setColor(Color.GRAY);
         g2.fillRect(x, y, healthBarWidth, healthBarHeight);
@@ -677,11 +779,17 @@ public class BattlePanel extends JPanel implements Runnable {
 
     }
 
+    /**
+     * Build in method in java, standard method to draw on JPanel
+     * @Graphics: A class that has the necessary functions to draw on the screen
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;
+
+        // Draw background
         try {
             BufferedImage image = ImageIO.read(new File("src/Backend/Images/Space-Background.jpg"));
             g2.drawImage(image, 0,0,null);
@@ -691,20 +799,23 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw hero
         drawHeroBattle(g2);
 
-        // IDK how to get the enemy
+        // Draw enemy
         drawEnemyBattle(g2);
 
         // Draw attack button
         drawBattleUI(g2);
 
-
+        // Check if enemy is dead
         if (currentEnemy.getHP() <= 0) {
             drawVictoryMessage(g2);
         }
+
+        // Check if hero is dead
         if (gamePanel.hero.getHP() <= 0) {
             drawDefeatedMessage(g2);
         }
 
+        // Handle "crit" message animation
         if (critPopupTimer > 0) {
             g2.setFont(customFont.deriveFont(36f));  // Bigger font
             g2.setColor(Color.RED);
@@ -713,6 +824,7 @@ public class BattlePanel extends JPanel implements Runnable {
             g2.drawString(critPopupText, critPopupX, critPopupY);
         }
 
+        // Handle "miss" message animation
         if (missPopupTimer > 0) {
             g2.setFont(customFont.deriveFont(36f));
             g2.setColor(Color.RED);
@@ -724,11 +836,17 @@ public class BattlePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
+    /**
+     * Select next weapon in list
+     */
     public void selectNextWeapon(){
         ArrayList<Weapon> weapons = gamePanel.hero.getOwnedWeapons();
-        selectedWeaponIndex = (selectedWeaponIndex + 1) % gamePanel.hero.getOwnedWeapons().size(); // Infinite cycle
+        selectedWeaponIndex = (selectedWeaponIndex + 1) % weapons.size(); // Infinite cycle
     }
 
+    /**
+     * Select last weapon in list
+     */
     public void selectPreviousWeapon(){
         selectedWeaponIndex--;
         if(selectedWeaponIndex < 0) {
@@ -740,10 +858,17 @@ public class BattlePanel extends JPanel implements Runnable {
         return gamePanel.hero.getOwnedWeapons().get(selectedWeaponIndex);
     }
 
+    /**
+     * Select next item in list
+     */
     public void selectNextItem() {
         ArrayList<Item> items = gamePanel.hero.getOwnedItems();
         selectedItemIndex = (selectedItemIndex + 1) % items.size();
     }
+
+    /**
+     * Select previous item in list
+     */
     public void selectPreviousItem() {
         ArrayList<Item> items = gamePanel.hero.getOwnedItems();
         selectedItemIndex--;
@@ -751,7 +876,13 @@ public class BattlePanel extends JPanel implements Runnable {
             selectedItemIndex = items.size() - 1;
         }
     }
+
+    /**
+     * Draw victory message on panel and return to main game panel
+     * @Graphics: A class that has the necessary functions to draw on the screen
+     */
     private void drawVictoryMessage(Graphics2D g2) {
+        // Set message to be printed
         String message = "Enemy Defeated!";
         this.enemyDefeated = true;
         g2.setFont(customFont.deriveFont(48f));
@@ -769,14 +900,19 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw main text
         g2.setColor(Color.YELLOW);
         g2.drawString(message, x, y);
+
+        // Set timer to return to game
         Timer timer = new Timer(3000, e -> returnToGame());
         timer.setRepeats(false);
         timer.start();
-
-
     }
 
+    /**
+     * Draw defeated message on panel and exit game if lost.
+     * @Graphics: A class that has the necessary functions to draw on the screen
+     */
     private void drawDefeatedMessage(Graphics2D g2) {
+        // Set message to be printed
         String message = "Better luck next time...";
         this.heroDefeated = true;
         g2.setFont(customFont.deriveFont(48f));
@@ -794,14 +930,19 @@ public class BattlePanel extends JPanel implements Runnable {
         // Draw main text
         g2.setColor(Color.YELLOW);
         g2.drawString(message, x, y);
+
+        // Set timer to exit program
         Timer timer = new Timer(2000, e -> System.exit(0));
         timer.setRepeats(false);
         timer.start();
-
     }
 
 
-
+    /**
+     * In this loop, we will constantly be updating the animations and
+     * draw the UI on the screen. Also, this function is necessary to use when working with Thread objects.
+     * In this method we create a Game loop.
+     */
     @Override
     public void run(){
 
@@ -843,10 +984,15 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * This code manages the battle menu and input handling 
+     * in a turn-based combat system
+     */
     public void update() {
         updateAttackAnimation();
         updateTypewriterText();
-
+        
+        // Update floating combat text animations
         if (critPopupTimer > 0) {
             critPopupTimer--;
             critPopupY--; // Float up
@@ -858,17 +1004,20 @@ public class BattlePanel extends JPanel implements Runnable {
         }
 
         if (!inSubmenu) {
+            // Up/Down arrows cycle between rows
             if (keyH.upArrow) {
                 selectedButtonIndex = (selectedButtonIndex + 2) % 4;
                 updateUIState();
                 keyH.upArrow = false;
             }
+            
             if (keyH.downArrow) {
                 selectedButtonIndex = (selectedButtonIndex + 2) % 4;
                 updateUIState();
                 keyH.downArrow = false;
-
             }
+
+            // Left/Right arrows move between columns
             if (keyH.leftArrow) {
                 selectedButtonIndex = selectedButtonIndex % 2 == 0 ? selectedButtonIndex + 1 : selectedButtonIndex - 1;
                 updateUIState();
@@ -879,9 +1028,10 @@ public class BattlePanel extends JPanel implements Runnable {
                 updateUIState();
                 keyH.rightArrow = false;
             }
-
+            
+            // Main Menu Actions
             if (keyH.spacePressed) {
-                if (selectedButtonIndex == 0) {
+                if (selectedButtonIndex == 0) { // Attack
                     if (isPlayerTurn && !waitingForAnimation){
                         if (usedItemThisTurn) {
                             showTypewriterText("Cannot attack after using an item!");
@@ -889,7 +1039,7 @@ public class BattlePanel extends JPanel implements Runnable {
                             performPlayerAttack();
                         }
                     }
-                } else if (selectedButtonIndex == 2) {
+                } else if (selectedButtonIndex == 2) { // Defend
                     if (isPlayerTurn && !waitingForAnimation){
                         showTypewriterText("Defense stance!");
                         isPlayerTurn = false;
@@ -897,19 +1047,19 @@ public class BattlePanel extends JPanel implements Runnable {
                         performEnemyAttack();
                     }
                 }
-                else {
+                else { // Enter submenu (weapons or items)
                     inSubmenu = true;
                     keyH.spacePressed = false;
                 }
             }
-        }else {
+        }else { // Once in submenu,
+            // Navigate weapons/items with left/right
             if(keyH.leftArrow) {
                 if (currentUIState == STATE_WEAPONS) {
                     selectPreviousWeapon();
                 } else if (currentUIState == STATE_ITEMS) {
                     selectPreviousItem();
                 }
-
                 keyH.leftArrow = false;
             }
             if(keyH.rightArrow) {
@@ -918,7 +1068,6 @@ public class BattlePanel extends JPanel implements Runnable {
                 } else if (currentUIState == STATE_ITEMS) {
                     selectNextItem();
                 }
-                // Add similar for items when implemented
                 keyH.rightArrow = false;
             }
 
@@ -927,7 +1076,8 @@ public class BattlePanel extends JPanel implements Runnable {
                 inSubmenu = false;
                 keyH.spacePressed = false;
             }
-
+            
+            // Enter uses selected item
             if(keyH.enterPressed) {
                 if (currentUIState == STATE_ITEMS) {
                     ArrayList<Item> items = gamePanel.hero.getOwnedItems();
@@ -944,13 +1094,9 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
-
-
-
-    public void stopBattleThread(){
-        battleThread = null;
-    }
-
+    /**
+     * Cleanup any pending or saved variables, resetting them for next usage
+     */
     void cleanupResources() {
         // Stop the battle thread properly
         isRunning = false;
@@ -983,6 +1129,7 @@ public class BattlePanel extends JPanel implements Runnable {
         // Clear any popups
         critPopupTimer = 0;
         missPopupTimer = 0;
+        
         // Clear any pending keyboard states
         if (keyH != null) {
             keyH.upPressed = false;
@@ -995,15 +1142,20 @@ public class BattlePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Return to main game panel
+     */
     private void returnToGame() {
-        // Clean up resources before switching back
-        System.out.println(isRunning);
+        // Check if isRunning: returnToGame() was running 60 times before close
         if (!isRunning){
             return;
         }
+
+        // Clean up resources before switching back
         cleanupResources();
         gamePanel.stopMusic();
-
+        
+        // Reinitiate game panel
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
@@ -1012,15 +1164,9 @@ public class BattlePanel extends JPanel implements Runnable {
         gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
 
-        // Remove battle panel and restore game panel
+        // Remove battle panel and restart music
         window.remove(this);
-
-        System.out.println("playin music");
         gamePanel.playMusic(0);
-
-
-
-
     }
 }
 

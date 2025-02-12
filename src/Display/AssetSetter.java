@@ -40,7 +40,7 @@ public class AssetSetter {
         String medipack = "/Backend/Images/itemSprites/Medipack.png";
 
         // Create new renderable weapons, and pass their locations in the world
-        gp.obj[0] = new WeaponRendering(battleAxe, 3344, 1888);
+        gp.obj[0] = new WeaponRendering(battleAxe, 428, 6096);
         gp.obj[1] = new WeaponRendering(normalAxe, 3340, 1900);
         gp.obj[2] = new WeaponRendering(bigSword, 7420, 10805);
         gp.obj[3] = new WeaponRendering(club, 412, 8172);
