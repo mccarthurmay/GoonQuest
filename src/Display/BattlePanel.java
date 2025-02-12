@@ -893,9 +893,9 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private void returnToGame() {
         // Stop battle thread before switching panels
-        changeBattleState(false);
         stopBattleThread();
-
+        gamePanel.stopMusic();
+        gamePanel.playMusic(0);
         window.remove(this);
         window.add(gamePanel);
         window.revalidate();

@@ -21,7 +21,8 @@ public class Battle {
     public void toBattleTransition(Enemy enemy) {
         BattlePanel battlePanel = new BattlePanel(gp, enemy, window);
         gp.stopGameThread(); // BattleThread was frozen if both threads on
-
+        gp.stopMusic();
+        gp.playMusic(2);
         window.remove(gp);
         window.add(battlePanel);
         window.revalidate();
@@ -30,7 +31,9 @@ public class Battle {
     }
 
     public void update(){
+        if(battlePanel != null){
             battlePanel.update();
+        }
 
     }
 
