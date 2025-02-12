@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import Backend.Characters.Enemy;
 import Backend.Characters.EnemyFactory;
 import Backend.Items.*;
+import Display.Battle;
 public class BattlePanel extends JPanel implements Runnable {
 
     GamePanel gamePanel; // copy original panel
@@ -892,6 +893,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private void returnToGame() {
         // Stop battle thread before switching panels
+        changeBattleState(false);
         stopBattleThread();
 
         window.remove(this);
@@ -902,6 +904,8 @@ public class BattlePanel extends JPanel implements Runnable {
         gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
     }
+
+
 
 
 }
