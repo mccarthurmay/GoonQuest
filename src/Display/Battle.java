@@ -8,8 +8,6 @@ public class Battle {
     GamePanel gp;
     JFrame window;
     BattlePanel battlePanel;
-    Enemy currentEnemy; // tracks current enemy
-    boolean battleState = false;
 
     public Battle(GamePanel gp, JFrame window) {
         this.gp = gp;
@@ -20,14 +18,17 @@ public class Battle {
     // REMOVE THIS LATER
     public void toBattleTransition(Enemy enemy) {
         gp.stopGameThread();
-        window.remove(gp);
         gp.stopMusic();
+
+        // Clean up old battle panel if it exists
+        if (battlePanel != null) {
+            battlePanel.cleanupResources();
+            battlePanel = null;
+        }
+
+        window.remove(gp);
         gp.playMusic(2);
 
-        // Create and set up new battle panel
-        if (battlePanel != null) {
-            battlePanel.cleanupResources(); // Clean up old battle panel if it exists
-        }
         battlePanel = new BattlePanel(gp, enemy, window);
 
         // Switch to battle panel
@@ -38,7 +39,7 @@ public class Battle {
     }
 
     public void update(){
-        if(battlePanel != null){
+        if (battlePanel != null) {
             battlePanel.update();
         }
 

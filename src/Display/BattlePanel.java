@@ -51,9 +51,6 @@ public class BattlePanel extends JPanel implements Runnable {
     private final String[] buttonLabels = {"Attack", "Weapon", "Defend", "Items"};
 
     // UI Message
-    private String currentMessage = "";
-    private String targetMessage = "";
-    private int charIndex = 0;
     private int frameCount = 0;
     private final int TEXT_SPEED = 2; // higher is slower, default 3
     private Font customFont;
@@ -102,6 +99,11 @@ public class BattlePanel extends JPanel implements Runnable {
     private int missPopupTimer = 0;
     private int missPopupX = 0;
     private int missPopupY = 0;
+
+    private volatile boolean isRunning = false;
+    private volatile String currentMessage = "";
+    private volatile String targetMessage = "";
+    private volatile int charIndex = 0;
 
     public BattlePanel(GamePanel gamePanel, Enemy enemy, JFrame window) {
         this.gamePanel = gamePanel;
@@ -340,6 +342,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
 
     public void startBattleThread() {
+        cleanupResources(); // Clean up any existing resources first
         battleThread = new Thread(this);
         battleThread.start();
     }
@@ -470,12 +473,6 @@ public class BattlePanel extends JPanel implements Runnable {
             int spriteY = weaponY + (weaponBoxSize - scaledHeight) / 2;
 
             g2.drawImage(weaponSprite, spriteX, spriteY, scaledWidth, scaledHeight, null);
-
-//            int spriteSize = 48;
-//            BufferedImage weaponSprite = weapons.get(i).getSprite();
-//            int spriteX = weaponX + (weaponBoxSize-spriteSize)/2;
-//            int spriteY = weaponY + 5;
-//            g2.drawImage(weaponSprite, spriteX, spriteY, spriteSize, spriteSize, null);
         }
     }
 
@@ -807,20 +804,29 @@ public class BattlePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        int FPS = 60;
-        double drawInterval = (double) 1000000000 /FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+        if (!isRunning) {
+            isRunning = true;
 
-        while(battleThread != null) {
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
-            if(delta >= 1) {
-                update();
-                repaint();
-                delta--;
+            long lastFrameTime = System.nanoTime();
+            double targetFPS = 60.0;
+            double frameTime = 1000000000 / targetFPS;
+
+            while (isRunning && battleThread != null) {
+                long now = System.nanoTime();
+                long elapsedTime = now - lastFrameTime;
+
+                if (elapsedTime >= frameTime) {
+                    update();
+                    repaint();
+                    lastFrameTime = now;
+                } else {
+                    // Add small sleep to prevent CPU overload
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -935,6 +941,8 @@ public class BattlePanel extends JPanel implements Runnable {
 
     void cleanupResources() {
         // Stop the battle thread properly
+        isRunning = false;
+
         if (battleThread != null) {
             Thread tempThread = battleThread;
             battleThread = null;
@@ -945,11 +953,17 @@ public class BattlePanel extends JPanel implements Runnable {
             }
         }
 
+        // Reset all state variables
+        currentMessage = "";
+        targetMessage = "";
+        charIndex = 0;
+
         // Clear any pending animations
         isPlayerAttacking = false;
         isEnemyAttacking = false;
         waitingForAnimation = false;
         waitingForMessage = false;
+        inSubmenu = false;
 
         // Reset message system
         currentMessage = "";
@@ -962,6 +976,16 @@ public class BattlePanel extends JPanel implements Runnable {
         // Clear any popups
         critPopupTimer = 0;
         missPopupTimer = 0;
+        // Clear any pending keyboard states
+        if (keyH != null) {
+            keyH.upPressed = false;
+            keyH.downPressed = false;
+            keyH.leftPressed = false;
+            keyH.rightPressed = false;
+            keyH.spacePressed = false;
+            keyH.enterPressed = false;
+            keyH.shiftPressed = false;
+        }
     }
 
     private void returnToGame() {
