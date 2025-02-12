@@ -16,19 +16,29 @@ import java.util.Random;
 
 abstract public class CharacterManager {
 
-    // Trying some stuff
+    // Declaring variable that keep track of player position
+    // on the whole map.
     public int worldX, worldY;
     public int speed;
 
+    /**
+     * BufferedImage describes an image with an accessible buffer of Image data.
+     * We mostly use this to stores images files.
+     * In this case, these images files will store different position of our player
+     * to give a walking animation effect
+     */
     public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
+    // Needed to later call our images in a correct order.
     public String direction;
 
+    // Needed to update our sprite current image to the next one.
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
+
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // default collision for characters
 
-    public int solidAreaDefaultX, solidAreaDefaultY;
+    public int solidAreaDefaultX, solidAreaDefaultY; 
 
     public boolean collisionsOn = false;
 
@@ -41,6 +51,12 @@ abstract public class CharacterManager {
     KeyHandler keyH;
     boolean guarding = false;
 
+    /**
+     * Defines a character object.
+     * @param stats Sets of stats that define a character base attack, health, crit chance etc. 
+     * @param weapon An object of class Weapon that allows the characters to deal more damage
+     * @param name A method to refer to the character object later on.
+     */
     public CharacterManager(Stats stats, Weapon weapon, String name){
         this.stats = stats;
         this.weapon = weapon;
@@ -160,6 +176,9 @@ abstract public class CharacterManager {
     public void setAction() {
 
     }
+
+    // This methods just keeps track of our character position and updates it on the Gamepanel.
+    // We later override it for more specific use.
     public void update() {
         setAction();
         collisionsOn = false;

@@ -134,6 +134,12 @@ public class GamePanel extends JPanel implements Runnable {
          * is written inside this bracket.
          */
         while(gameThread != null) {
+
+            /**
+             * Delta is essentially a timer that signals the computer
+             * when to update and redraw the screen.
+             * it slowly approaches one and once it reaches a value of one, it signals it. git
+             */
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
