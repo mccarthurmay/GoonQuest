@@ -189,10 +189,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         isInFoggyRegion = checkFoggyRegion();
 
-        // REMOVE THIS LATER
-        if(keyH.battleTestKey) {
-            battle.testBattleTransition();
-        }
+
         if(keyH.qPressed){
             System.out.println(hero.worldX + " " + hero.worldY);
             keyH.qPressed = false;

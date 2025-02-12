@@ -12,6 +12,7 @@ public class EnemyRendering extends Superobjects {
     public EnemyRendering(String path, int worldX, int worldY) {
         super(worldX, worldY);
         name = "Enemy";
+        spritePath = path;
         try {
             image = ImageIO.read(getClass().getResourceAsStream(path));
 

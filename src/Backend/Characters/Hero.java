@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 import static Backend.Characters.HeroFactory.unfoundItems;
 import static Backend.Characters.HeroFactory.unfoundWeapons;
+import static Backend.Characters.HeroFactory.unfoundEnemies;
 import Display.Battle;
-import Display.GamePanel;
 
 import javax.swing.*;
 
@@ -28,6 +28,7 @@ public class Hero extends CharacterManager {
     public final int screenX;
     public final int screenY;
     private BufferedImage img = null;
+
 
     /**
      * Create a character - now with Christian's game panel and keyhandler
@@ -211,8 +212,14 @@ public class Hero extends CharacterManager {
                     gp.obj[i] = null;
                     break;
                 case ("Enemy"):
-
-                    battle.testBattleTransition();
+                    for (int k = 0; k < unfoundEnemies.size(); k++){
+                        System.out.println(unfoundEnemies.get(k).getSpritePath());
+                        System.out.println(objectPath);
+                        if (unfoundEnemies.get(k).getSpritePath().contains(objectPath)) {
+                            gp.battle.toBattleTransition(unfoundEnemies.get(k));
+                            unfoundEnemies.remove(k);
+                        }
+                    }
                     gp.obj[i] = null;
                     break;
 

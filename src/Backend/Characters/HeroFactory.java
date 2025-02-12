@@ -4,7 +4,6 @@ import Backend.Weapons.*;
 import Backend.Items.*;
 import Display.GamePanel;
 import Display.KeyHandler;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.Key;
@@ -19,6 +18,7 @@ public class HeroFactory {
      */
     public static ArrayList<Weapon>  unfoundWeapons = new ArrayList<>();
     public static ArrayList<Item>  unfoundItems = new ArrayList<>();
+    public static ArrayList<Enemy> unfoundEnemies = new ArrayList<>();
 
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
@@ -64,6 +64,29 @@ public class HeroFactory {
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new HpItem("Health P6623otion", 10, ""));
+
+
+        ArrayList<Item> blankItems = new ArrayList<>();
+        Stats gHoly = new Stats(15.0, 8.0, 1, 0.1, 0.75); // angelic, high HP
+        Stats gRed = new Stats(20.0, 3.0, 300, 0.5, 0.3); // he sees red, low hit chance but it'll hurt when it connects!
+        Stats gVoid = new Stats(100.0, 200.0, 10.0, 0.0, 1); // super easy to kill, but oh boy will he CORRUPT you
+        Stats gKawaii = new Stats(5.0, 20.0, 600.0, 0.5, 0.8); // kawaii!
+        Stats gStar = new Stats(10.0, 50.0, 300.0, 0.7, 0.99); // skilled sharpshooter. rarely misses.
+        Stats gSad = new Stats(15.0, 3.0, 200.0, 0.5, 0.3); // he's doing his best, alright?
+        Weapon lameStick = new Weapon ("Lame stick", 1.0, "None", 0.2, 0.3, "Ehhhh.. it's alright.", "");
+
+        Enemy holyEnemy = new Enemy(gHoly, lameStick, "Glargo Holy", blankItems, gp, "src/Backend/Images/sprites/glargo_holy.png", 30, 31);
+        Enemy redEnemy = new Enemy(gRed, lameStick, "Glargo Red", blankItems, gp, "src/Backend/Images/sprites/glargo_red.png", 32, 30);
+        Enemy voidEnemy = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 33, 30);
+        Enemy kawaiiEnemy = new Enemy(gKawaii, lameStick, "Glargo Kawaii", blankItems, gp, "src/Backend/Images/sprites/glargo_kawaii.png", 34, 30);
+        Enemy starEnemy = new Enemy(gStar, lameStick, "Glargo Star", blankItems, gp, "src/Backend/Images/sprites/glargo_star.png", 35, 30);
+        Enemy sadEnemy = new Enemy(gSad, lameStick, "Glargo Sad", blankItems, gp, "src/Backend/Images/sprites/glargo_sad.png", 36, 30);
+        unfoundEnemies.add(holyEnemy);
+        unfoundEnemies.add(redEnemy);
+        unfoundEnemies.add(voidEnemy);
+        unfoundEnemies.add(kawaiiEnemy);
+        unfoundEnemies.add(starEnemy);
+        unfoundEnemies.add(sadEnemy);
 
 
 

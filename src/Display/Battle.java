@@ -40,9 +40,9 @@ public class Battle {
     }
 
     // REMOVE THIS LATER
-    public void testBattleTransition() {
+    public void toBattleTransition(Enemy enemy) {
         this.currentEnemy = EnemyFactory.createDefaultEnemy(gp);
-        BattlePanel battlePanel = new BattlePanel(gp, this.currentEnemy, window);
+        BattlePanel battlePanel = new BattlePanel(gp, enemy, window);
 
         gp.stopGameThread(); // BattleThread was frozen if both threads on
 

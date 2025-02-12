@@ -47,12 +47,14 @@ public class Enemy extends CharacterManager{
         }
     }
 
-    public void getImage() {
+    public BufferedImage getImage() {
         try {
             down1 = ImageIO.read(new File(path));
+            return down1;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
@@ -83,6 +85,9 @@ public class Enemy extends CharacterManager{
 
     }
 
+    public String getSpritePath(){
+        return path;
+    }
 
     public Weapon getWeapon() {
         return weapon;

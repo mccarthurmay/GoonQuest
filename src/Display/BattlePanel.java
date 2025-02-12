@@ -1,8 +1,11 @@
 package Display;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import Backend.Characters.Hero;
@@ -118,7 +121,6 @@ public class BattlePanel extends JPanel implements Runnable {
 
         // Set up the battle panel properties
         this.setPreferredSize(new Dimension(gamePanel.screenWidth, gamePanel.screenHeight));
-        this.setBackground(Color.BLACK); // black because I didn't look at your map code
         this.setDoubleBuffered(true);
 
         // Initialize bounce effect
@@ -637,6 +639,14 @@ public class BattlePanel extends JPanel implements Runnable {
 
     }
 
+    public void drawEnemyBattle(Graphics2D g2) {
+        BufferedImage image = currentEnemy.getImage();
+
+        int battleSize = gamePanel.tileSize *4;
+        g2.drawImage(image, enemyX, enemyY, battleSize, battleSize, null);
+        drawHealthBar(g2, enemyX, enemyY + battleSize + 10, currentEnemy.getHP(), heroMaxHealth );
+    }
+
     public void drawHealthBar(Graphics g2, int x, int y, double currentHealth, double maxHealth) {
         g2.setColor(Color.GRAY);
         g2.fillRect(x, y, healthBarWidth, healthBarHeight);
@@ -660,17 +670,23 @@ public class BattlePanel extends JPanel implements Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
 
+        Graphics2D g2 = (Graphics2D)g;
+        try {
+            BufferedImage image = ImageIO.read(new File("src/Backend/Images/Space-Background.jpg"));
+            g2.drawImage(image, 0,0,null);
+        } catch (IOException _) {
+        }
         // Draw hero
         drawHeroBattle(g2);
 
         // IDK how to get the enemy
-        g2.fillRect(enemyX, enemyY, 150, 100);
-        drawHealthBar(g2, enemyX, enemyY + 60, currentEnemy.getHP(), enemyMaxHealth);
+        drawEnemyBattle(g2);
 
         // Draw attack button
         drawBattleUI(g2);
+
+
 
         if (currentEnemy.getHP() <= 0) {
             drawVictoryMessage(g2);
