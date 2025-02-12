@@ -135,7 +135,7 @@ public class Hero extends CharacterManager {
              */
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);
-            int obj_index = gp.collisionChecker.checkObject(this, true);
+            int obj_index = gp.collisionChecker.checkObject(this);
             pickUpObject(obj_index);
 
 

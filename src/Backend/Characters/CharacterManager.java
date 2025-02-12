@@ -199,33 +199,7 @@ abstract public class CharacterManager {
      * This method just keeps track of our character position and updates it on the Gamepanel.
      * we later override it for more specific use.
      */
-    public void update() {
-        collisionsOn = false;
-        gp.collisionChecker.checkTile(this);
-        if (collisionsOn == false) {
-            switch (direction) {
-                case "up":
-                    this.worldY -= speed;
-                    break;
-                case "down":
-                    this.worldY += speed;
-                    break;
-                case "left":
-                    this.worldX -= speed;
-                    break;
-                case "right":
-                    this.worldX += speed;
-                    break;
-                case "none":
-                    break;
-            }
-        }
-        spriteCounter++;
-        if(spriteCounter > 10) {
-            spriteNum = (spriteNum % 4) + 1;
-            spriteCounter = 0;
-        }
-    }
+    abstract void update();
 
     /**
      * This method initializes some variable that we defined before, that will
