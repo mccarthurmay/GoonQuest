@@ -68,7 +68,7 @@ public class SaveLoad {
      */
     public static Hero load(String filepath, GamePanel gp, KeyHandler keyH) {
         Hero myNull = CharacterFactory.createDefaultHero(gp, keyH);
-        try {
+        try { // error handling loop
             // initialize
             File f = new File(filepath);
             Scanner fileread = null;
@@ -188,9 +188,9 @@ public class SaveLoad {
             newH.worldY = worldY;
             return newH;
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) { // if file is not found, make default hero
             System.out.println("Bad file or file not found.");
-            return CharacterFactory.createDefaultHero(gp, keyH); // makes default hero if error
+            return CharacterFactory.createDefaultHero(gp, keyH); // makes default hero
         }
 
     }

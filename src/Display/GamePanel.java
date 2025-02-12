@@ -189,17 +189,23 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    /**
+     * Load hero object from file
+     * @param gp GamePanel that will be passed into the hero
+     * @param keyH keyhandler that will be passed into the hero
+     * @return the newly loaded hero!
+     */
     public Hero loadHero(GamePanel gp, KeyHandler keyH) {
-        Hero hero;
-        Scanner input = new Scanner(System.in);
-        System.out.println("Would you like to load a save? (y/n): ");
+        Hero hero = CharacterFactory.createDefaultHero(this, keyH);;
+        Scanner input = new Scanner(System.in); // create a scanner to read files from the system
+        System.out.println("Would you like to load a save? (y/n): "); // prompt user for a save
         String response = input.nextLine();
         if (response.equals("y") || response.equals("Y")) {
-            System.out.println("Input your save file directory (ex: src/saves/mySav.sav)");
-            response = input.nextLine();
-            hero = SaveLoad.load(response, gp, keyH);
+            System.out.println("Input your save file directory (ex: out.sav)"); // out.sav is the default
+            response = input.nextLine(); // take in the user response
+            hero = SaveLoad.load(response, gp, keyH); // load the information from that save file
 
-        }else {
+        }else { // create default hero
             hero = CharacterFactory.createDefaultHero(this, keyH);
         }
 
@@ -302,11 +308,6 @@ public class GamePanel extends JPanel implements Runnable {
                 width * tileSize,
                 height * tileSize
         ));
-    }
-    public void removeFoggyRegion(int index) {
-        if (index >= 0 && index < foggyRegions.size()) {
-            foggyRegions.remove(index);
-        }
     }
 
     public void playMusic(int i) {
