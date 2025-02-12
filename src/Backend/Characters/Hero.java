@@ -10,8 +10,13 @@ import java.util.ArrayList;
 
 import static Backend.Characters.HeroFactory.unfoundItems;
 import static Backend.Characters.HeroFactory.unfoundWeapons;
+import Display.Battle;
+import Display.GamePanel;
+
+import javax.swing.*;
 
 public class Hero extends CharacterManager {
+    public Battle battle;
     // Game mechanics fields
     private ArrayList<Weapon> ownedWeapons = new ArrayList<>();
     private ArrayList<Item> ownedItems = new ArrayList<>();
@@ -19,7 +24,6 @@ public class Hero extends CharacterManager {
     private Stats stats;
 
     // Display and movement fields
-    private GamePanel gp;
     private KeyHandler keyH;
     public final int screenX;
     public final int screenY;
@@ -146,7 +150,8 @@ public class Hero extends CharacterManager {
             gp.collisionChecker.checkTile(this);
             int obj_index = gp.collisionChecker.checkObject(this, true);
             pickUpObject(obj_index);
-            int enemyIndex = gp.collisionChecker.checkEnemy(this, gp.enemy); // check if any enemies are colliding with the player
+
+
             // fight enemy!
 
            if (collisionsOn == false) {
@@ -183,10 +188,10 @@ public class Hero extends CharacterManager {
             String objectPath = gp.obj[i].spritePath;
 
             System.out.println(objectPath);
-            switch(objectName){
-                case("Weapon"):
-                    for(int j = 0; j < unfoundWeapons.size(); j++){
-                        if(unfoundWeapons.get(j).getSpritePath().contains(objectPath)){
+            switch(objectName) {
+                case ("Weapon"):
+                    for (int j = 0; j < unfoundWeapons.size(); j++) {
+                        if (unfoundWeapons.get(j).getSpritePath().contains(objectPath)) {
                             ownedWeapons.add(unfoundWeapons.get(j));
                             unfoundWeapons.remove(j);
                         }
@@ -194,29 +199,25 @@ public class Hero extends CharacterManager {
                     gp.obj[i] = null;
                     break;
 
-                case("Item"):
-                    for(int j = 0; j < unfoundItems.size(); j++){
+                case ("Item"):
+                    for (int j = 0; j < unfoundItems.size(); j++) {
                         System.out.println(unfoundItems.get(j).getSpritePath());
                         System.out.println(objectPath);
-                        if(unfoundItems.get(j).getSpritePath().contains(objectPath)){
+                        if (unfoundItems.get(j).getSpritePath().contains(objectPath)) {
                             ownedItems.add(unfoundItems.get(j));
                             unfoundItems.remove(j);
                         }
                     }
                     gp.obj[i] = null;
                     break;
+                case ("Enemy"):
+
+                    battle.testBattleTransition();
+                    gp.obj[i] = null;
+                    break;
 
             }
 
-
-
-
-
-//            switch(objectName){
-//                case("Weapon"){
-//
-//                }
-//            }
 
         }
     }

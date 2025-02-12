@@ -59,8 +59,8 @@ public class AssetSetter {
         }
 
         String enemy = "/Backend/Images/sprites/glargo_holy.png";
-        gp.obj[8] = new EnemyRendering(enemy);
-        gp.obj[8].worldX = gp.tileSize * (40);
-        gp.obj[8].worldY = gp.tileSize * 32;
+        gp.obj[9] = new EnemyRendering(enemy);
+        gp.obj[9].worldX = gp.tileSize * (40);
+        gp.obj[9].worldY = gp.tileSize * 32;
     }
 }
