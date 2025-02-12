@@ -50,7 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
     Stats gSad = new Stats(15.0, 3.0, 200.0, 0.5, 0.3); // he's doing his best, alright?
     Weapon lameStick = new Weapon ("Lame stick", 1.0, "None", 0.2, 0.3, "Ehhhh.. it's alright.", "");
     ArrayList<Item> blankItems = new ArrayList<>();
-    public Enemy holyEnemy = new Enemy(gHoly, lameStick, "Glargo Holy", blankItems, this, "src/Backend/Images/sprites/glargo_holy.png", 50, 50);
+    public Enemy holyEnemy = new Enemy(gHoly, lameStick, "Glargo Holy", blankItems, this, "src/Backend/Images/sprites/glargo_holy.png", 30, 31);
     public Enemy redEnemy = new Enemy(gRed, lameStick, "Glargo Red", blankItems, this, "src/Backend/Images/sprites/glargo_red.png", 32, 30);
     public Enemy voidEnemy = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, this, "src/Backend/Images/sprites/glargo_void.png", 33, 30);
     public Enemy kawaiiEnemy = new Enemy(gKawaii, lameStick, "Glargo Kawaii", blankItems, this, "src/Backend/Images/sprites/glargo_kawaii.png", 34, 30);
@@ -118,9 +118,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() { // add things to the game world, play music, etc
-//        aSetter.setEnemy();
+        //aSetter.setEnemy();
 
-        System.out.println("enemy set");
         aSetter.setObject();
         playMusic(0 );
     }
