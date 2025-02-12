@@ -18,45 +18,44 @@ public class TileManager {
 
     GamePanel gp;
     public Tile[] tile;
-    public int mapTileNum[][];
+    public int mapTileNum[][]; // create a 2d array of tiles
 
-
+    /**
+     * Constructor for a tilemanager object
+     * @param gp gamepanel to be drawn on
+     */
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[40000];
+        tile = new Tile[40000]; // yes, there are 40,000 total tiles in the world
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
-        loadMap("/Backend/Maps/data2.txt");
-        getTileImage();
+        loadMap("/Backend/Maps/data2.txt"); // import information from the tile map
+        getTileImage(); // get the tiles
     }
 
 
 
     public void getTileImage() {
-        File dir = new File("src/Backend/Images/unique_tiles");
-        File[] directoryListing = dir.listFiles();
-        int i = 0;
+        File dir = new File("src/Backend/Images/unique_tiles"); // folder for tile ojects
+        File[] directoryListing = dir.listFiles(); // create a list of files
         if (directoryListing != null) {
             for (File child : directoryListing) {
-                String filename = child.getName();
+                String filename = child.getName(); // get the name of each .png
                 String myNum = "";
-                if (filename.length() > 12){
+                if (filename.length() > 12){ // if the filename has 5 digits, take all 5 of the digits from the filename
                     myNum = filename.substring(4, 9);
-                } else {
+                } else { // if the filename has 4 digits, take the 4 digits from the filename
                     myNum = filename.substring(4, 8);
                 }
-                int newNum = Integer.parseInt(myNum);
-                tile[newNum] = new Tile();
-                try {
-                    tile[newNum].image = ImageIO.read(new File(child.getAbsolutePath()));
-
+                int newNum = Integer.parseInt(myNum); // convert the digits to an integer
+                tile[newNum] = new Tile(); // create a new tile object at the address of the filename
+                try { // we're required to put this in a try/catch
+                    tile[newNum].image = ImageIO.read(new File(child.getAbsolutePath())); // get the tile's image
                 } catch(Exception e){
                     System.out.println(e);
                 }
-                i++;
-                // Do something with child
             }
         }
-
+        // list of tile numbers that should have collision
         ArrayList<Integer> collisionTiles = new ArrayList<Integer>(Arrays.asList(0,1,2,60,74,75,120,121,135,136,260,274,275,341,342,460,476,477,478,479,507,519,541,542,676,677,678,679,696,697,698,707,714,715,720,722,735,740,741,742,743,800,801,802,860,874,875,890,891,892,896,897,898,941,942,
                 1060,1074,1075, 1090,1091,1092, 1093, 1096, 1097, 1098, 1109, 1110, 1128, 1141,1142, 1260, 1290, 1291, 1292, 1293, 1294, 1295, 1296, 1308, 1309, 1310, 1311, 1486, 1487, 1488, 1493, 1494, 1495, 1496, 1497, 1498, 1508, 1509, 1510, 1514, 1515, 1693, 1694, 1695, 1696, 1697, 1698,
                 1700, 1701, 1702, 1708, 1709, 1710, 1711, 1714, 1715, 1880, 1881, 1906, 1908, 1909, 1910, 1911, 1912, 2000, 2012, 2013, 2080, 2081, 2085, 2086, 2106, 2107, 2200, 2212, 2213, 2279, 2280, 2281, 2282, 2284, 2285, 2286, 2287, 2400, 2412, 2413, 2484, 2485, 2486, 2487, 2525, 2548,
@@ -92,6 +91,7 @@ public class TileManager {
                 34675, 34676, 34750, 34789, 34790, 34791, 34792, 34810, 34811, 34990, 34991, 34992, 35174, 35189, 35190, 35191, 35192, 35373, 35374, 35389, 35390, 35391, 35392, 35549, 35550, 35723, 35749, 35750, 35936, 35937, 35938, 36090, 36091, 36182, 36641, 36642, 36644, 36736, 36737, 36840, 36843, 36844, 36988, 36989, 37040, 37043, 37144, 37188, 37189, 37240,
                 37243, 37145, 37386, 37387, 37388, 37389, 37440, 37441, 37443, 38242, 38248, 38249, 38254, 38255, 38260, 38261, 38262, 38276, 38303, 38322, 38361, 38362, 38386, 38387, 38399, 38446, 38460, 38461, 38646, 38732, 38733, 38734, 38741, 38742, 38771, 38772, 38902, 38903, 38932, 38933, 38934, 38941, 38942, 39102, 39103, 39132, 39133, 39134, 39302, 39303, 39332, 39333, 39334, 39532, 39533, 39534, 39961, 39998, 39999));
 
+        // re-assign the collision value to true if you should have collision
         for (Integer collisionTile : collisionTiles) {
             //System.out.println(collisionTile);
             tile[collisionTile].collision = true;
@@ -101,7 +101,7 @@ public class TileManager {
 
     public void loadMap(String map){
         try{
-            InputStream is = getClass().getResourceAsStream(map);
+            InputStream is = getClass().getResourceAsStream(map); //
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
