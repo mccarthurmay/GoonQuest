@@ -168,14 +168,12 @@ abstract public class CharacterManager {
                 '}';
     }
 
-    public void setAction() {
 
-    }
+
 
     // This methods just keeps track of our character position and updates it on the Gamepanel.
     // We later override it for more specific use.
     public void update() {
-        setAction();
         collisionsOn = false;
         gp.collisionChecker.checkTile(this);
         if (collisionsOn == false) {

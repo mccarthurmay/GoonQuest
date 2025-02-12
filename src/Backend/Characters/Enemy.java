@@ -51,34 +51,6 @@ public class Enemy extends CharacterManager{
         return null;
     }
 
-
-    public void setAction() {
-
-        actionLockCounter++;
-        if(actionLockCounter == 10){
-            Random random = new Random();
-            int i = random.nextInt(100);
-            if (i == 1){
-                direction = "right";
-            }
-            else if (i == 2){
-                direction = "up";
-            }
-            else if (i == 3){
-                direction = "down";
-            }
-            else if (i  == 4){
-                direction = "left";
-            }
-            else{
-                direction = "none";
-            }
-            actionLockCounter = 0;
-        }
-
-
-    }
-
     public String getSpritePath(){
         return path;
     }
