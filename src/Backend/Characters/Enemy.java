@@ -19,13 +19,13 @@ public class Enemy extends CharacterManager{
     /**
      * Create enemy object
      * @param stats Stats object of enemy
-     * @param weapon
-     * @param name
-     * @param ownedItems
-     * @param gp
-     * @param path
-     * @param worldX
-     * @param worldY
+     * @param weapon Gives a weapon to an enemy
+     * @param name Gives a name to an enemy that we can later reference
+     * @param ownedItems Gives some items to enemy
+     * @param gp Gives a gamePanel in which we draw on
+     * @param path Gives a path that we later reference for collision and battle purposes on Hero.pickUpObject.
+     * @param worldX Coordinates use for later placement on the map.
+     * @param worldY Coordinates use for later placement on the map.
      */
     public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems, GamePanel gp, String path, int worldX, int worldY){
         super(stats, weapon, name);
@@ -36,11 +36,17 @@ public class Enemy extends CharacterManager{
         this.worldY = worldY;
     }
 
+    /**
+     * Used mostly for collision detection with hero.
+     */
     public void update() {
         collisionsOn = true;
-        //gp.collisionChecker.checkTile(this);
     }
 
+    /**
+     * Gets the image related to an specific enemy.
+     * @return
+     */
     public BufferedImage getImage() {
         try {
             down1 = ImageIO.read(new File(path));
@@ -51,6 +57,10 @@ public class Enemy extends CharacterManager{
         return null;
     }
 
+    /**
+     * Few getters.
+     * @return some attributes we need later
+     */
     public String getSpritePath(){
         return path;
     }
