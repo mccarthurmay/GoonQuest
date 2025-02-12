@@ -1,5 +1,7 @@
 package Display;
 import Backend.Characters.CharacterFactory;
+import Backend.Items.HpItem;
+import Backend.Items.StatusEffect;
 import Backend.ObjectsRendering.EnemyRendering;
 import Backend.ObjectsRendering.ItemRendering;
 import Backend.ObjectsRendering.WeaponRendering;
@@ -39,6 +41,17 @@ public class AssetSetter {
         String calamari = "/Backend/Images/itemSprites/Calamari.png";
         String medipack = "/Backend/Images/itemSprites/Medipack.png";
 
+        String treasure = "/Backend/Images/itemSprites/BigTreasureChest.png";
+        String goldCoin = "/Backend/Images/itemSprites/GoldCoin.png";
+        HpItem lifePot = new HpItem("Life Pot", 100,"./src/Backend/Images/itemSprites/LifePot.png");
+        HpItem octopus = new HpItem("Octopus", 25,"./src/Backend/Images/itemSprites/Octopus.png");
+        HpItem seed = new HpItem("Seed", 10,"./src/Backend/Images/itemSprites/Seed1.png");
+        HpItem seedLarge = new HpItem("Larger Seed", 25,"./src/Backend/Images/itemSprites/SeedLarge.png");
+        HpItem sushi = new HpItem("Sushi", 50,"./src/Backend/Images/itemSprites/Sushi.png");
+        HpItem sushi2 = new HpItem("Sushi #2", 50,"./src/Backend/Images/itemSprites/Sushi2.png");
+        HpItem waterPot = new HpItem("Water Pot", 1,"./src/Backend/Images/itemSprites/WaterPot.png");
+
+
         // Create new renderable weapons, and pass their locations in the world
         gp.obj[0] = new WeaponRendering(battleAxe, 428, 6096);
         gp.obj[1] = new WeaponRendering(normalAxe, 3340, 1900);
@@ -57,6 +70,18 @@ public class AssetSetter {
         gp.obj[12] = new ItemRendering(onigiri, 10048, 2832);
         gp.obj[13] = new ItemRendering(fortune, 9008, 11041);
         gp.obj[14] = new ItemRendering(calamari, 468, 2816);
+
+        gp.obj[15] = new ItemRendering(lifePot, 2112, 2060);
+        gp.obj[16] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[17] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[18] = new ItemRendering(fortune, 2112, 20606);
+        gp.obj[19] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[20] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[21] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[22] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[23] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[24] = new ItemRendering(fortune, 2112, 2060);
+
 
         // create new renderable enemies (locations have already been defined within unfoundEnemies)
         for (int i = 0; i < CharacterFactory.unfoundEnemies.size(); i++){

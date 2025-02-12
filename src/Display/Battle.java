@@ -43,6 +43,7 @@ public class Battle {
         battlePanel.requestFocusInWindow();
         window.revalidate();
         window.repaint();
+
     }
 
     /**

@@ -4,7 +4,7 @@ import Backend.ObjectsRendering.Superobjects;
 import Backend.SaveLoad;
 import Backend.WorldBuilding.TileManager;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -345,8 +345,12 @@ public class GamePanel extends JPanel implements Runnable {
      * @param i index of the sound effect to be played
      */
     public void playSE(int i){
+        sound.stop();
         sound.setFile(i);
         sound.play();
+        Timer timer = new Timer(2500, e -> playMusic(0));
+        timer.setRepeats(false);
+        timer.start();
 
     }
 

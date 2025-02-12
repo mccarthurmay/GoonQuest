@@ -4,6 +4,7 @@ import Backend.Items.*;
 import Display.GamePanel;
 import Display.KeyHandler;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -203,19 +204,23 @@ public class Hero extends CharacterManager {
                         if (unfoundWeapons.get(j).getSpritePath().contains(objectPath)) {
                             addWeapon(unfoundWeapons.get(j));
                             unfoundWeapons.remove(j);
+                            break;
                         }
                     }
                     gp.obj[i] = null;
                     break;
 
                 case ("Item"):
+
                     gp.playSE(4);
+
                     for (int j = 0; j < unfoundItems.size(); j++) {
                         System.out.println(unfoundItems.get(j).getSpritePath());
                         System.out.println(objectPath);
                         if (unfoundItems.get(j).getSpritePath().contains(objectPath)) {
                             addItem(unfoundItems.get(j));
                             unfoundItems.remove(j);
+                            break;
                         }
                     }
                     gp.obj[i] = null;

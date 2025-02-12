@@ -53,8 +53,20 @@ public class CharacterFactory {
         HpItem calamari = new HpItem("Calamari", 75,"./src/Backend/Images/itemSprites/Calamari.png");
         HpItem fortune = new HpItem("Fortune Cookie", 50,"./src/Backend/Images/itemSprites/FortuneCookie.png");
         HpItem onigiri = new HpItem("Onigiri", 50,"./src/Backend/Images/itemSprites/Onigiri.png");
+        HpItem lifePot = new HpItem("Life Pot", 100,"./src/Backend/Images/itemSprites/LifePot.png");
+        HpItem octopus = new HpItem("Octopus", 25,"./src/Backend/Images/itemSprites/Octopus.png");
+        HpItem seed = new HpItem("Seed", 10,"./src/Backend/Images/itemSprites/Seed1.png");
+        HpItem seedLarge = new HpItem("Larger Seed", 25,"./src/Backend/Images/itemSprites/SeedLarge.png");
+        HpItem sushi = new HpItem("Sushi", 50,"./src/Backend/Images/itemSprites/Sushi.png");
+        HpItem sushi2 = new HpItem("Sushi #2", 50,"./src/Backend/Images/itemSprites/Sushi2.png");
+        HpItem waterPot = new HpItem("Water Pot", 1,"./src/Backend/Images/itemSprites/WaterPot.png");
+
         StatusEffect milk = new StatusEffect("Milk", "defense", true, 30, 3, "./src/Backend/Images/itemSprites/MilkPot.png");
         StatusEffect noodle = new StatusEffect("Noodles", "dmg", true, 30, 3, "./src/Backend/Images/itemSprites/Noodle.png");
+        StatusEffect treasure = new StatusEffect("Treasure Chest", "hit_chance", true, 100,1, "./src/Backend/Images/itemSprites/BigTreasureChest.png");
+        StatusEffect goldCoin = new StatusEffect("goldCoin", "hit_chance", true, 30, 1, "./src/Backend/Images/itemSprites/GoldCoin.png");
+
+
 
         unfoundItems.add(beaf);
         unfoundItems.add(medipack);
@@ -63,23 +75,24 @@ public class CharacterFactory {
         unfoundItems.add(onigiri);
         unfoundItems.add(milk);
         unfoundItems.add(noodle);
+        unfoundItems.add(seed);
+        unfoundItems.add(lifePot);
+        unfoundItems.add(octopus);
+        unfoundItems.add(seedLarge);
+        unfoundItems.add(sushi);
+        unfoundItems.add(sushi2);
+        unfoundItems.add(waterPot);
+        unfoundItems.add(treasure);
+        unfoundItems.add(goldCoin);
 
         /**
          * Creating some more items
          */
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
-        items.add(new HpItem("Health 1", 10, ""));
-        items.add(new HpItem("Health3 Potion", 10, ""));
-        items.add(new HpItem("Health P4236otion", 10, ""));
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new HpItem("Heal56th 234Potion", 10, ""));
-        items.add(new HpItem("Health62 Potion", 10, ""));
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new HpItem("Healt4235h Potion", 10, ""));
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new HpItem("Health Potion", 10, ""));
-        items.add(new HpItem("Health P6623otion", 10, ""));
+        items.add(new HpItem("Shrimp", 50, "./src/Backend/Images/itemSprites/Shrimp.png"));
+        items.add(new HpItem("Honey", 50, "./src/Backend/Images/itemSprites/Honey.png"));
+        items.add(new HpItem("Fish", 50, "./src/Backend/Images/itemSprites/Fish.png"));
+
+
 
 
         ArrayList<Item> blankItems = new ArrayList<>();
