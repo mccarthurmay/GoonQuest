@@ -17,6 +17,9 @@ public class HeroFactory {
     /**
      * Create full default hero, saves some time
      */
+    public static ArrayList<Weapon>  unfoundWeapons = new ArrayList<>();
+    public static ArrayList<Item>  unfoundItems = new ArrayList<>();
+
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
         Weapon defaultWeapon = new Weapon("Stick", 2, "Basic weapon", 2, 3, "A simple stick", "");
@@ -30,18 +33,24 @@ public class HeroFactory {
         Weapon sword = new Weapon("Dawnbreaker", 20, "wind", 20, 100, "Man, it's windy", "./src/Backend/Images/Weapons/Sword/Sprite.png");
         ArrayList<Weapon> weapons = new ArrayList<>();
         weapons.add(defaultWeapon);
-        weapons.add(battleAxe);
-        weapons.add(normalAxe);
-        weapons.add(bigSword);
-        weapons.add(club);
-        weapons.add(Lance);
-        weapons.add(katana);
-        weapons.add(hammer);
-        weapons.add(sword);
+
+        unfoundWeapons.add(battleAxe);
+        unfoundWeapons.add(normalAxe);
+        unfoundWeapons.add(bigSword);
+        unfoundWeapons.add(club);
+        unfoundWeapons.add(Lance);
+        unfoundWeapons.add(katana);
+        unfoundWeapons.add(hammer);
+        unfoundWeapons.add(sword);
+
+
 
 
         // Create default items
         ArrayList<Item> items = new ArrayList<>();
+        HpItem beaf = new HpItem("Beaf", 100.0,"./src/Backend/Images/itemSprites/default.png");
+        unfoundItems.add(beaf);
+
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
         items.add(new HpItem("Health 1", 10, ""));
@@ -56,12 +65,16 @@ public class HeroFactory {
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new HpItem("Health P6623otion", 10, ""));
 
+
+
         // Create default stats
         Stats stats = new Stats(100.0, 10.0, 200.0, 0.15, 0.85);
 
         // Create and return the hero
         return new Hero("Player", weapons, items, stats, gp, keyH);
     }
+
+
 
     /**
      * CUSTOM FULL HERO CREATION!!!

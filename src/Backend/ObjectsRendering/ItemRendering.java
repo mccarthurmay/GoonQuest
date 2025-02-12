@@ -4,8 +4,10 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class ItemRendering extends Superobjects{
+
     public ItemRendering(String path){
         name  = "Item";
+        spritePath = path;
         try{
             image = ImageIO.read(getClass().getResourceAsStream(path));
 

@@ -4,6 +4,7 @@ import Backend.Characters.Enemy;
 import Backend.Characters.Hero;
 import Backend.Characters.Stats;
 import Backend.Items.Item;
+import Backend.ObjectsRendering.ItemRendering;
 import Backend.ObjectsRendering.WeaponRendering;
 import Backend.Weapons.Weapon;
 
@@ -37,6 +38,9 @@ public class AssetSetter {
         String hammer = "/Backend/Images/Weapons/Hammer/Sprite.png";
         String sword = "/Backend/Images/Weapons/Sword/Sprite.png";
 
+        String beaf2 = "/Backend/Images/itemSprites/default.png";
+
+
         gp.obj[0] = new WeaponRendering(battleAxe);
         gp.obj[1] = new WeaponRendering(normalAxe);
         gp.obj[2] = new WeaponRendering(bigSword);
@@ -45,9 +49,10 @@ public class AssetSetter {
         gp.obj[5] = new WeaponRendering(katana);
         gp.obj[6] = new WeaponRendering(hammer);
         gp.obj[7] = new WeaponRendering(sword);
+        gp.obj[8] = new ItemRendering(beaf2);
 
 
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < 9; i++){
             gp.obj[i].worldX = gp.tileSize * (30 + i);
             gp.obj[i].worldY = gp.tileSize * 32;
         }

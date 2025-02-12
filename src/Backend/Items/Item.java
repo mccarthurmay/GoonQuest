@@ -36,6 +36,12 @@ public abstract class Item {
         return sprite;
     }
 
+    public String getSpritePath () {
+        return spritePath;
+    }
+
+
+
     public abstract void useItem(CharacterManager character);
 
     public String getName() {return name;}

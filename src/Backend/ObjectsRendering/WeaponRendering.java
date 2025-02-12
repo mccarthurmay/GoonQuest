@@ -9,6 +9,7 @@ public class WeaponRendering extends Superobjects {
 
     public WeaponRendering(String path){
         name  = "Weapon";
+        spritePath = path;
         try{
             image = ImageIO.read(getClass().getResourceAsStream(path));
 
