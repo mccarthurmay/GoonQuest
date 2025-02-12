@@ -6,6 +6,11 @@ import Backend.Characters.Hero;
 
 public class CollisionChecker {
     GamePanel gp;
+
+    /**
+     * Take in gamepanel
+     * @param gp
+     */
     public CollisionChecker(GamePanel gp) {
         this.gp = gp;
     }
