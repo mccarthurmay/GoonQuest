@@ -7,7 +7,8 @@ import java.io.IOException;
 
 public class WeaponRendering extends Superobjects {
 
-    public WeaponRendering(String path){
+    public WeaponRendering(String path, int worldX, int worldY){
+        super(worldX, worldY);
         name  = "Weapon";
         spritePath = path;
         try{

@@ -77,7 +77,7 @@ public class GamePanel extends JPanel implements Runnable {
     // DstOut makes existing pixels more transparent where drawn (cut holes)\
     // CHANGE ALPHA TO CHANGE HOW TRANSPARENT THE FOG IS
     private AlphaComposite fogComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-    private int visibilityRadius = 100;
+    private int visibilityRadius = 200;
 
     // Add a buffer for entire game -- no buffer causes flickering
     private BufferedImage gameBuffer;
@@ -104,7 +104,7 @@ public class GamePanel extends JPanel implements Runnable {
         // define foggy regions with coordinates
         foggyRegions = new ArrayList<>();
         // EXAMPLEEEEEE
-        addFoggyRegion(18,18,5,5);
+        addFoggyRegion(1,140,60,54);
     }
     private boolean checkFoggyRegion() {
         Point playerWorldPos = new Point(hero.worldX, hero.worldY);
@@ -201,6 +201,7 @@ public class GamePanel extends JPanel implements Runnable {
             System.out.println("Saving...");
             SaveLoad.save(hero);
             System.out.println("Saved at out.sav!");
+            keyH.saveFile = false;
         }
 
         battle.checkBattle();

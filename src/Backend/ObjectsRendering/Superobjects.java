@@ -16,7 +16,10 @@ public class Superobjects {
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
 
-
+    public Superobjects(int worldX, int worldY){
+        this.worldX = worldX;
+        this.worldY = worldY;
+    }
     public void draw(Graphics g2, GamePanel gp) {
         int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
         int screenY = worldY - gp.hero.worldY + gp.hero.screenY;

@@ -5,7 +5,8 @@ import java.io.IOException;
 
 public class ItemRendering extends Superobjects{
 
-    public ItemRendering(String path){
+    public ItemRendering(String path, int worldX, int worldY){
+        super(worldX, worldY);
         name  = "Item";
         spritePath = path;
         try{

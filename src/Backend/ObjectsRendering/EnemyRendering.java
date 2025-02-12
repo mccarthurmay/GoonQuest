@@ -9,7 +9,8 @@ import java.io.IOException;
 
 public class EnemyRendering extends Superobjects {
 
-    public EnemyRendering(String path) {
+    public EnemyRendering(String path, int worldX, int worldY) {
+        super(worldX, worldY);
         name = "Enemy";
         try {
             image = ImageIO.read(getClass().getResourceAsStream(path));
