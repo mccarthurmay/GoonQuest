@@ -119,7 +119,10 @@ abstract public class CharacterManager {
     ArrayList<Item> ownedItems = new ArrayList<>();
 
 
-
+    /**
+     * Creating some getter for later use.
+     * @return attributes.
+     */
     public double getHP(){
         return stats.getHP();
     }
@@ -155,10 +158,7 @@ abstract public class CharacterManager {
         return stats;
     }
 
-    // Use this like "if Hero attacks, reduce buff. else if hero blocks, don't use this fucking command"
-    public void reduceBuff(StatusEffect buff) {
-        buff.reduceDuration(this);
-    }
+
     // I think this would be used every round. Poison goes away in a linear fashion, damage reduction goes away in linear fashion
     public void reduceDebuff(StatusEffect debuff) {
         debuff.reduceDuration(this);
