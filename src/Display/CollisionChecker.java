@@ -79,34 +79,38 @@ public class CollisionChecker {
 
                 switch (hero.direction) {
                     case "up":
-                        hero.solidArea.y -= hero.speed;
+//                        hero.solidArea.y -= hero.speed;
                         if (hero.solidArea.intersects(target[i].solidArea)) {
                             hero.collisionsOn = true;
                             index = i;
                         }
                         break;
                     case "down":
-                        hero.solidArea.y += hero.speed;
+//                        hero.solidArea.y += hero.speed;
                         if (hero.solidArea.intersects(target[i].solidArea)) {
                             hero.collisionsOn = true;
                             index = i;
                         }
                         break;
                     case "left":
-                        hero.solidArea.x -= hero.speed;
+//                        hero.solidArea.x -= hero.speed;
                         if (hero.solidArea.intersects(target[i].solidArea)) {
                             hero.collisionsOn = true;
                             index = i;
                         }
                         break;
                     case "right":
-                        hero.solidArea.x += hero.speed;
+//                        hero.solidArea.x += hero.speed;
                         if (hero.solidArea.intersects(target[i].solidArea)) {
                             hero.collisionsOn = true;
                             index = i;
                         }
                         break;
                 }
+                hero.solidArea.x = hero.solidAreaDefaultX;
+                hero.solidArea.y = hero.solidAreaDefaultY;
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
 
             }
         }

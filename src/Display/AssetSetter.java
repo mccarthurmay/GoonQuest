@@ -17,11 +17,13 @@ public class AssetSetter {
         this.gp = gp;
     }
     public void setEnemy() {
-        gp.enemy[0] = new Enemy(gp, "");
-        gp.enemy[0].worldX = gp.tileSize * 20; // creates a new enemy
-        gp.enemy[0].worldY = gp.tileSize * 20; // at this position
-    }
+        if (gp.enemy[0].getStats().getHP() > 0){
+            gp.enemy[0] = new Enemy(gp, "");
+            gp.enemy[0].worldX = gp.tileSize * 20; // creates a new enemy
+            gp.enemy[0].worldY = gp.tileSize * 20; // at this position
+        }
 
+    }
     public void setObject () {
         String battleAxe = "/Backend/Images/Weapons/Axe/Sprite.png";
         String normalAxe = "/Backend/Images/Weapons/AxeTool/Sprite.png";

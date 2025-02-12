@@ -21,6 +21,7 @@ public class Battle {
         if(enemyIndex != 999) {
             gp.stopGameThread(); // Battle thread frozen if gamethread on
             // Create new battle panel
+            currentEnemy = gp.enemy[0];
             BattlePanel battlePanel = new BattlePanel(gp, currentEnemy, window);
 
             // Remove game panel and add battle panel
