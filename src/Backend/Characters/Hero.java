@@ -11,15 +11,11 @@ import java.util.ArrayList;
 import static Backend.Characters.HeroFactory.unfoundItems;
 import static Backend.Characters.HeroFactory.unfoundWeapons;
 import static Backend.Characters.HeroFactory.unfoundEnemies;
-import Display.Battle;
-
-import javax.swing.*;
 
 public class Hero extends CharacterManager {
-    public Battle battle;
     // Game mechanics fields
-    private ArrayList<Weapon> ownedWeapons = new ArrayList<>();
-    private ArrayList<Item> ownedItems = new ArrayList<>();
+    private ArrayList<Weapon> ownedWeapons;
+    private ArrayList<Item> ownedItems ;
     private String name;
     private Stats stats;
 
@@ -27,7 +23,7 @@ public class Hero extends CharacterManager {
     private KeyHandler keyH;
     public final int screenX;
     public final int screenY;
-    private BufferedImage img = null;
+
 
 
     /**
@@ -62,45 +58,6 @@ public class Hero extends CharacterManager {
         getPlayerImage();
     }
 
-    /**
-     * Old constructor for character testing
-     */
-    public Hero(String name, ArrayList<Weapon> ownedWeapons, ArrayList<Item> ownedItems, Stats stats, GamePanel gp) {
-        super(stats, ownedWeapons.get(0), name);
-        this.name = name;
-        this.ownedWeapons = ownedWeapons;
-        this.ownedItems = ownedItems;
-        this.stats = stats;
-        // Default values for screen position
-        this.screenX = 0;  // or some other default value
-        this.screenY = 0;  // or some other default value
-
-    }
-    /**
-     * Old constructor for display testing, so you don't gotta type all that shit.
-     */
-    public Hero(GamePanel gp, KeyHandler keyH) {
-        super(gp);
-        this.gp = gp;
-        this.keyH = keyH;
-        this.screenX = gp.screenWidth/2 - (gp.tileSize/2); // needed to add this. bc yellow underline told me to
-        this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
-
-        solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
-
-        solidAreaDefaultX = solidArea.x;
-        solidAreaDefaultY = solidArea.y;
-
-        solidArea.width = 32;
-        solidArea.height = 32;
-
-        setDefaultValues();
-        getPlayerImage();
-    }
-
-
     // Use one of those special milks (items)
     public void useItem(Item item) {
         ownedItems.remove(item);
@@ -128,7 +85,6 @@ public class Hero extends CharacterManager {
         ownedItems.add(item);
     }
 
-    // I just followed the underlined stuff... don't need boolean == here
     public void update() {
 
         if(keyH.rightPressed || keyH.leftPressed || keyH.upPressed || keyH.downPressed) {
@@ -193,7 +149,7 @@ public class Hero extends CharacterManager {
                 case ("Weapon"):
                     for (int j = 0; j < unfoundWeapons.size(); j++) {
                         if (unfoundWeapons.get(j).getSpritePath().contains(objectPath)) {
-                            ownedWeapons.add(unfoundWeapons.get(j));
+                            addWeapon(unfoundWeapons.get(j));
                             unfoundWeapons.remove(j);
                         }
                     }
@@ -205,7 +161,7 @@ public class Hero extends CharacterManager {
                         System.out.println(unfoundItems.get(j).getSpritePath());
                         System.out.println(objectPath);
                         if (unfoundItems.get(j).getSpritePath().contains(objectPath)) {
-                            ownedItems.add(unfoundItems.get(j));
+                            addItem(unfoundItems.get(j));
                             unfoundItems.remove(j);
                         }
                     }
@@ -305,7 +261,6 @@ public class Hero extends CharacterManager {
                 }
 
         }
-        // Probably move this eventually too
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
