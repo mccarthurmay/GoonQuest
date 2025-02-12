@@ -100,7 +100,7 @@ public class BattlePanel extends JPanel implements Runnable {
     private int missPopupX = 0;
     private int missPopupY = 0;
 
-    private volatile boolean isRunning = false;
+    private volatile boolean isRunning = true;
     private volatile String currentMessage = "";
     private volatile String targetMessage = "";
     private volatile int charIndex = 0;
@@ -342,7 +342,6 @@ public class BattlePanel extends JPanel implements Runnable {
 
 
     public void startBattleThread() {
-        cleanupResources(); // Clean up any existing resources first
         battleThread = new Thread(this);
         battleThread.start();
     }
@@ -774,6 +773,7 @@ public class BattlePanel extends JPanel implements Runnable {
         timer.setRepeats(false);
         timer.start();
 
+
     }
 
     private void drawDefeatedMessage(Graphics2D g2) {
@@ -803,31 +803,43 @@ public class BattlePanel extends JPanel implements Runnable {
 
 
     @Override
-    public void run() {
-        if (!isRunning) {
-            isRunning = true;
+    public void run(){
 
-            long lastFrameTime = System.nanoTime();
-            double targetFPS = 60.0;
-            double frameTime = 1000000000 / targetFPS;
+        /**
+         * These following variable help set time intervals that slow down
+         * the number of times we update our program per second.
+         * We restrict it to only update 60 times per second.
+         */
+        int FPS = 60;
+        double drawInterval = (double) 1000000000 /FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
 
-            while (isRunning && battleThread != null) {
-                long now = System.nanoTime();
-                long elapsedTime = now - lastFrameTime;
+        /**
+         * As long as this gameThreadExists, it represents the process that
+         * is written inside this bracket.
+         */
+        while(battleThread != null) {
 
-                if (elapsedTime >= frameTime) {
-                    update();
-                    repaint();
-                    lastFrameTime = now;
-                } else {
-                    // Add small sleep to prevent CPU overload
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+            /**
+             * Delta is essentially a timer that signals the computer
+             * when to update and redraw the screen.
+             * it slowly approaches one and once it reaches a value of one, it signals it. git
+             */
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
+            if(delta >= 1) {
+
+                // Updates information as character position
+                update();
+
+                // Draw the screen with the updated information
+                repaint();
+                delta--;
             }
+
         }
     }
 
@@ -942,15 +954,10 @@ public class BattlePanel extends JPanel implements Runnable {
     void cleanupResources() {
         // Stop the battle thread properly
         isRunning = false;
+        System.out.println("Battle thread stopped");
 
         if (battleThread != null) {
-            Thread tempThread = battleThread;
             battleThread = null;
-            try {
-                tempThread.join(1000); // Wait up to 1 second for thread to finish
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
         // Reset all state variables
@@ -990,13 +997,13 @@ public class BattlePanel extends JPanel implements Runnable {
 
     private void returnToGame() {
         // Clean up resources before switching back
+        System.out.println(isRunning);
+        if (!isRunning){
+            return;
+        }
         cleanupResources();
-
         gamePanel.stopMusic();
-        gamePanel.playMusic(0);
 
-        // Remove battle panel and restore game panel
-        window.remove(this);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
@@ -1004,6 +1011,16 @@ public class BattlePanel extends JPanel implements Runnable {
         // Ensure game panel has focus and restart its thread
         gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
+
+        // Remove battle panel and restore game panel
+        window.remove(this);
+
+        System.out.println("playin music");
+        gamePanel.playMusic(0);
+
+
+
+
     }
 }
 
