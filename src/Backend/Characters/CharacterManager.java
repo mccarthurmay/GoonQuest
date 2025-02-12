@@ -195,10 +195,10 @@ abstract public class CharacterManager {
     }
 
 
-
-
-    // This method just keeps track of our character position and updates it on the Gamepanel.
-    // We later override it for more specific use.
+    /**
+     * This method just keeps track of our character position and updates it on the Gamepanel.
+     * we later override it for more specific use.
+     */
     public void update() {
         collisionsOn = false;
         gp.collisionChecker.checkTile(this);
@@ -232,6 +232,7 @@ abstract public class CharacterManager {
      * be used for walking animation purposes on our hero class.
      */
     public void getPlayerImage() {
+
         /**
          * Whenever we need to read an images, we need to implement a try and catch
          */
