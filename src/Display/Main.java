@@ -7,7 +7,9 @@ public class Main{
         // Initialize the window info
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("2D game");
+
+        //Sets a title to the window
+        window.setTitle("Goon Quest");
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
         window.pack();
