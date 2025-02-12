@@ -2,20 +2,31 @@ package Backend.Characters;
 import Backend.Items.*;
 import Backend.Weapons.*;
 import Display.GamePanel;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class Enemy extends CharacterManager{
     public int worldX, worldY;
     GamePanel gp;
     String path;
     int actionLockCounter = 0;
+
+    /**
+     * Create enemy object
+     * @param stats Stats object of enemy
+     * @param weapon
+     * @param name
+     * @param ownedItems
+     * @param gp
+     * @param path
+     * @param worldX
+     * @param worldY
+     */
     public Enemy(Stats stats, Weapon weapon, String name, ArrayList<Item> ownedItems, GamePanel gp, String path, int worldX, int worldY){
         super(stats, weapon, name);
         this.gp = gp;
@@ -36,15 +47,6 @@ public class Enemy extends CharacterManager{
     public void update() {
         collisionsOn = true;
         //gp.collisionChecker.checkTile(this);
-    }
-    public void draw(Graphics2D g2){
-        BufferedImage image = down1;
-        int screenX = worldX - gp.enemy[0].worldX + gp.hero.screenX;
-        int screenY = worldY - gp.enemy[0].worldY + gp.hero.screenY;
-
-        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        }
     }
 
     public BufferedImage getImage() {

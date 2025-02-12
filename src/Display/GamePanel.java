@@ -24,9 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // World Settings
     public final int maxWorldCol = 199;
-    public final int maxWorldRow = 199;
-    public final int worldWidth  = tileSize*maxWorldCol;
-    public final int WorldHeight = tileSize * maxWorldRow;
+    public final int maxWorldRow = 199;;
 
 
     TileManager tileM = new TileManager(this);
@@ -36,39 +34,10 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     Thread gameThread;
 
-
     public Hero hero = loadHero(this, keyH);
-    public Superobjects obj[] = new Superobjects[10];
-
-    public Enemy foe = EnemyFactory.createDefaultEnemy(this);
-
-    Stats gHoly = new Stats(15.0, 8.0, 1, 0.1, 0.75); // angelic, high HP
-    Stats gRed = new Stats(20.0, 3.0, 300, 0.5, 0.3); // he sees red, low hit chance but it'll hurt when it connects!
-    Stats gVoid = new Stats(100.0, 200.0, 10.0, 0.0, 1); // super easy to kill, but oh boy will he CORRUPT you
-    Stats gKawaii = new Stats(5.0, 20.0, 600.0, 0.5, 0.8); // kawaii!
-    Stats gStar = new Stats(10.0, 50.0, 300.0, 0.7, 0.99); // skilled sharpshooter. rarely misses.
-    Stats gSad = new Stats(15.0, 3.0, 200.0, 0.5, 0.3); // he's doing his best, alright?
-    Weapon lameStick = new Weapon ("Lame stick", 1.0, "None", 0.2, 0.3, "Ehhhh.. it's alright.", "");
-    ArrayList<Item> blankItems = new ArrayList<>();
-    public Enemy holyEnemy = new Enemy(gHoly, lameStick, "Glargo Holy", blankItems, this, "src/Backend/Images/sprites/glargo_holy.png", 30, 31);
-    public Enemy redEnemy = new Enemy(gRed, lameStick, "Glargo Red", blankItems, this, "src/Backend/Images/sprites/glargo_red.png", 32, 30);
-    public Enemy voidEnemy = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, this, "src/Backend/Images/sprites/glargo_void.png", 33, 30);
-    public Enemy kawaiiEnemy = new Enemy(gKawaii, lameStick, "Glargo Kawaii", blankItems, this, "src/Backend/Images/sprites/glargo_kawaii.png", 34, 30);
-    public Enemy starEnemy = new Enemy(gStar, lameStick, "Glargo Star", blankItems, this, "src/Backend/Images/sprites/glargo_star.png", 35, 30);
-    public Enemy sadEnemy = new Enemy(gSad, lameStick, "Glargo Sad", blankItems, this, "src/Backend/Images/sprites/glargo_sad.png", 36, 30);
-
-    //public Enemy[] enemy = {holyEnemy, redEnemy, voidEnemy, kawaiiEnemy, sadEnemy, starEnemy}; // can have up to 10 enemies
-
-    public Enemy[] enemy = {holyEnemy};
+    public Superobjects obj[] = new Superobjects[30];
 
 
-
-
-
-    // set player's default position * DELETE LATER*
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
 
 
 
@@ -180,13 +149,6 @@ public class GamePanel extends JPanel implements Runnable {
 //            playMusic(0);
 //        }
 
-
-        for (int i = 0; i < enemy.length; i++){
-            if (enemy[i] != null){
-                enemy[i].update();
-            }
-        }
-
         isInFoggyRegion = checkFoggyRegion();
 
 
@@ -201,7 +163,6 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.saveFile = false;
         }
 
-        battle.checkBattle();
 
         if (battle != null){
             battle.update();
@@ -234,15 +195,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         bufferG.setColor(getBackground());
         bufferG.fillRect(0, 0, screenWidth, screenHeight);
-
-        // Draw out normal world
-
-
-        for (int i = 0; i < enemy.length; i++){ // draws all enemies
-            if (enemy[i] != null){
-                enemy[i].draw(bufferG);
-            }
-        }
 
         // Tile
         tileM.draw(bufferG);

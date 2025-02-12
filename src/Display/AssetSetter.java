@@ -18,17 +18,7 @@ public class AssetSetter {
     public AssetSetter(GamePanel gp){
         this.gp = gp;
     }
-    public void setEnemy() {
-        // Get hero's current position
-        int heroTileX = gp.hero.worldX / gp.tileSize;
-        int heroTileY = gp.hero.worldY / gp.tileSize;
-
-        gp.enemy[0] = new Enemy(gp, "src/Backend/Images/sprites/glargo_holy.png");
-        gp.enemy[0].worldX = heroTileX * gp.tileSize; // Set to hero's X position
-        gp.enemy[0].worldY = heroTileY * gp.tileSize; // Set to hero's Y position
-
-        System.out.println("Enemy spawned at: " + heroTileX + ", " + heroTileY);
-    }
+    
     public void setObject () {
         String battleAxe = "/Backend/Images/Weapons/Axe/Sprite.png";
         String normalAxe = "/Backend/Images/Weapons/AxeTool/Sprite.png";
