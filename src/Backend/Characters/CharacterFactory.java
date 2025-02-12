@@ -10,12 +10,15 @@ import java.util.ArrayList;
 public class CharacterFactory {
 
     /**
-     * Create full default hero, saves some time
+     * Static ArrayList that we use later in order to display and store items on the map.
      */
     public static ArrayList<Weapon> unfoundWeapons = new ArrayList<>();
     public static ArrayList<Item> unfoundItems = new ArrayList<>();
     public static ArrayList<Enemy> unfoundEnemies = new ArrayList<>();
 
+    /**
+     * Create full default hero, saves some time
+     */
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
         Weapon defaultWeapon = new Weapon("Book", 2, "Basic weapon", 2, 3, "a book ", "./src/Backend/Images/Weapons/Book/Sprite.png");
@@ -40,8 +43,10 @@ public class CharacterFactory {
         unfoundWeapons.add(sword);
 
 
+        /**
+         *  Create default items
+         */
 
-        // Create default items
         ArrayList<Item> items = new ArrayList<>();
         HpItem beaf = new HpItem("Beaf", 100.0,"./src/Backend/Images/itemSprites/Beaf.png");
         HpItem medipack = new HpItem("MediPack", 200,"./src/Backend/Images/itemSprites/Medipack.png");
@@ -59,6 +64,9 @@ public class CharacterFactory {
         unfoundItems.add(milk);
         unfoundItems.add(noodle);
 
+        /**
+         * Creating some more items
+         */
         items.add(new HpItem("Health Potion", 10, ""));
         items.add(new StatusEffect("Strength Boost", "dmg", true, 5, 3, ""));
         items.add(new HpItem("Health 1", 10, ""));
@@ -98,12 +106,15 @@ public class CharacterFactory {
         unfoundEnemies.add(sadEnemy);
 
 
+        /**
+         * Create default stats
+         */
 
-
-        // Create default stats
         Stats stats = new Stats(100.0, 10.0, 200.0, 0.15, 0.85);
 
-        // Create and return the hero
+        /**
+         * Create and return the hero
+         */
         return new Hero("Player", weapons, items, stats, gp, keyH);
     }
 
