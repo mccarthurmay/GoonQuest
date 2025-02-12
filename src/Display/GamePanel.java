@@ -193,6 +193,10 @@ public class GamePanel extends JPanel implements Runnable {
         if(keyH.battleTestKey) {
             battle.testBattleTransition();
         }
+        if(keyH.qPressed){
+            System.out.println(hero.worldX + " " + hero.worldY);
+            keyH.qPressed = false;
+        }
         if(keyH.saveFile){
             System.out.println("Saving...");
             SaveLoad.save(hero);

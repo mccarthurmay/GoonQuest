@@ -17,14 +17,24 @@ public class Superobjects {
     public int solidAreaDefaultY = 0;
 
 
-    public void draw (Graphics g2, GamePanel gp) {
+    public void draw(Graphics g2, GamePanel gp) {
         int screenX = worldX - gp.hero.worldX + gp.hero.screenX;
         int screenY = worldY - gp.hero.worldY + gp.hero.screenY;
 
-        if(worldX + gp.tileSize > gp.hero.worldX - gp.hero.screenX && worldX - gp.tileSize < gp.hero.worldX + gp.hero.screenX && worldY + gp.tileSize > gp.hero.worldY - gp.hero.screenY && worldY - gp.tileSize < gp.hero.worldY + gp.hero.screenY){
-            //System.out.println(tileNum);
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        // Scale the image by 5 times
+        int scaledWidth = image.getWidth() * 3;
+        int scaledHeight = image.getHeight() * 3;
+
+        if (worldX + scaledWidth > gp.hero.worldX - gp.hero.screenX &&
+                worldX - scaledWidth < gp.hero.worldX + gp.hero.screenX &&
+                worldY + scaledHeight > gp.hero.worldY - gp.hero.screenY &&
+                worldY - scaledHeight < gp.hero.worldY + gp.hero.screenY) {
+
+            // Draw the image at 5 times its original size
+            g2.drawImage(image, screenX, screenY, scaledWidth, scaledHeight, null);
         }
     }
+
+
 
 }

@@ -13,6 +13,7 @@ public class KeyHandler implements KeyListener {
     public boolean spacePressed;
     public boolean saveFile; // save the game state
     public boolean enterPressed;
+    public boolean qPressed;
 
 
     public void keyTyped(KeyEvent e) {}
@@ -71,6 +72,9 @@ public class KeyHandler implements KeyListener {
         if (keyCode == KeyEvent.VK_ENTER) {
             enterPressed = true;
         }
+        if (keyCode == KeyEvent.VK_Q) {
+            qPressed = true;
+        }
     }
 
     // Check if the key has been let go
@@ -126,6 +130,10 @@ public class KeyHandler implements KeyListener {
 
         if (keyCode == KeyEvent.VK_ENTER) {
             enterPressed = false;
+        }
+
+        if (keyCode == KeyEvent.VK_Q) {
+            qPressed = false;
         }
     }
 }
