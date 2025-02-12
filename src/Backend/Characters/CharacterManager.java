@@ -159,11 +159,6 @@ abstract public class CharacterManager {
     }
 
 
-    // I think this would be used every round. Poison goes away in a linear fashion, damage reduction goes away in linear fashion
-    public void reduceDebuff(StatusEffect debuff) {
-        debuff.reduceDuration(this);
-    }
-
     public String toString() {
         return "EnemyType {" +
                 "Name=" + name +
