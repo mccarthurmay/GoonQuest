@@ -1,16 +1,9 @@
 package Display;
 
-import Backend.Characters.Enemy;
-import Backend.Characters.Hero;
-import Backend.Characters.HeroFactory;
-import Backend.Characters.Stats;
-import Backend.Items.Item;
+import Backend.Characters.CharacterFactory;
 import Backend.ObjectsRendering.EnemyRendering;
 import Backend.ObjectsRendering.ItemRendering;
 import Backend.ObjectsRendering.WeaponRendering;
-import Backend.Weapons.Weapon;
-
-import java.util.ArrayList;
 
 public class AssetSetter {
     GamePanel gp;
@@ -59,9 +52,9 @@ public class AssetSetter {
         gp.obj[14] = new ItemRendering(calamari, 468, 2816);
 
 
-        for (int i = 0; i < HeroFactory.unfoundEnemies.size(); i++){
-            System.out.println("adding" + HeroFactory.unfoundEnemies.get(i).getName());
-            gp.obj[i + 14] = new EnemyRendering(HeroFactory.unfoundEnemies.get(i));
+        for (int i = 0; i < CharacterFactory.unfoundEnemies.size(); i++){
+            System.out.println("adding" + CharacterFactory.unfoundEnemies.get(i).getName());
+            gp.obj[i + 14] = new EnemyRendering(CharacterFactory.unfoundEnemies.get(i));
         }
     }
 }

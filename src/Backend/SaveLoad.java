@@ -1,7 +1,7 @@
 package Backend;
 
 import Backend.Characters.Hero;
-import Backend.Characters.HeroFactory;
+import Backend.Characters.CharacterFactory;
 import Backend.Characters.Stats;
 import Backend.Items.HpItem;
 import Backend.Items.Item;
@@ -67,7 +67,7 @@ public class SaveLoad {
      * @return the newly restored hero
      */
     public static Hero load(String filepath, GamePanel gp, KeyHandler keyH) {
-        Hero myNull = HeroFactory.createDefaultHero(gp, keyH);
+        Hero myNull = CharacterFactory.createDefaultHero(gp, keyH);
         try {
             // initialize
             File f = new File(filepath);
@@ -183,14 +183,14 @@ public class SaveLoad {
             }
 
             // create new hero with these parameters
-            Hero newH = HeroFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
+            Hero newH = CharacterFactory.createCustomHero(name, weapons, items, stats, gp, keyH);
             newH.worldX = worldX;
             newH.worldY = worldY;
             return newH;
 
         } catch (FileNotFoundException e) {
             System.out.println("Bad file or file not found.");
-            return HeroFactory.createDefaultHero(gp, keyH); // makes default hero if error
+            return CharacterFactory.createDefaultHero(gp, keyH); // makes default hero if error
         }
 
     }

@@ -200,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
             hero = SaveLoad.load(response, gp, keyH);
 
         }else {
-            hero = HeroFactory.createDefaultHero(this, keyH);
+            hero = CharacterFactory.createDefaultHero(this, keyH);
         }
 
         return hero;

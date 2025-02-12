@@ -4,14 +4,10 @@ import Backend.Weapons.*;
 import Backend.Items.*;
 import Display.GamePanel;
 import Display.KeyHandler;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.security.Key;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Scanner;
 
-public class HeroFactory {
+import java.util.ArrayList;
+
+public class CharacterFactory {
 
     /**
      * Create full default hero, saves some time

@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static Backend.Characters.HeroFactory.unfoundItems;
-import static Backend.Characters.HeroFactory.unfoundWeapons;
-import static Backend.Characters.HeroFactory.unfoundEnemies;
+import static Backend.Characters.CharacterFactory.unfoundItems;
+import static Backend.Characters.CharacterFactory.unfoundWeapons;
+import static Backend.Characters.CharacterFactory.unfoundEnemies;
 
 public class Hero extends CharacterManager {
     // Game mechanics fields
