@@ -89,48 +89,17 @@ public class HeroFactory {
 
         Enemy holyEnemy = new Enemy(gHoly, lameStick, "Glargo Holy", blankItems, gp, "src/Backend/Images/sprites/glargo_holy.png", 10864, 6824);
         Enemy redEnemy = new Enemy(gRed, lameStick, "Glargo Red", blankItems, gp, "src/Backend/Images/sprites/glargo_red.png", 2104, 2520);
-
         Enemy kawaiiEnemy = new Enemy(gKawaii, lameStick, "Glargo Kawaii", blankItems, gp, "src/Backend/Images/sprites/glargo_kawaii.png", 5200, 1888);
-        Enemy kawaiiEnemy2 = new Enemy(gKawaii, lameStick, "Glargo Kawaii", blankItems, gp, "src/Backend/Images/sprites/glargo_kawaii.png", 6096, 2216);
-
-
         Enemy starEnemy = new Enemy(gStar, lameStick, "Glargo Star", blankItems, gp, "src/Backend/Images/sprites/glargo_star.png", 1624, 4048);
-        Enemy starEnemy2 = new Enemy(gStar, lameStick, "Glargo Star", blankItems, gp, "src/Backend/Images/sprites/glargo_star.png", 1184, 4008);
-        Enemy starEnemy3 = new Enemy(gStar, lameStick, "Glargo Star", blankItems, gp, "src/Backend/Images/sprites/glargo_star.png", 776, 3712);
-        Enemy starEnemy4 = new Enemy(gStar, lameStick, "Glargo Star", blankItems, gp, "src/Backend/Images/sprites/glargo_star.png", 2100, 3612);
-
         Enemy sadEnemy = new Enemy(gSad, lameStick, "Glargo Sad", blankItems, gp, "src/Backend/Images/sprites/glargo_sad.png", 724, 3000);
-        Enemy sadEnemy2 = new Enemy(gSad, lameStick, "Glargo Sad", blankItems, gp, "src/Backend/Images/sprites/glargo_sad.png", 6800, 5928);
-
         Enemy voidEnemy = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 600, 6772);
-        Enemy voidEnemy2 = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 676, 6772);
-        Enemy voidEnemy3 = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 764, 6772);
-        Enemy voidEnemy4 = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 9808, 9301);
-        Enemy voidEnemy5 = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 9740, 9301);
-        Enemy voidEnemy6 = new Enemy(gVoid, lameStick, "Glargo Void", blankItems, gp, "src/Backend/Images/sprites/glargo_void.png", 9688, 9377);
-
 
         unfoundEnemies.add(holyEnemy);
         unfoundEnemies.add(redEnemy);
         unfoundEnemies.add(voidEnemy);
-        unfoundEnemies.add(voidEnemy2);
-        unfoundEnemies.add(voidEnemy3);
-        unfoundEnemies.add(voidEnemy4);
-        unfoundEnemies.add(voidEnemy5);
-        unfoundEnemies.add(voidEnemy6);
-
         unfoundEnemies.add(kawaiiEnemy);
-        unfoundEnemies.add(kawaiiEnemy2);
-
-
         unfoundEnemies.add(starEnemy);
-        unfoundEnemies.add(starEnemy2);
-        unfoundEnemies.add(starEnemy3);
-        unfoundEnemies.add(starEnemy4);
-
-
         unfoundEnemies.add(sadEnemy);
-        unfoundEnemies.add(sadEnemy2);
 
 
 
