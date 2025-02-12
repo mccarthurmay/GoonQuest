@@ -30,7 +30,15 @@ public class AssetSetter {
         String hammer = "/Backend/Images/Weapons/Hammer/Sprite.png";
         String sword = "/Backend/Images/Weapons/Sword/Sprite.png";
 
-        String beaf2 = "/Backend/Images/itemSprites/default.png";
+
+        String beaf = "/Backend/Images/itemSprites/Beaf.png";
+        String noodle = "/Backend/Images/itemSprites/Noodle.png";
+        String milk = "/Backend/Images/itemSprites/MilkPot.png";
+        String onigiri = "/Backend/Images/itemSprites/Onigiri.png";
+        String fortune = "/Backend/Images/itemSprites/FortuneCookie.png";
+        String calamari = "/Backend/Images/itemSprites/Calamari.png";
+        String medipack = "/Backend/Images/itemSprites/Medipack.png";
+
 
 
         gp.obj[0] = new WeaponRendering(battleAxe, 3344, 1888);
@@ -41,17 +49,19 @@ public class AssetSetter {
         gp.obj[5] = new WeaponRendering(katana, 9752, 9377);
         gp.obj[6] = new WeaponRendering(hammer, 9968, 1504);
         gp.obj[7] = new WeaponRendering(sword, 2556, 11328);
-        gp.obj[8] = new ItemRendering(beaf2, 2468, 8704);
 
+        gp.obj[8] = new ItemRendering(beaf, 2468, 8704);
+        gp.obj[9] = new ItemRendering(noodle, 992, 11260);
+        gp.obj[10] = new ItemRendering(medipack, 4980, 2568);
+        gp.obj[11] = new ItemRendering(milk, 9420, 3968);
+        gp.obj[12] = new ItemRendering(onigiri, 10048, 2832);
+        gp.obj[13] = new ItemRendering(fortune, 9008, 11041);
+        gp.obj[14] = new ItemRendering(calamari, 468, 2816);
 
-//        for(int i = 0; i < 9; i++){
-//            gp.obj[i].worldX = gp.tileSize * (30 + i);
-//            gp.obj[i].worldY = gp.tileSize * 32;
-//        }
 
         for (int i = 0; i < HeroFactory.unfoundEnemies.size(); i++){
             System.out.println("adding" + HeroFactory.unfoundEnemies.get(i).getName());
-            gp.obj[i + 9] = new EnemyRendering(HeroFactory.unfoundEnemies.get(i));
+            gp.obj[i + 14] = new EnemyRendering(HeroFactory.unfoundEnemies.get(i));
         }
     }
 }
