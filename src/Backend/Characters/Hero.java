@@ -13,13 +13,22 @@ import static Backend.Characters.CharacterFactory.unfoundWeapons;
 import static Backend.Characters.CharacterFactory.unfoundEnemies;
 
 public class Hero extends CharacterManager {
-    // Game mechanics fields
+    /**
+     * ----Game mechanics fields----
+     * Few attributes for this class for:
+     * Storing weapons
+     * Storing Items
+     * Names for reference
+     * Stats for battling
+     */
     private ArrayList<Weapon> ownedWeapons;
     private ArrayList<Item> ownedItems ;
     private String name;
     private Stats stats;
 
-    // Display and movement fields
+    /**
+     * Display and movement fields
+     */
     private KeyHandler keyH;
     public final int screenX;
     public final int screenY;
@@ -40,14 +49,18 @@ public class Hero extends CharacterManager {
         this.ownedItems = ownedItems;
         this.stats = stats;
 
-        // Display and movement initialization
+        /**
+         * Display and movement initialization
+         */
         this.gp = gp;
         System.out.println(this.gp);
         this.keyH = keyH;
         this.screenX = gp.screenWidth/2 - (gp.tileSize/2);
         this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
-        // Initialize collision area
+        /**
+         * Initialize collision area
+         */
         solidArea = new Rectangle();
         solidArea.x = 10;
         solidArea.y = 10;
@@ -58,13 +71,18 @@ public class Hero extends CharacterManager {
         getPlayerImage();
     }
 
-    // Use one of those special milks (items)
+    /**
+     *  Use one of those special milks (items)
+     * @param item signals which item we should remove from the hero's inventory
+     */
     public void useItem(Item item) {
         ownedItems.remove(item);
         item.useItem(this);
     }
 
-    // Display and movement methods
+    /**
+     * Display and movement methods
+     */
     public void setDefaultValues() {
         worldY = gp.tileSize * 30;
         worldX = gp.tileSize * 30;
@@ -72,6 +90,10 @@ public class Hero extends CharacterManager {
         direction = "down";
     }
 
+    /**
+     * Some getters
+     * @return some information about attributes
+     */
     public ArrayList<Weapon> getOwnedWeapons(){
         return ownedWeapons;
     }
@@ -84,6 +106,12 @@ public class Hero extends CharacterManager {
     public void addItem(Item item) {
         ownedItems.add(item);
     }
+
+    /**
+     * Updates information on the hero, such as coordinates,
+     * item, and weapon bag length, sprites(for animation purposes)
+     * sends signals about collision etc.
+     */
 
     public void update() {
 
@@ -102,14 +130,18 @@ public class Hero extends CharacterManager {
         } else{
             speed = 4;
         }
-            // Check Tile Collision
+            /**
+             *  Check Tile Collision
+             */
             collisionsOn = false;
             gp.collisionChecker.checkTile(this);
             int obj_index = gp.collisionChecker.checkObject(this, true);
             pickUpObject(obj_index);
 
 
-            // fight enemy!
+            /**
+             * fight enemy!
+             */
 
            if (collisionsOn == false) {
                switch (direction) {
@@ -129,6 +161,9 @@ public class Hero extends CharacterManager {
            }
 
 
+            /**
+             * Sets a counter to update the Hero's image at the right intervals.
+             */
 
             spriteCounter++;
             if(spriteCounter > 10) {
@@ -139,6 +174,13 @@ public class Hero extends CharacterManager {
         }
     }
 
+    /**
+     * Checks for collision with items displaced on the map,
+     * and adds some of those items, or sometimes fight such in the
+     * case if enemy, then later destroys those items.
+     * @param i, it is an index that signals when hero touched one of these
+     *           objects displaced on the map.
+     */
     public void pickUpObject(int i){
         if(i!= 999){
             String objectName = gp.obj[i].name;
@@ -146,7 +188,17 @@ public class Hero extends CharacterManager {
 
             System.out.println(objectPath);
             switch(objectName) {
+
+                /**
+                 * Sets some cases for when we interact with different objects.
+                 * for example, when we interact with a weapon object, we iterate throygh the
+                 * list of weapons displaced around the world, and delete them from that list, destroy the
+                 * items, and add a weapon object that used to be linked to that sprite on the open map.
+                 *
+                 * On the case of Enemy, we initiate a fight.
+                 */
                 case ("Weapon"):
+
                     for (int j = 0; j < unfoundWeapons.size(); j++) {
                         if (unfoundWeapons.get(j).getSpritePath().contains(objectPath)) {
                             addWeapon(unfoundWeapons.get(j));
@@ -185,9 +237,17 @@ public class Hero extends CharacterManager {
         }
     }
 
+    /**
+     * Draws the Hero on gamePanel
+     * @param g2 Is the panel on which we draw on.
+     */
     public void drawHero(Graphics g2) {
         BufferedImage img = null;
 
+        /**
+         * The follwoing switch, allows to switch images whenever our sprite is
+         * waling in a specific direction.
+         */
         switch(direction) {
             case "up":
                 if(spriteNum == 1){
@@ -261,6 +321,9 @@ public class Hero extends CharacterManager {
                 }
 
         }
+        /**
+         * Draws the hero with an specific image in a spefic coordinate on the map.
+         */
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
