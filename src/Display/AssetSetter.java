@@ -43,13 +43,13 @@ public class AssetSetter {
 
         String treasure = "/Backend/Images/itemSprites/BigTreasureChest.png";
         String goldCoin = "/Backend/Images/itemSprites/GoldCoin.png";
-        HpItem lifePot = new HpItem("Life Pot", 100,"./src/Backend/Images/itemSprites/LifePot.png");
-        HpItem octopus = new HpItem("Octopus", 25,"./src/Backend/Images/itemSprites/Octopus.png");
-        HpItem seed = new HpItem("Seed", 10,"./src/Backend/Images/itemSprites/Seed1.png");
-        HpItem seedLarge = new HpItem("Larger Seed", 25,"./src/Backend/Images/itemSprites/SeedLarge.png");
-        HpItem sushi = new HpItem("Sushi", 50,"./src/Backend/Images/itemSprites/Sushi.png");
-        HpItem sushi2 = new HpItem("Sushi #2", 50,"./src/Backend/Images/itemSprites/Sushi2.png");
-        HpItem waterPot = new HpItem("Water Pot", 1,"./src/Backend/Images/itemSprites/WaterPot.png");
+        String lifePot = "/Backend/Images/itemSprites/LifePot.png";
+        String octopus =  "/Backend/Images/itemSprites/Octopus.png";
+        String seed = "/Backend/Images/itemSprites/Seed1.png";
+        String seedLarge = "/Backend/Images/itemSprites/SeedLarge.png";
+        String sushi = "/Backend/Images/itemSprites/Sushi.png";
+        String sushi2 = "/Backend/Images/itemSprites/Sushi2.png";
+        String waterPot = "/Backend/Images/itemSprites/WaterPot.png";
 
 
         // Create new renderable weapons, and pass their locations in the world
@@ -71,16 +71,15 @@ public class AssetSetter {
         gp.obj[13] = new ItemRendering(fortune, 9008, 11041);
         gp.obj[14] = new ItemRendering(calamari, 468, 2816);
 
-        gp.obj[15] = new ItemRendering(lifePot, 2112, 2060);
-        gp.obj[16] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[17] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[18] = new ItemRendering(fortune, 2112, 20606);
-        gp.obj[19] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[20] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[21] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[22] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[23] = new ItemRendering(fortune, 2112, 2060);
-        gp.obj[24] = new ItemRendering(fortune, 2112, 2060);
+        gp.obj[15] = new ItemRendering(lifePot, 1920, 1880);
+        gp.obj[16] = new ItemRendering(treasure, 2112, 2060);
+        gp.obj[17] = new ItemRendering(goldCoin, 2112, 2060);
+        gp.obj[18] = new ItemRendering(octopus, 2112, 2006);
+        gp.obj[19] = new ItemRendering(seed, 2112, 2060);
+        gp.obj[20] = new ItemRendering(seedLarge, 2112, 2060);
+        gp.obj[21] = new ItemRendering(sushi2, 2112, 2060);
+        gp.obj[22] = new ItemRendering(sushi, 2112, 2060);
+        gp.obj[23] = new ItemRendering(waterPot, 2112, 2060);
 
 
         // create new renderable enemies (locations have already been defined within unfoundEnemies)
