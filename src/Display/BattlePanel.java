@@ -144,6 +144,20 @@ public class BattlePanel extends JPanel implements Runnable {
     }
 
     private void updateAttackAnimation() {
+        if (currentEnemy.getHP() <= 0) {
+            // If enemy is defeated, stop any ongoing animations
+            isEnemyAttacking = false;
+            isPlayerAttacking = false;
+            enemyX = enemyBaseX;
+            enemyY = enemyBaseY;
+            playerX = playerBaseX;
+            playerY = playerBaseY;
+            if (!enemyDefeated) {
+                enemyDefeated = true;
+                showTypewriterText("Enemy was defeated!");
+            }
+            return;
+        }
         if (isPlayerAttacking) {
             // First half of animation going towards enemy (0-30 ticks)
             if (attackAnimationTicks < ATTACK_ANIMATION_DURATION / 2) {
@@ -544,7 +558,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 24));
-        g2.drawString("__ blocked the attack!", x + 20, y + 20);
+        g2.drawString(currentMessage, x + 20, y + 20);
     }
 
 
@@ -663,7 +677,7 @@ public class BattlePanel extends JPanel implements Runnable {
 
         // Draw health number
         g2.setFont(new Font("Arial", Font.BOLD, 12));
-        g2.drawString(currentHealth + "/" + maxHealth, x + healthBarWidth/3, y + 15);
+        g2.drawString((int)currentHealth + "/" + (int)maxHealth, x + healthBarWidth/3, y + 15);
 
     }
 
@@ -826,25 +840,26 @@ public class BattlePanel extends JPanel implements Runnable {
         }
 
         if (!inSubmenu) {
-            if (keyH.upPressed) {
+            if (keyH.upArrow) {
                 selectedButtonIndex = (selectedButtonIndex + 2) % 4;
                 updateUIState();
-                keyH.upPressed = false;
+                keyH.upArrow = false;
             }
-            if (keyH.downPressed) {
+            if (keyH.downArrow) {
                 selectedButtonIndex = (selectedButtonIndex + 2) % 4;
                 updateUIState();
-                keyH.downPressed = false;
+                keyH.downArrow = false;
+
             }
-            if (keyH.leftPressed) {
+            if (keyH.leftArrow) {
                 selectedButtonIndex = selectedButtonIndex % 2 == 0 ? selectedButtonIndex + 1 : selectedButtonIndex - 1;
                 updateUIState();
-                keyH.leftPressed = false;
+                keyH.leftArrow = false;
             }
-            if (keyH.rightPressed) {
+            if (keyH.rightArrow) {
                 selectedButtonIndex = selectedButtonIndex % 2 == 0 ? selectedButtonIndex + 1 : selectedButtonIndex - 1;
                 updateUIState();
-                keyH.rightPressed = false;
+                keyH.rightArrow = false;
             }
 
             if (keyH.spacePressed) {
@@ -870,23 +885,23 @@ public class BattlePanel extends JPanel implements Runnable {
                 }
             }
         }else {
-            if(keyH.leftPressed) {
+            if(keyH.leftArrow) {
                 if (currentUIState == STATE_WEAPONS) {
                     selectPreviousWeapon();
                 } else if (currentUIState == STATE_ITEMS) {
                     selectPreviousItem();
                 }
-                // Add similar for items when implemented
-                keyH.leftPressed = false;
+
+                keyH.leftArrow = false;
             }
-            if(keyH.rightPressed) {
+            if(keyH.rightArrow) {
                 if (currentUIState == STATE_WEAPONS) {
                     selectNextWeapon();
                 } else if (currentUIState == STATE_ITEMS) {
                     selectNextItem();
                 }
                 // Add similar for items when implemented
-                keyH.rightPressed = false;
+                keyH.rightArrow = false;
             }
 
             // Exit submenu on space
@@ -927,9 +942,9 @@ public class BattlePanel extends JPanel implements Runnable {
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
-
         gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
+
     }
 
 

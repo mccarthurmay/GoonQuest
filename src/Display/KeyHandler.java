@@ -7,6 +7,7 @@ public class KeyHandler implements KeyListener {
 
     // Initialize variables
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upArrow, downArrow, leftArrow, rightArrow;
     public boolean shiftPressed;
     public boolean battleTestKey; // since enemies don't work, just made a set battle key
     public boolean weaponLeft, weaponRight;
@@ -42,16 +43,16 @@ public class KeyHandler implements KeyListener {
 
         // Menu navigation (Arrow Keys)
         if (keyCode == KeyEvent.VK_UP) {
-            upPressed = true;
+            upArrow = true;
         }
         if (keyCode == KeyEvent.VK_DOWN) {
-            downPressed = true;
+            downArrow = true;
         }
         if (keyCode == KeyEvent.VK_LEFT) {
-            leftPressed = true;
+            leftArrow = true;
         }
         if (keyCode == KeyEvent.VK_RIGHT) {
-            rightPressed = true;
+            rightArrow = true;
         }
 
         // Battle test key
@@ -101,16 +102,16 @@ public class KeyHandler implements KeyListener {
 
         // Menu navigation (Arrow Keys)
         if (keyCode == KeyEvent.VK_UP) {
-            upPressed = false;
+            upArrow = false;
         }
         if (keyCode == KeyEvent.VK_DOWN) {
-            downPressed = false;
+            downArrow = false;
         }
         if (keyCode == KeyEvent.VK_LEFT) {
-            leftPressed = false;
+            leftArrow = false;
         }
         if (keyCode == KeyEvent.VK_RIGHT) {
-            rightPressed = false;
+            rightArrow = false;
         }
 
         // Battle test key

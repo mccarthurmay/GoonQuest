@@ -19,15 +19,15 @@ public class Battle {
 
     // REMOVE THIS LATER
     public void toBattleTransition(Enemy enemy) {
-        BattlePanel battlePanel = new BattlePanel(gp, enemy, window);
-        gp.stopGameThread(); // BattleThread was frozen if both threads on
+        gp.stopGameThread();
+        window.remove(gp);
         gp.stopMusic();
         gp.playMusic(2);
-        window.remove(gp);
+        BattlePanel battlePanel = new BattlePanel(gp, enemy, window);
         window.add(battlePanel);
+        battlePanel.requestFocusInWindow();
         window.revalidate();
         window.repaint();
-        battlePanel.requestFocusInWindow(); // Need this to make keyboard work
     }
 
     public void update(){
