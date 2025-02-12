@@ -22,72 +22,99 @@ public class CharacterFactory {
     public static Hero createDefaultHero(GamePanel gp, KeyHandler keyH) {
         // Create default weapon
         Weapon defaultWeapon = new Weapon("Book", 2, "Basic weapon", 2, 3, "a book ", "./src/Backend/Images/Weapons/Book/Sprite.png");
-        Weapon battleAxe = new Weapon("Battle Axe", 25, "wind", 8, 85, "Man, it's windy", "./src/Backend/Images/Weapons/Axe/Sprite.png");
-        Weapon normalAxe = new Weapon("Basic Axe", 8, "wind", 5, 85, "Man, it's windy", "./src/Backend/Images/Weapons/AxeTool/Sprite.png");
-        Weapon bigSword = new Weapon("Big sword", 28, "wind", 7, 85, "Man, it's windy", "./src/Backend/Images/Weapons/BigSword/Sprite.png");
-        Weapon club = new Weapon("Club", 18, "wind", 15, 99, "Man, it's windy", "./src/Backend/Images/Weapons/Club/Sprite.png");
-        Weapon Lance = new Weapon("Knight's lance", 22, "wind", 11, 90, "Man, it's windy", "./src/Backend/Images/Weapons/Lance/Sprite.png");
-        Weapon katana = new Weapon("Kusanagi-no-tsurugi", 30, "wind", 10, 80, "Man, it's windy", "./src/Backend/Images/Weapons/Katana/Sprite.png");
-        Weapon hammer = new Weapon("Sledgehammer.", 14, "wind", 12, 99, "Man, it's wind1y", "./src/Backend/Images/Weapons/Hammer/Sprite.png");
-        Weapon sword = new Weapon("Dawnbreaker", 20, "wind", 20, 100, "Man, it's windy", "./src/Backend/Images/Weapons/Sword/Sprite.png");
         ArrayList<Weapon> weapons = new ArrayList<>();
         weapons.add(defaultWeapon);
 
-        unfoundWeapons.add(battleAxe);
-        unfoundWeapons.add(normalAxe);
-        unfoundWeapons.add(bigSword);
-        unfoundWeapons.add(club);
-        unfoundWeapons.add(Lance);
-        unfoundWeapons.add(katana);
-        unfoundWeapons.add(hammer);
-        unfoundWeapons.add(sword);
+        // Base path for all weapon sprites
+        String weaponBasePath = "./src/Backend/Images/Weapons/";
 
+        // Define weapon data in a 2D array: {name, damage, element, crit, accuracy, description, sprite name}
+        Object[][] weaponData = {
+                {"Battle Axe", 25, "wind", 8, 85, "Man, it's windy", "Axe"},
+                {"Basic Axe", 8, "wind", 5, 85, "Man, it's windy", "AxeTool"},
+                {"Big sword", 28, "wind", 7, 85, "Man, it's windy", "BigSword"},
+                {"Club", 18, "wind", 15, 99, "Man, it's windy", "Club"},
+                {"Knight's lance", 22, "wind", 11, 90, "Man, it's windy", "Lance"},
+                {"Kusanagi-no-tsurugi", 30, "wind", 10, 80, "Man, it's windy", "Katana"},
+                {"Sledgehammer", 14, "wind", 12, 99, "Man, it's windy", "Hammer"},
+                {"Dawnbreaker", 20, "wind", 20, 100, "Man, it's windy", "Sword"},
+                {"Poseidon's Fork", 35, "wind", 30, 93, "Man, it's windy", "Fork"},
+                {"The 'Chucks", 15, "wind", 3, 40, "Man, it's windy", "Ninjaku"},
+                {"Fortnite", 1, "wind", 0, 0, "Man, it's windy", "Pickaxe"},
+                {"Pointy", 12, "wind", 10, 85, "Man, it's windy", "Rapier"},
+                {"Trunk", 15, "wind", 50, 90, "Man, it's windy", "Sai"},
+                {"Mid Sword", 10, "wind", 20, 85, "Man, it's windy", "Sword2"},
+                {"Lucky Whip", 99999999, "", 100, 1, "", "Whip"}
+        };
+
+        // Create and add weapons to unfoundWeapons list
+        for (Object[] data : weaponData) {
+            unfoundWeapons.add(new Weapon(
+                    (String)data[0],                    // name
+                    (Integer)data[1],                   // damage
+                    (String)data[2],                    // element
+                    (Integer)data[3],                   // crit
+                    (Integer)data[4],                   // accuracy
+                    (String)data[5],                    // description
+                    weaponBasePath + data[6] + "/Sprite.png"  // spritePath
+            ));
+        }
+
+
+
+
+        // Base path for all item sprites
+        String itemBasePath = "./src/Backend/Images/itemSprites/";
+
+        // HP Items data: {name, hp amount, sprite filename}
+        Object[][] hpItemsData = {
+                {"Beaf", 100.0, "Beaf"},
+                {"MediPack", 200.0, "Medipack"},
+                {"Calamari", 75.0, "Calamari"},
+                {"Fortune Cookie", 50.0, "FortuneCookie"},
+                {"Onigiri", 50.0, "Onigiri"},
+                {"Life Pot", 100.0, "LifePot"},
+                {"Octopus", 25.0, "Octopus"},
+                {"Seed", 10.0, "Seed1"},
+                {"Larger Seed", 25.0, "SeedLarge"},
+                {"Sushi", 50.0, "Sushi"},
+                {"Sushi #2", 50.0, "Sushi2"},
+                {"Water Pot", 1.0, "WaterPot"}
+        };
+
+        // Status Effect items data: {name, effect type, is buff, amount, duration, sprite filename}
+        Object[][] statusItemsData = {
+                {"Milk", "defense", true, 30, 3, "MilkPot"},
+                {"Noodles", "dmg", true, 30, 3, "Noodle"},
+                {"Treasure Chest", "hit_chance", true, 100, 1, "BigTreasureChest"},
+                {"goldCoin", "hit_chance", true, 30, 1, "GoldCoin"}
+        };
+
+        // Create and add all HP items
+        for (Object[] data : hpItemsData) {
+            unfoundItems.add(new HpItem(
+                    (String)data[0],             // name
+                    (Double)data[1],             // hp amount
+                    itemBasePath + data[2] + ".png"  // sprite path
+            ));
+        }
+
+        // Create and add all Status Effect items
+        for (Object[] data : statusItemsData) {
+            unfoundItems.add(new StatusEffect(
+                    (String)data[0],             // name
+                    (String)data[1],             // effect type
+                    (Boolean)data[2],            // is buff
+                    (Integer)data[3],            // amount
+                    (Integer)data[4],            // duration
+                    itemBasePath + data[5] + ".png"  // sprite path
+            ));
+        }
 
         /**
          *  Create default items
          */
-
         ArrayList<Item> items = new ArrayList<>();
-        HpItem beaf = new HpItem("Beaf", 100.0,"./src/Backend/Images/itemSprites/Beaf.png");
-        HpItem medipack = new HpItem("MediPack", 200,"./src/Backend/Images/itemSprites/Medipack.png");
-        HpItem calamari = new HpItem("Calamari", 75,"./src/Backend/Images/itemSprites/Calamari.png");
-        HpItem fortune = new HpItem("Fortune Cookie", 50,"./src/Backend/Images/itemSprites/FortuneCookie.png");
-        HpItem onigiri = new HpItem("Onigiri", 50,"./src/Backend/Images/itemSprites/Onigiri.png");
-        HpItem lifePot = new HpItem("Life Pot", 100,"./src/Backend/Images/itemSprites/LifePot.png");
-        HpItem octopus = new HpItem("Octopus", 25,"./src/Backend/Images/itemSprites/Octopus.png");
-        HpItem seed = new HpItem("Seed", 10,"./src/Backend/Images/itemSprites/Seed1.png");
-        HpItem seedLarge = new HpItem("Larger Seed", 25,"./src/Backend/Images/itemSprites/SeedLarge.png");
-        HpItem sushi = new HpItem("Sushi", 50,"./src/Backend/Images/itemSprites/Sushi.png");
-        HpItem sushi2 = new HpItem("Sushi #2", 50,"./src/Backend/Images/itemSprites/Sushi2.png");
-        HpItem waterPot = new HpItem("Water Pot", 1,"./src/Backend/Images/itemSprites/WaterPot.png");
-
-        StatusEffect milk = new StatusEffect("Milk", "defense", true, 30, 3, "./src/Backend/Images/itemSprites/MilkPot.png");
-        StatusEffect noodle = new StatusEffect("Noodles", "dmg", true, 30, 3, "./src/Backend/Images/itemSprites/Noodle.png");
-        StatusEffect treasure = new StatusEffect("Treasure Chest", "hit_chance", true, 100,1, "./src/Backend/Images/itemSprites/BigTreasureChest.png");
-        StatusEffect goldCoin = new StatusEffect("goldCoin", "hit_chance", true, 30, 1, "./src/Backend/Images/itemSprites/GoldCoin.png");
-
-
-
-        unfoundItems.add(beaf);
-        unfoundItems.add(medipack);
-        unfoundItems.add(calamari);
-        unfoundItems.add(fortune);
-        unfoundItems.add(onigiri);
-        unfoundItems.add(milk);
-        unfoundItems.add(noodle);
-        unfoundItems.add(seed);
-        unfoundItems.add(lifePot);
-        unfoundItems.add(octopus);
-        unfoundItems.add(seedLarge);
-        unfoundItems.add(sushi);
-        unfoundItems.add(sushi2);
-        unfoundItems.add(waterPot);
-        unfoundItems.add(treasure);
-        unfoundItems.add(goldCoin);
-
-        /**
-         * Creating some more items
-         */
         items.add(new HpItem("Shrimp", 50, "./src/Backend/Images/itemSprites/Shrimp.png"));
         items.add(new HpItem("Honey", 50, "./src/Backend/Images/itemSprites/Honey.png"));
         items.add(new HpItem("Fish", 50, "./src/Backend/Images/itemSprites/Fish.png"));

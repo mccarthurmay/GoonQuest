@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     public Hero hero = loadHero(this, keyH);
-    public Superobjects obj[] = new Superobjects[50];
+    public Superobjects obj[] = new Superobjects[70];
 
 
     // Composite controls how pixels overlap existing pixels
@@ -249,7 +249,6 @@ public class GamePanel extends JPanel implements Runnable {
         // Object
         for(int i = 0; i<obj.length; i++ ){
             if (obj[i] != null){
-                System.out.println(obj[i]);
                 obj[i].draw(bufferG, this);
             }
         }

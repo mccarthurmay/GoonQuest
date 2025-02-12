@@ -571,7 +571,7 @@ public class BattlePanel extends JPanel implements Runnable {
             }
 
             int spriteSize = 48;
-            BufferedImage itemSprite = items.get(i).getSprite();
+            BufferedImage itemSprite = items.get(itemIndex).getSprite();
             int spriteX = itemX + (itemBoxSize-spriteSize)/2;
             int spriteY = itemY + 5;
             g2.drawImage(itemSprite, spriteX, spriteY, spriteSize, spriteSize, null);

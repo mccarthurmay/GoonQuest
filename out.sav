@@ -5,23 +5,13 @@ Player
 Book,2.0,Basic weapon,2.0,3.0,a book ,./src/Backend/Images/Weapons/Book/Sprite.png
 </weapon>
 <item>
-HpItem,Health Potion,10.0
-StatusEffect,Strength Boost,dmg,true,5.0,3
-HpItem,Health 1,10.0
-HpItem,Health3 Potion,10.0
-HpItem,Health P4236otion,10.0
-HpItem,Health Potion,10.0
-HpItem,Heal56th 234Potion,10.0
-HpItem,Health62 Potion,10.0
-HpItem,Health Potion,10.0
-HpItem,Healt4235h Potion,10.0
-HpItem,Health Potion,10.0
-HpItem,Health Potion,10.0
-HpItem,Health P6623otion,10.0
+HpItem,Shrimp,50.0
+HpItem,Honey,50.0
+HpItem,Fish,50.0
 </item>
 <stats>
 100.0,10.0,200.0,0.15,0.85
 </stats>
 <location>
-1908,2132
+1800,1800
 </location>

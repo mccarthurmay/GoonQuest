@@ -5,6 +5,7 @@ import Backend.Items.StatusEffect;
 import Backend.ObjectsRendering.EnemyRendering;
 import Backend.ObjectsRendering.ItemRendering;
 import Backend.ObjectsRendering.WeaponRendering;
+import Backend.Weapons.Weapon;
 
 public class AssetSetter {
     GamePanel gp;
@@ -31,6 +32,13 @@ public class AssetSetter {
         String katana = "/Backend/Images/Weapons/Katana/Sprite.png";
         String hammer = "/Backend/Images/Weapons/Hammer/Sprite.png";
         String sword = "/Backend/Images/Weapons/Sword/Sprite.png";
+        String fork = "/Backend/Images/Weapons/Fork/Sprite.png";
+        String ninjaku = "/Backend/Images/Weapons/Ninjaku/Sprite.png";
+        String pickaxe = "/Backend/Images/Weapons/Pickaxe/Sprite.png";
+        String rapier = "/Backend/Images/Weapons/Rapier/Sprite.png";
+        String sai = "/Backend/Images/Weapons/Sai/Sprite.png";
+        String sword2 = "/Backend/Images/Weapons/Sword2/Sprite.png";
+        String whip = "/Backend/Images/Weapons/Whip/Sprite.png";
 
         // Item paths
         String beaf = "/Backend/Images/itemSprites/Beaf.png";
@@ -40,7 +48,6 @@ public class AssetSetter {
         String fortune = "/Backend/Images/itemSprites/FortuneCookie.png";
         String calamari = "/Backend/Images/itemSprites/Calamari.png";
         String medipack = "/Backend/Images/itemSprites/Medipack.png";
-
         String treasure = "/Backend/Images/itemSprites/BigTreasureChest.png";
         String goldCoin = "/Backend/Images/itemSprites/GoldCoin.png";
         String lifePot = "/Backend/Images/itemSprites/LifePot.png";
@@ -51,8 +58,7 @@ public class AssetSetter {
         String sushi2 = "/Backend/Images/itemSprites/Sushi2.png";
         String waterPot = "/Backend/Images/itemSprites/WaterPot.png";
 
-
-        // Create new renderable weapons, and pass their locations in the world
+        // Create new renderable Strings, and pass their locations in the world
         gp.obj[0] = new WeaponRendering(battleAxe, 428, 6096);
         gp.obj[1] = new WeaponRendering(normalAxe, 3340, 1900);
         gp.obj[2] = new WeaponRendering(bigSword, 7420, 10805);
@@ -73,18 +79,27 @@ public class AssetSetter {
 
         gp.obj[15] = new ItemRendering(lifePot, 1920, 1880);
         gp.obj[16] = new ItemRendering(treasure, 2112, 2060);
-        gp.obj[17] = new ItemRendering(goldCoin, 2112, 2060);
-        gp.obj[18] = new ItemRendering(octopus, 2112, 2006);
-        gp.obj[19] = new ItemRendering(seed, 2112, 2060);
-        gp.obj[20] = new ItemRendering(seedLarge, 2112, 2060);
-        gp.obj[21] = new ItemRendering(sushi2, 2112, 2060);
-        gp.obj[22] = new ItemRendering(sushi, 2112, 2060);
-        gp.obj[23] = new ItemRendering(waterPot, 2112, 2060);
+        gp.obj[17] = new ItemRendering(goldCoin, 10460, 8760); //
+        gp.obj[18] = new ItemRendering(octopus, 8940, 904); // done
+        gp.obj[19] = new ItemRendering(seed, 8704, 5672); //
+        gp.obj[20] = new ItemRendering(seedLarge, 10164, 6536); //
+        gp.obj[21] = new ItemRendering(sushi2, 9596, 6408); //
+        gp.obj[22] = new ItemRendering(sushi, 6868, 7388); // done
+        gp.obj[23] = new ItemRendering(waterPot, 3740, 8256); // done
+
+        gp.obj[24] = new WeaponRendering(fork, 6844, 6240); // done
+        gp.obj[25] = new WeaponRendering(ninjaku, 1920, 1880);
+        gp.obj[26] = new WeaponRendering(pickaxe, 3720, 7800); //done
+        gp.obj[27] = new WeaponRendering(rapier, 8216, 11084); //
+        gp.obj[28] = new WeaponRendering(sai, 1920, 1880); //
+        gp.obj[29] = new WeaponRendering(sword2, 11284, 3672); //
+        gp.obj[30] = new WeaponRendering(whip, 5908, 8340); // done
+
 
 
         // create new renderable enemies (locations have already been defined within unfoundEnemies)
         for (int i = 0; i < CharacterFactory.unfoundEnemies.size(); i++){
-            gp.obj[i + 15] = new EnemyRendering(CharacterFactory.unfoundEnemies.get(i)); // start at 15 since we already have some items in the list that we don't want to overwrite
+            gp.obj[i + 31] = new EnemyRendering(CharacterFactory.unfoundEnemies.get(i)); // start at 15 since we already have some items in the list that we don't want to overwrite
         }
     }
 }
