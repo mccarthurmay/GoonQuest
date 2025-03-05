@@ -15,19 +15,16 @@ An adventure RPG with turn-based combat, weapon collection, and a world to explo
 ### Installation & Running
 1. Clone the repository or download the source code
 2. Navigate to the project directory
-3. Run the game by executing:
-   ```
-   CP122/src/Display/Main.java
-   ```
-4. If you have a save file, type 'y' when prompted and enter the path to your save file
-   (Paths are relative to the CP122 directory)
+3. Run the game by running "GoonQuest.jar", "GoonQuest.bat", or "GoonQuest.sh"
+4. If you have a save file, press yes and navigate to your save.
+   (Saves are automatically placed in the GoonQuest directory)
 
 ## 🎮 Controls
 
 - **Movement:** W (up), A (left), S (down), D (right)
 - **Sprint:** Hold Shift while moving
 - **Menu Navigation:** Arrow keys
-- **Select Option:** Space bar
+- **Return to Main Menu:** Space bar
 - **Use Item:** Enter key
 - **Save Game:** P key
 - **Debug Coordinates:** Q key
