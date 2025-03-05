@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import static Backend.Characters.CharacterFactory.unfoundItems;
 import static Backend.Characters.CharacterFactory.unfoundWeapons;
 import static Backend.Characters.CharacterFactory.unfoundEnemies;
+import static Backend.Characters.CharacterFactory.foundObjects;
 
 public class Hero extends CharacterManager {
     /**
@@ -87,7 +88,7 @@ public class Hero extends CharacterManager {
     public void setDefaultValues() {
         worldY = gp.tileSize * 30;
         worldX = gp.tileSize * 30;
-        speed = 20;
+        speed = 4;
         direction = "down";
     }
 
@@ -126,11 +127,11 @@ public class Hero extends CharacterManager {
             } else if(keyH.rightPressed) {
                 direction = "right";
             }
-        if(keyH.shiftPressed){
-            speed = 20;
-        } else{
-            speed = 4;
-        }
+            if(keyH.shiftPressed){
+                speed = 8;
+            } else{
+                speed = 4;
+            }
             /**
              *  Check Tile Collision
              */
@@ -144,22 +145,22 @@ public class Hero extends CharacterManager {
              * fight enemy!
              */
 
-           if (collisionsOn == false) {
-               switch (direction) {
-                   case "up":
-                       this.worldY -= speed;
-                       break;
-                   case "down":
-                       this.worldY += speed;
-                       break;
-                   case "left":
-                       this.worldX -= speed;
-                       break;
-                   case "right":
-                       this.worldX += speed;
-                       break;
-               }
-           }
+            if (collisionsOn == false) {
+                switch (direction) {
+                    case "up":
+                        this.worldY -= speed;
+                        break;
+                    case "down":
+                        this.worldY += speed;
+                        break;
+                    case "left":
+                        this.worldX -= speed;
+                        break;
+                    case "right":
+                        this.worldX += speed;
+                        break;
+                }
+            }
 
 
             /**
@@ -183,7 +184,7 @@ public class Hero extends CharacterManager {
      *           objects displaced on the map.
      */
     public void pickUpObject(int i){
-        if(i!= 999){
+        if(i != 999 && gp.obj != null && gp.obj[i] != null){
             String objectName = gp.obj[i].name;
             String objectPath = gp.obj[i].spritePath;
 
@@ -207,6 +208,8 @@ public class Hero extends CharacterManager {
                             break;
                         }
                     }
+                    // Track the object as found before removing it
+                    foundObjects.add(gp.obj[i]);
                     gp.obj[i] = null;
                     break;
 
@@ -223,6 +226,8 @@ public class Hero extends CharacterManager {
                             break;
                         }
                     }
+                    // Track the object as found before removing it
+                    foundObjects.add(gp.obj[i]);
                     gp.obj[i] = null;
                     break;
                 case ("Enemy"):
@@ -234,12 +239,12 @@ public class Hero extends CharacterManager {
                             unfoundEnemies.remove(k);
                         }
                     }
+                    // Track the object as found before removing it
+                    foundObjects.add(gp.obj[i]);
                     gp.obj[i] = null;
                     break;
 
             }
-
-
         }
     }
 

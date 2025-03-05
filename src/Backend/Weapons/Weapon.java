@@ -74,7 +74,8 @@ public class Weapon {
 
     @Override
     public String toString() {
-        return this.name + ',' + this.dmg +  ',' + this.effect + ',' + this.crit + ',' + this.hit + ',' + this.message + ',' + this.spritePath;
+        return this.name + ',' + this.dmg + ',' + this.effect + ',' + this.crit + ',' +
+                this.hit + ',' + this.message + ',' + this.spritePath;
     }
 }
 

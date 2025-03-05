@@ -24,8 +24,10 @@ public class HpItem extends Item {
         double newHP = HP + hpGain;
         character.setHP(newHP);
     }
-    public String toString(){
-        return "HpItem" + ',' + getName() + ',' + getHpGain();
+
+    @Override
+    public String toString() {
+        return "HpItem" + ',' + getName() + ',' + getHpGain() + ',' + getSpritePath();
     }
 }
 

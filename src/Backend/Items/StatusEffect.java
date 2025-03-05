@@ -123,8 +123,10 @@ public class StatusEffect extends Item{
         return duration;
     }
 
-    public String toString(){
-        return "StatusEffect" + ',' + this.getName() + ',' + this.classification + ',' + this.buff + ',' +this.numChange + ',' + this.getDuration();
+    @Override
+    public String toString() {
+        return "StatusEffect" + ',' + this.getName() + ',' + this.classification + ',' +
+                this.buff + ',' + this.numChange + ',' + this.getDuration() + ',' + this.getSpritePath();
     }
 
     // Battle logic:

@@ -3,19 +3,20 @@ Player
 </name>
 <weapon>
 Book,2.0,Basic weapon,2.0,3.0,a book ,./src/Backend/Images/Weapons/Book/Sprite.png
-Trunk,15.0,wind,50.0,90.0,Man, it's windy,./src/Backend/Images/Weapons/Sai/Sprite.png
-The 'Chucks,15.0,wind,3.0,40.0,Man, it's windy,./src/Backend/Images/Weapons/Ninjaku/Sprite.png
+Basic Axe,20.0,wind,5.0,85.0,Man it's windy,./src/Backend/Images/Weapons/AxeTool/Sprite.png
 </weapon>
 <item>
-HpItem,Shrimp,50.0
-HpItem,Honey,50.0
-HpItem,Fish,50.0
-HpItem,Life Pot,100.0
-StatusEffect,Treasure Chest,hit_chance,true,100.0,1
+HpItem,Shrimp,50.0,./src/Backend/Images/itemSprites/Shrimp.png
+HpItem,Honey,50.0,./src/Backend/Images/itemSprites/Honey.png
+HpItem,Fish,50.0,./src/Backend/Images/itemSprites/Fish.png
 </item>
 <stats>
-100.0,10.0,200.0,0.15,0.85
+20.0,10.0,179.0,0.05,0.85
 </stats>
 <location>
-11720,6896
+2032,4048
 </location>
+<collected_objects>
+Weapon,3340,1900
+Enemy,2104,2520
+</collected_objects>

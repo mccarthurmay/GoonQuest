@@ -2,6 +2,7 @@ package Backend.Characters;
 
 import Backend.Weapons.*;
 import Backend.Items.*;
+import Backend.ObjectsRendering.Superobjects;
 import Display.GamePanel;
 import Display.KeyHandler;
 
@@ -15,6 +16,11 @@ public class CharacterFactory {
     public static ArrayList<Weapon> unfoundWeapons = new ArrayList<>();
     public static ArrayList<Item> unfoundItems = new ArrayList<>();
     public static ArrayList<Enemy> unfoundEnemies = new ArrayList<>();
+
+    /**
+     * Track objects that have been collected by the player
+     */
+    public static ArrayList<Superobjects> foundObjects = new ArrayList<>();
 
     /**
      * Create full default hero, saves some time
@@ -59,9 +65,6 @@ public class CharacterFactory {
                     weaponBasePath + data[6] + "/Sprite.png"  // spritePath
             ));
         }
-
-
-
 
         // Base path for all item sprites
         String itemBasePath = "./src/Backend/Images/itemSprites/";
