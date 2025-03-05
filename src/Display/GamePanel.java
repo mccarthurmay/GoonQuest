@@ -100,6 +100,22 @@ public class GamePanel extends JPanel implements Runnable {
     // Add things to the game world, play music, etc.
     public void setupGame() {
         aSetter.setThings();
+
+        // If hero is loaded from a save file, remove collected objects
+        if (!CharacterFactory.foundObjects.isEmpty()) {
+            // Remove objects that have been collected
+            for (Superobjects foundObj : CharacterFactory.foundObjects) {
+                for (int i = 0; i < obj.length; i++) {
+                    if (obj[i] != null &&
+                            obj[i].worldX == foundObj.worldX &&
+                            obj[i].worldY == foundObj.worldY) {
+
+                        obj[i] = null;
+                    }
+                }
+            }
+        }
+
         playMusic(0 );
     }
 
@@ -203,19 +219,7 @@ public class GamePanel extends JPanel implements Runnable {
      * @return the newly loaded hero!
      */
     public Hero loadHero(GamePanel gp, KeyHandler keyH) {
-        Hero hero = CharacterFactory.createDefaultHero(this, keyH);;
-        Scanner input = new Scanner(System.in); // create a scanner to read files from the system
-        System.out.println("Would you like to load a save? (y/n): "); // prompt user for a save
-        String response = input.nextLine();
-        if (response.equals("y") || response.equals("Y")) {
-            System.out.println("Input your save file directory (ex: out.sav)"); // out.sav is the default
-            response = input.nextLine(); // take in the user response
-            hero = SaveLoad.load(response, gp, keyH); // load the information from that save file
-
-        }else { // if no file to load from, create default hero
-            hero = CharacterFactory.createDefaultHero(this, keyH);
-        }
-        return hero;
+        return SaveLoad.load("out.sav", gp, keyH);
     }
 
     /**
@@ -352,6 +356,15 @@ public class GamePanel extends JPanel implements Runnable {
         timer.setRepeats(false);
         timer.start();
 
+    }
+
+    /**
+     * Checks if all enemies in the game have been defeated
+     * @return true if all enemies are defeated, false otherwise
+     */
+    public boolean checkAllEnemiesDefeated() {
+        // If the unfoundEnemies list is empty, all enemies have been encountered/defeated
+        return CharacterFactory.unfoundEnemies.isEmpty();
     }
 
 }

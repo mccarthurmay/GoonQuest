@@ -1,5 +1,7 @@
 package Display;
 
+import Backend.SaveLoad;
+
 import javax.swing.JFrame;
 public class Main{
     public static void main(String[] args) {
@@ -34,8 +36,10 @@ public class Main{
 
         // Load game
         gamePanel.setupGame();
+
+        // Process any pending collected objects from the save file
+        SaveLoad.processPendingCollectedObjects(gamePanel);
+
         gamePanel.startGameThread();
-
     }
-
 }

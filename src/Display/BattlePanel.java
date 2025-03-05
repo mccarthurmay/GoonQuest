@@ -115,6 +115,15 @@ public class BattlePanel extends JPanel implements Runnable {
     private volatile String targetMessage = "";
     private volatile int charIndex = 0;
 
+    // Game win conditions
+    private boolean gameCompleted = false;
+    private boolean showWinScreen = false;
+    private final String winMessage = "CONGRATULATIONS! YOU HAVE DEFEATED ALL ENEMIES AND WON THE GAME!";
+    private String currentWinMessage = "";
+    private int winMessageCharIndex = 0;
+    private int winMessageFrameCount = 0;
+    private final int WIN_MESSAGE_SPEED = 2; // Higher is slower
+
     /**
      * Creates battlePanel object that allows for battle to initiate.
      * @param gamePanel gamePanel logic to be created
@@ -146,9 +155,10 @@ public class BattlePanel extends JPanel implements Runnable {
         // Create custom font
         try {
         customFont = Font.createFont(Font.TRUETYPE_FONT,
-                        getClass().getResourceAsStream("/Backend/font/undertale.ttf"))
+                        getClass().getResourceAsStream("/Backend/Font/undertale.ttf"))
                 .deriveFont(22f);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         // Add messages to list
@@ -789,6 +799,13 @@ public class BattlePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D)g;
 
+        // If showing win screen, draw only that
+        if (showWinScreen) {
+            drawWinScreen(g2);
+            g2.dispose();
+            return;
+        }
+
         // Draw background
         try {
             BufferedImage image = ImageIO.read(new File("src/Backend/Images/Space-Background.jpg"));
@@ -991,7 +1008,13 @@ public class BattlePanel extends JPanel implements Runnable {
     public void update() {
         updateAttackAnimation();
         updateTypewriterText();
-        
+
+        if (showWinScreen) {
+            updateWinMessage();
+            return; // Skip regular updates when showing win screen
+        }
+
+
         // Update floating combat text animations
         if (critPopupTimer > 0) {
             critPopupTimer--;
@@ -1151,10 +1174,24 @@ public class BattlePanel extends JPanel implements Runnable {
             return;
         }
 
+        // After defeating an enemy, check if all enemies are defeated
+        if (gamePanel.checkAllEnemiesDefeated() && !gameCompleted) {
+            gameCompleted = true;
+            showWinScreen = true;
+            currentWinMessage = "";
+            winMessageCharIndex = 0;
+            return; // Don't return to game yet, show win screen first
+        }
+
+        // If showing win screen, handle that instead of returning to game
+        if (showWinScreen) {
+            return;
+        }
+
         // Clean up resources before switching back
         cleanupResources();
         gamePanel.stopMusic();
-        
+
         // Reinitiate game panel
         window.add(gamePanel);
         window.revalidate();
@@ -1167,6 +1204,57 @@ public class BattlePanel extends JPanel implements Runnable {
         // Remove battle panel and restart music
         window.remove(this);
         gamePanel.playMusic(0);
+    }
+
+    /**
+     * Update the win message typewriter effect
+     */
+    private void updateWinMessage() {
+        if (showWinScreen) {
+            winMessageFrameCount++;
+            if (winMessageFrameCount >= WIN_MESSAGE_SPEED) {
+                if (winMessageCharIndex < winMessage.length()) {
+                    currentWinMessage = winMessage.substring(0, winMessageCharIndex + 1);
+                    winMessageCharIndex++;
+                } else if (keyH.spacePressed) {
+                    // After message is complete and player presses space, return to game
+                    showWinScreen = false;
+                    returnToGame();
+                }
+                winMessageFrameCount = 0;
+            }
+        }
+    }
+
+    /**
+     * Draw the win screen
+     * @param g2 Graphics2D object to draw with
+     */
+    private void drawWinScreen(Graphics2D g2) {
+        // Set background
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, gamePanel.screenWidth, gamePanel.screenHeight);
+
+        // Draw victory text
+        g2.setFont(customFont.deriveFont(48f));
+        g2.setColor(Color.YELLOW);
+
+        // Center text
+        FontMetrics metrics = g2.getFontMetrics();
+        int textWidth = metrics.stringWidth(currentWinMessage);
+        int x = (getWidth() - textWidth) / 2;
+        int y = getHeight() / 2;
+
+        g2.drawString(currentWinMessage, x, y);
+
+        // Add instruction after message is complete
+        if (winMessageCharIndex >= winMessage.length()) {
+            g2.setFont(customFont.deriveFont(24f));
+            g2.setColor(Color.WHITE);
+            String instruction = "Press SPACE to continue";
+            int instrWidth = g2.getFontMetrics().stringWidth(instruction);
+            g2.drawString(instruction, (getWidth() - instrWidth) / 2, y + 60);
+        }
     }
 }
 
